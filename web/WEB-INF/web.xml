@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+    <display-name>Geno</display-name>
+    <servlet>
+        <servlet-name>GenoRESTWebservice</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+
+        <multipart-config>
+            <max-file-size>5048576</max-file-size>
+            <max-request-size>5048576</max-request-size>
+            <file-size-threshold>2048576</file-size-threshold>
+        </multipart-config>
+
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GenoRESTWebservice</servlet-name>
+        <url-pattern>/api/rest/*</url-pattern>
+    </servlet-mapping>
+
+    <context-param>
+        <param-name>contextClass</param-name>
+        <param-value>
+            org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+        </param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            security.config.WebSecurityConfig
+        </param-value>
+    </context-param>
+
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+
+    <error-page>
+        <exception-type>org.springframework.web.multipart.MultipartException</exception-type>
+        <location>/api/rest/errors/maxUploadSizeExceeded</location>
+    </error-page>
+
+    <error-page>
+        <location>/api/rest/errors</location>
+    </error-page>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+
+
+</web-app>

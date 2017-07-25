@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!-- entity -->
+    <bean id="service" class="model.entity.persistent.Service" scope="prototype"/>
+    <bean id="address" class="model.entity.persistent.Address" scope="prototype"/>
+    <bean id="car" class="model.entity.persistent.Car" scope="prototype"/>
+    <bean id="carManufacture" class="model.entity.persistent.CarManufacture" scope="prototype"/>
+    <bean id="device" class="model.entity.persistent.Device" scope="prototype"/>
+    <bean id="driver" class="model.entity.persistent.Driver" scope="prototype">
+        <property name="address" ref="address"/>
+        <property name="vehicle" ref="vehicle"/>
+    </bean>
+    <bean id="driverFile" class="model.entity.persistent.DriverFile" scope="prototype"/>
+    <bean id="driverLog" class="model.entity.persistent.DriverLog" scope="prototype"/>
+    <bean id="favPlace" class="model.entity.persistent.FavPlace" scope="prototype"/>
+    <bean id="location" class="model.entity.persistent.Location" scope="prototype"/>
+    <bean id="message" class="model.entity.persistent.Message" scope="prototype"/>
+    <bean id="operator" class="model.entity.persistent.Operator" scope="prototype"/>
+    <bean id="operatorLog" class="model.entity.persistent.OperatorLog" scope="prototype"/>
+    <bean id="organization" class="model.entity.persistent.Organization" scope="prototype"/>
+    <bean id="passenger" class="model.entity.persistent.Passenger" scope="prototype"/>
+    <bean id="passengerInfo" class="model.entity.persistent.PassengerInfo" scope="prototype"/>
+    <bean id="passengerLog" class="model.entity.persistent.PassengerLog" scope="prototype"/>
+    <bean id="payment" class="model.entity.persistent.Payment" scope="prototype"/>
+    <bean id="searchRadius" class="model.entity.persistent.SearchRadius" scope="prototype"/>
+    <bean id="sms" class="model.entity.persistent.SMS" scope="prototype"/>
+    <bean id="subscribeUser" class="model.entity.persistent.SubscribeUser" scope="prototype"/>
+    <bean id="tariff" class="model.entity.persistent.Tariff" scope="prototype"/>
+    <bean id="tariffHistory" class="model.entity.persistent.TariffHistory" scope="prototype"/>
+    <bean id="ticket" class="model.entity.persistent.Ticket" scope="prototype"/>
+    <bean id="ticketSubject" class="model.entity.persistent.TicketSubject" scope="prototype"/>
+    <bean id="trip" class="model.entity.persistent.Trip" scope="prototype"/>
+    <bean id="tripDestination" class="model.entity.persistent.TripDestination" scope="prototype"/>
+    <bean id="vehicle" class="model.entity.persistent.Vehicle" scope="prototype"/>
+    <bean id="systemSetting" class="model.entity.persistent.SystemSetting" />
+    <bean id="bug" class="model.entity.persistent.Bug" scope="prototype"/>
+    <bean id="deliveryInfo" class="model.entity.persistent.DeliveryInfo" scope="prototype"/>
+    <bean id="tutorialInfo" class="model.entity.persistent.TutorialInfo" scope="prototype"/>
+    <bean id="voucherCode" class="model.entity.persistent.VoucherCode" scope="prototype"/>
+    <bean id="state" class="model.entity.persistent.State" scope="prototype"/>
+    <bean id="city" class="model.entity.persistent.City" scope="prototype"/>
+
+    <!-- entity -->
+
+    <bean id="mongoDBQueries" class="model.da.MongoDBQueries"/>
+
+    <bean id="generator" class="util.Generator"/>
+
+
+    <!-- converters -->
+    <bean id="userRoleConverter" class="util.converter.UserRoleConverter"/>
+    <bean id="fileTypeConverter" class="util.converter.FileTypeConverter"/>
+    <bean id="accountStateConverter" class="util.converter.AccountStateConverter"/>
+    <bean id="tripStateConverter" class="util.converter.TripStateConverter"/>
+    <bean id="serviceTypeConverter" class="util.converter.ServiceTypeConverter"/>
+    <bean id="ticketStateConverter" class="util.converter.TicketStateConverter"/>
+    <bean id="cityConverter" class="util.converter.CityConverter"/>
+    <bean id="logTypeConverter" class="util.converter.LogTypeConverter"/>
+    <bean id="employeeCountConverter" class="util.converter.EmployeeCountConverter"/>
+    <bean id="paymentTypeConverter" class="util.converter.PaymentMethodConverter"/>
+    <bean id="genderConverter" class="util.converter.GenderConverter"/>
+    <bean id="voucherCodeTypeConverter" class="util.converter.VoucherCodeTypeConverter"/>
+    <bean id="voucherCodeGenerationTypeConverter" class="util.converter.VoucherCodeGenerationTypeConverter"/>
+    <bean id="reloader" class="util.Reloader"/>
+    <bean id="httpAuthParser" class="util.HTTPAuthParser"/>
+
+    <!-- -->
+
+    <!--Services -->
+
+    <bean id="systemService" class="service.SystemServiceImpl"/>
+    <bean id="operatorService" class="service.OperatorServiceImpl"/>
+    <bean id="copService" class="service.COPServiceImpl"/>
+    <bean id="masterService" class="service.MasterServiceImpl"/>
+    <bean id="adminService" class="service.AdminServiceImpl"/>
+    <!-- -->
+
+</beans>
