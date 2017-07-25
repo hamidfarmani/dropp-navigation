@@ -197,6 +197,7 @@ public class AdminController {
             if(serviceTypeStr.isEmpty()){
                 return returnResponse(Status.BAD_DATA);
             }
+            //ijj
             ServiceTypeConverter serviceTypeConverter = (ServiceTypeConverter) IOCContainer.getBean("serviceTypeConverter");
             ServiceType serviceType = serviceTypeConverter.convertToEntityAttribute(serviceTypeStr);
             Object object = adminManager.radiusRegister(radius,serviceType);
