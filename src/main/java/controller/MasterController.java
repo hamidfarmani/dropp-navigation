@@ -55,10 +55,10 @@ public class MasterController {
             CityConverter cityConverter = (CityConverter)IOCContainer.getBean("cityConverter");
             city = cityConverter.convertToEntityAttribute(cityStr);
 
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             birthDate = new Date();
-            birthDate.setYear(year);
-            birthDate.setMonth(month);
-            birthDate.setDate(day);
+            String dataStr = String.valueOf(year + "/" + month + "/" + day);
+            birthDate = dateFormat.parse(dataStr);
 
             if (PhoneNumber.isEmpty()
                     || password.isEmpty()
@@ -71,6 +71,9 @@ public class MasterController {
         } catch (JSONException e) {
             e.printStackTrace();
             return returnResponse(Status.BAD_JSON);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return returnResponse(Status.BAD_DATA);
         }
         if ((!Validation.getInstance().validateUsername(username)) || username.length() > 20 || username.contains(":")) {
             return returnResponse(Status.BAD_USERNAME);
@@ -126,12 +129,14 @@ public class MasterController {
             CityConverter cityConverter = (CityConverter)IOCContainer.getBean("cityConverter");
             city = cityConverter.convertToEntityAttribute(cityStr);
 
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             birthDate = new Date();
-            birthDate.setYear(year);
-            birthDate.setMonth(month);
-            birthDate.setDate(day);
+            String dataStr = String.valueOf(year + "/" + month + "/" + day);
+            birthDate = dateFormat.parse(dataStr);
 
-            if (PhoneNumber.isEmpty() || password.isEmpty()) {
+
+            if (PhoneNumber.isEmpty() || password.isEmpty()
+                    || firstname.isEmpty() || lastname.isEmpty()) {
                 return returnResponse(Status.BAD_DATA);
             }
         } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
@@ -139,6 +144,9 @@ public class MasterController {
         } catch (JSONException e) {
             e.printStackTrace();
             return returnResponse(Status.BAD_JSON);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return returnResponse(Status.BAD_DATA);
         }
         if ((!Validation.getInstance().validatePassword(password)) || password.length() > 30) {
             return returnResponse(Status.BAD_PASSWORD);
@@ -192,7 +200,7 @@ public class MasterController {
             e.printStackTrace();
             return returnResponse(Status.BAD_JSON);
         }
-        if (!masterService.isSubjectExist(subject)) {
+        if (!masterService.isSubjectExist(subject,userRole)) {
             Status ticketSubjectRegisterStatus = masterService.ticketSubjectRegister(subject,parentID,userRole);
             Status reloadStatus = null;
             if(ticketSubjectRegisterStatus==Status.OK){
@@ -235,7 +243,7 @@ public class MasterController {
             String ED = jsonObjectRequest.getString("expireDate");
             String gtype = jsonObjectRequest.getString("generationType");
             String ctype = jsonObjectRequest.getString("voucherType");
-            String value = jsonObjectRequest.getString("code");
+            String value = jsonObjectRequest.getString("discountValue");
 
             VoucherCodeGenerationType generationType = gConverter.convertToEntityAttribute(gtype.charAt(0));
             VoucherCodeType codeType = cConverter.convertToEntityAttribute(ctype.charAt(0));
@@ -259,6 +267,7 @@ public class MasterController {
                 return returnResponse((Status) object);
             }
         } catch (JSONException e) {
+            e.printStackTrace();
             return ResponseProvider.getInstance().getResponse(Status.BAD_JSON);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -278,7 +287,7 @@ public class MasterController {
             String SD = jsonObjectRequest.getString("startDate");
             String ED = jsonObjectRequest.getString("expireDate");
             String ctype = jsonObjectRequest.getString("voucherType");
-            String value = jsonObjectRequest.getString("code");
+            String value = jsonObjectRequest.getString("discountValue");
 
             VoucherCodeType codeType = cConverter.convertToEntityAttribute(ctype.charAt(0));
 
@@ -295,6 +304,7 @@ public class MasterController {
             Status status = masterService.voucherUpdate(id, maxUse,description,startDate,endDate,codeType,value);
             return returnResponse(status);
         } catch (JSONException e) {
+            e.printStackTrace();
             return ResponseProvider.getInstance().getResponse(Status.BAD_JSON);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

@@ -11,7 +11,7 @@ import java.util.List;
  */
 @NamedQueries({
         @NamedQuery(name = "ticketSubject.All", query = "select t from ticketSubject t"),
-        @NamedQuery(name = "ticketSubject.subject.exist", query = "select t.id from ticketSubject t where t.subject=:subject"),
+        @NamedQuery(name = "ticketSubject.subject.exist", query = "select t.id from ticketSubject t where t.subject=:subject and t.role=:role"),
         @NamedQuery(name = "ticketSubject.findby.id", query = "select t from ticketSubject t where t.id=:id")
 })
 @Entity(name = "ticketSubject")

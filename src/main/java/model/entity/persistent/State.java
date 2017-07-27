@@ -6,6 +6,7 @@ import javax.persistence.*;
  * Created by kasra on 7/13/2017.
  */
 @NamedQueries({
+        @NamedQuery(name = "state.by.id", query = "select s from state s where s.id=:id"),
         @NamedQuery(name = "state.by.name", query = "select s from state s where s.name=:name"),
         @NamedQuery(name = "state.all", query = "select s from state s"),
 })

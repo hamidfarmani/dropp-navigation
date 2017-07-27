@@ -20,6 +20,8 @@ import util.converter.CityConverter;
 import util.converter.GenderConverter;
 import util.converter.ServiceTypeConverter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -62,10 +64,10 @@ public class AdminController {
             CityConverter cityConverter = (CityConverter)IOCContainer.getBean("cityConverter");
             city = cityConverter.convertToEntityAttribute(cityStr);
 
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd");
             birthDate = new Date();
-            birthDate.setYear(year);
-            birthDate.setMonth(month);
-            birthDate.setDate(day);
+            String dataStr = String.valueOf(year + "/" + month + "/" + day);
+            birthDate = dateFormatter.parse(dataStr);
 
             if (username.isEmpty()
                     || PhoneNumber.isEmpty()
@@ -78,6 +80,9 @@ public class AdminController {
         } catch (JSONException e) {
             e.printStackTrace();
             return returnResponse(Status.BAD_JSON);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return returnResponse(Status.BAD_DATA);
         }
         if ((!Validation.getInstance().validateUsername(username)) || username.length() > 20 || username.contains(":")) {
             return returnResponse(Status.BAD_USERNAME);
@@ -189,15 +194,15 @@ public class AdminController {
     @RequestMapping(value = "/admin/searchRadiuses", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> searchRadiusRegister(@RequestBody String request, @RequestHeader(value = "Authorization") String auth) {
         JSONObject jsonObjectRequest = new JSONObject(request);
-        String serviceTypeStr;
+        String serviceTypeStr,radiusStr;
         double radius;
         try {
-            radius = jsonObjectRequest.getDouble("radius");
+            radiusStr = jsonObjectRequest.getString("radius");
             serviceTypeStr = jsonObjectRequest.getString("serviceType");
-            if(serviceTypeStr.isEmpty()){
+            if(serviceTypeStr.isEmpty() || radiusStr.isEmpty()){
                 return returnResponse(Status.BAD_DATA);
             }
-            //ijj
+            radius = Long.valueOf(radiusStr);
             ServiceTypeConverter serviceTypeConverter = (ServiceTypeConverter) IOCContainer.getBean("serviceTypeConverter");
             ServiceType serviceType = serviceTypeConverter.convertToEntityAttribute(serviceTypeStr);
             Object object = adminManager.radiusRegister(radius,serviceType);
@@ -292,18 +297,31 @@ public class AdminController {
         try {
             String cityName = jsonObjectRequest.getString("city").trim();
             City city = ((CityConverter) IOCContainer.getBean("cityConverter")).convertToEntityAttribute(cityName);
-            double before2KM = jsonObjectRequest.getDouble("before2KM");
-            double after2KM = jsonObjectRequest.getDouble("after2KM");
-            double perMin = jsonObjectRequest.getDouble("perMin");
-            double waitingMin = jsonObjectRequest.getDouble("waitingMin");
-            double entrance = jsonObjectRequest.getDouble("entrance");
-            int twoWayCost = jsonObjectRequest.getInt("twoWayCost");
             String type = jsonObjectRequest.getString("serviceType");
-            int coShare = jsonObjectRequest.getInt("coShare");
-            if(type.isEmpty()
-                    || cityName.isEmpty()){
+            String before2KMStr = jsonObjectRequest.getString("before2KM");
+            String after2KMStr = jsonObjectRequest.getString("after2KM");
+            String perMinStr = jsonObjectRequest.getString("perMin");
+            String waitingMinStr = jsonObjectRequest.getString("waitingMin");
+            String entranceStr = jsonObjectRequest.getString("entrance");
+            String twoWayCostStr = jsonObjectRequest.getString("twoWayCost");
+            String coShareStr = jsonObjectRequest.getString("coShare");
+
+            if(type.isEmpty() || cityName.isEmpty()
+                    || before2KMStr.isEmpty() || after2KMStr.isEmpty()
+                    || perMinStr.isEmpty() || waitingMinStr.isEmpty()
+                    || entranceStr.isEmpty() || twoWayCostStr.isEmpty()
+                    || coShareStr.isEmpty()){
                 return returnResponse(Status.BAD_DATA);
             }
+
+            double before2KM = Double.valueOf(before2KMStr);
+            double after2KM = Double.valueOf(after2KMStr);
+            double perMin = Double.valueOf(perMinStr);
+            double waitingMin = Double.valueOf(waitingMinStr);
+            double entrance = Double.valueOf(entranceStr);
+            int twoWayCost = Integer.valueOf(twoWayCostStr);
+            int coShare = Integer.valueOf(coShareStr);
+
             ServiceType serviceType = ((ServiceTypeConverter) IOCContainer.getBean("serviceTypeConverter")).convertToEntityAttribute(type);
             Status tarifRegisterStatus = adminManager.tariffRegister(city, before2KM, after2KM, perMin, waitingMin, entrance, serviceType, twoWayCost, coShare);
             Status reloadStatus = null;
@@ -333,14 +351,31 @@ public class AdminController {
     public ResponseEntity<String> tariffUpdate(@RequestBody String request, @RequestHeader(value = "Authorization") String auth) {
         JSONObject jsonObjectRequest = new JSONObject(request);
         try {
-            Long tariffID = jsonObjectRequest.getLong("tariffID");
-            double before2KM = jsonObjectRequest.getDouble("before2KM");
-            double after2KM = jsonObjectRequest.getDouble("after2KM");
-            double perMin = jsonObjectRequest.getDouble("perMin");
-            double waitingMin = jsonObjectRequest.getDouble("waitingMin");
-            double entrance = jsonObjectRequest.getDouble("entrance");
-            int twoWayCost = jsonObjectRequest.getInt("twoWayCost");
-            int coShare = jsonObjectRequest.getInt("coShare");
+            String tariffIDStr = jsonObjectRequest.getString("tariffID");
+            String before2KMStr = jsonObjectRequest.getString("before2KM");
+            String after2KMStr = jsonObjectRequest.getString("after2KM");
+            String perMinStr = jsonObjectRequest.getString("perMin");
+            String waitingMinStr = jsonObjectRequest.getString("waitingMin");
+            String entranceStr = jsonObjectRequest.getString("entrance");
+            String twoWayCostStr = jsonObjectRequest.getString("twoWayCost");
+            String coShareStr = jsonObjectRequest.getString("coShare");
+
+            if(tariffIDStr.isEmpty() || before2KMStr.isEmpty() || after2KMStr.isEmpty()
+                    || perMinStr.isEmpty() || waitingMinStr.isEmpty()
+                    || entranceStr.isEmpty() || twoWayCostStr.isEmpty()
+                    || coShareStr.isEmpty()){
+                return returnResponse(Status.BAD_DATA);
+            }
+
+            Long tariffID = Long.valueOf(tariffIDStr);
+            double before2KM = Double.valueOf(before2KMStr);
+            double after2KM = Double.valueOf(after2KMStr);
+            double perMin = Double.valueOf(perMinStr);
+            double waitingMin = Double.valueOf(waitingMinStr);
+            double entrance = Double.valueOf(entranceStr);
+            int twoWayCost = Integer.valueOf(twoWayCostStr);
+            int coShare = Integer.valueOf(coShareStr);
+
             Status tarifUpdateStatus = adminManager.tariffUpdate(tariffID, before2KM,after2KM,perMin,waitingMin,entrance,twoWayCost,coShare);
             Status reloadStatus = null;
             if(tarifUpdateStatus==Status.OK){
@@ -365,9 +400,9 @@ public class AdminController {
     @RequestMapping(value = "/admin/tariffs/{cityName}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> searchTariff(@PathVariable String cityName) {
         try {
-            Object driver = adminManager.searchTariff(cityName);
-            if(driver instanceof JSONObject){
-                return returnResponse(Status.OK,(JSONObject) driver);
+            Object searchTariff = adminManager.searchTariff(cityName);
+            if(searchTariff instanceof JSONObject){
+                return returnResponse(Status.OK,(JSONObject) searchTariff);
             }else {
                 return returnResponse(Status.NOT_FOUND);
             }
@@ -590,8 +625,8 @@ public class AdminController {
             e.printStackTrace();
             return returnResponse(Status.BAD_JSON);
         }
-        City cityExist = adminManager.isCityExist(name, state);
-        if (cityExist== null) {
+        model.entity.persistent.City cityExist = adminManager.isCityExist(name, state);
+        if (cityExist == null) {
             Object object = adminManager.cityRegister(name,state);
             if (object == null) {
                 return returnResponse(Status.UNKNOWN_ERROR);

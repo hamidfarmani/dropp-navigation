@@ -148,16 +148,16 @@ public class COPServiceImpl implements COPService {
         entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            Long sum;
-            sum = (Long)entityManager.createNamedQuery("trip.distance.findBy.vehicleID")
+            Long distance;
+            distance = (Long)entityManager.createNamedQuery("trip.distance.findBy.vehicleID")
                     .setParameter("vehicleID",vehicleID)
                     .getSingleResult();
-            if(sum==null){
-                sum = Long.valueOf(0);
+            if(distance==null){
+                distance = Long.valueOf(0);
             }
             entityManager.getTransaction().commit();
             JSONObject j = new JSONObject();
-            j.put("sum",sum);
+            j.put("distance",distance);
             return j;
         } catch (NoResultException e){
             e.printStackTrace();

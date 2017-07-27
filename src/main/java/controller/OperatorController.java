@@ -517,7 +517,6 @@ public class OperatorController {
         }
     }
 
-
     @RequestMapping(value = "/operator/trips/online", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> viewOnlineTrips() {
         Object allOnlinetrips = operatorService.viewOnlineTrips();
@@ -607,7 +606,7 @@ public class OperatorController {
     }
 
     @RequestMapping(value = "/operator/cities/{stateID}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> viewAllStates(@PathVariable String stateID) {
+    public ResponseEntity<String> viewAllCities(@PathVariable String stateID) {
         if(stateID.isEmpty()){
             return returnResponse(Status.BAD_DATA);
         }

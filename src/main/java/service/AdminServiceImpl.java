@@ -164,6 +164,8 @@ public class AdminServiceImpl implements AdminService {
         entityManager = LocalEntityManagerFactory.createEntityManager();
         JSONObject actives = new JSONObject();
         JSONArray services = new JSONArray();
+        ServiceTypeConverter serviceTypeConverter = (ServiceTypeConverter) IOCContainer.getBean("serviceTypeConverter");
+
         try {
             entityManager.getTransaction().begin();
             List activeServices = entityManager.createNamedQuery("activeServices.find.byCity")
@@ -174,7 +176,7 @@ public class AdminServiceImpl implements AdminService {
                 JSONObject ob = new JSONObject();
                 Service a = (Service)activeServices.get(i);
                 ob.put("id" , a.getId());
-                ob.put("type" , a.getServiceType());
+                ob.put("type" , serviceTypeConverter.convertToDatabaseColumn(a.getServiceType()));
                 ob.put("status",a.getServiceState());
                 services.put(ob);
             }
@@ -389,7 +391,6 @@ public class AdminServiceImpl implements AdminService {
             entityManager.getTransaction().begin();
             return !entityManager.createNamedQuery("operator.username.exist")
                     .setParameter("username", username)
-                    .setParameter("role", UserRole.MASTER_OPERATOR)
                     .setMaxResults(1)
                     .getResultList()
                     .isEmpty();
@@ -828,14 +829,16 @@ public class AdminServiceImpl implements AdminService {
         try {
             entityManager.getTransaction().begin();
             model.entity.persistent.City city = (model.entity.persistent.City) IOCContainer.getBean("city");
-            State state = entityManager.find(State.class,stateID);
+            State state = (State ) entityManager.createNamedQuery("state.by.id")
+                    .setParameter("id",stateID)
+                    .getSingleResult();
             city.setState(state);
             city.setName(name);
             entityManager.persist(city);
             entityManager.getTransaction().commit();
 
             return Status.OK;
-        }catch(NoResultException e){
+        } catch(NoResultException e){
             e.printStackTrace();
             return Status.NOT_FOUND;
         }catch (NullPointerException e ){
@@ -878,12 +881,12 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-    public City isCityExist(String name, Long stateID){
+    public model.entity.persistent.City isCityExist(String name, Long stateID){
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
-        City city = null ;
+        model.entity.persistent.City city = null ;
         try {
             entityManager.getTransaction().begin();
-            city = (City) entityManager.createNamedQuery("city.by.nameAndStateID")
+            city = (model.entity.persistent.City) entityManager.createNamedQuery("city.by.nameAndStateID")
                     .setParameter("name", name)
                     .setParameter("stateID",stateID)
                     .getSingleResult();

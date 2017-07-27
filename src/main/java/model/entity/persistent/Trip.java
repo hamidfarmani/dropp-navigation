@@ -23,11 +23,10 @@ import java.util.List;
          @NamedQuery(name = "trip.findBy.passengerUsername",query = "select t from trip t left join passenger p on t.passenger.id=p.id where p.username like :username"),
          @NamedQuery(name = "trip.findBy.passengerPhoneNumber",query = "select t from trip t left join passenger p on t.passenger.id=p.id where p.phoneNumber like :phoneNumber"),
          @NamedQuery(name = "trip.findBy.uuid",query = "select t from trip t where t.UUID like :uuid"),
-         @NamedQuery(name = "trip.today.count",query = "select count(t.id) from trip t where t.startDate >= current_date()")
+         @NamedQuery(name = "trip.today.count",query = "select count(t.id) from trip t where t.startDate >= current_date()"),
+         @NamedQuery(name = "trip.distance.findBy.vehicleID",query = "select SUM(t.distance) from trip t where (t.serviceType!='R' or t.serviceType!='D') and t.vehicle.id=:vehicleID"),
  })
-@NamedNativeQueries({
-        @NamedNativeQuery(name = "trip.distance.findBy.vehicleID",query = "select SUM(t.distance) from trip t where (SERVICE_TYPE!='R' or SERVICE_TYPE!='D') and t.FK_VEHICLE=:vehicleID"),
-})
+
 @Entity(name = "trip")
 @Table(name = "TRIP", indexes = {
         @Index(name = "TRIP_UUID_INDEX", columnList = "UUID")

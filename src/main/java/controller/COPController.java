@@ -26,14 +26,16 @@ public class COPController {
     @RequestMapping(value = "/cop/cars", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> carRegister(@RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);
-        String name;
+        String name,manufactureIDStr;
         Long manufactureID;
+
         try {
             name = jsonObjectRequest.getString("name").trim();
-            manufactureID = jsonObjectRequest.getLong("manufactureID");
-            if(name.isEmpty()){
+            manufactureIDStr = jsonObjectRequest.getString("manufactureID");
+            if(name.isEmpty() || manufactureIDStr.isEmpty()){
                 return returnResponse(Status.BAD_DATA);
             }
+            manufactureID = Long.valueOf(manufactureIDStr);
             return  returnResponse(copService.carRegister(name,manufactureID));
 
         } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {

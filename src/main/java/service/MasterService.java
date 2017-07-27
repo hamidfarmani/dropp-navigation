@@ -19,7 +19,7 @@ public interface MasterService {
 
     Operator isPhoneNumberExist(String phoneNumber);
 
-    boolean isSubjectExist(String subject);
+    boolean isSubjectExist(String subject, UserRole userRole);
 
     Status ticketSubjectRegister(String subject,String parentID, UserRole role);
 

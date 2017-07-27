@@ -16,6 +16,9 @@ import util.EncoderUtil;
 import util.Generator;
 import util.IOCContainer;
 import util.LocalEntityManagerFactory;
+import util.converter.AccountStateConverter;
+import util.converter.CityConverter;
+import util.converter.GenderConverter;
 import util.converter.UserRoleConverter;
 
 import javax.persistence.EntityManager;
@@ -201,7 +204,6 @@ public class MasterServiceImpl implements MasterService {
             entityManager.getTransaction().begin();
             return !entityManager.createNamedQuery("operator.username.exist")
                     .setParameter("username", username)
-                    .setParameter("role", UserRole.OPERATOR)
                     .setMaxResults(1)
                     .getResultList()
                     .isEmpty();
@@ -235,11 +237,13 @@ public class MasterServiceImpl implements MasterService {
         }
     }
 
-    public boolean isSubjectExist(String subject) {
+    public boolean isSubjectExist(String subject,UserRole role) {
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            return !entityManager.createNamedQuery("ticketSubject.subject.exist").setParameter("subject", subject)
+            return !entityManager.createNamedQuery("ticketSubject.subject.exist")
+                    .setParameter("subject", subject)
+                    .setParameter("role",role)
                     .setMaxResults(1)
                     .getResultList()
                     .isEmpty();
@@ -486,8 +490,15 @@ public class MasterServiceImpl implements MasterService {
         entityManager = LocalEntityManagerFactory.createEntityManager();
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray operatorJsonArray = new JSONArray();
+        UserRoleConverter userRoleConverter = (UserRoleConverter) IOCContainer.getBean("userRoleConverter");
+        GenderConverter genderConverter = (GenderConverter) IOCContainer.getBean("genderConverter");
+        CityConverter cityConverter = (CityConverter) IOCContainer.getBean("cityConverter");
+        AccountStateConverter accountStateConverter = (AccountStateConverter) IOCContainer.getBean("accountStateConverter");
         try {
             entityManager.getTransaction().begin();
+            Operator op = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username",operatorUsername)
+                    .getSingleResult();
             List<Operator> operators;
             if(count==-1){
                 operators = entityManager.createNamedQuery("operator.like")
@@ -502,24 +513,29 @@ public class MasterServiceImpl implements MasterService {
             }
             entityManager.getTransaction().commit();
             for(Operator o : operators) {
+                if(op.getRole()==UserRole.MASTER_OPERATOR
+                        && (o.getRole()==UserRole.CAR_OPERATOR || o.getRole()==UserRole.ADMIN || o.getRole()==UserRole.MASTER_OPERATOR)){
+                    continue;
+                }
                 JSONObject operatorJsonObject = new JSONObject();
                 operatorJsonObject.put("id",o.getoId());
                 operatorJsonObject.put("firstName",o.getFirstName());
                 operatorJsonObject.put("lastName",o.getLastName());
                 operatorJsonObject.put("username",o.getUsername());
-                operatorJsonObject.put("accountState",o.getAccountState());
+                operatorJsonObject.put("accountState",accountStateConverter.convertToDatabaseColumn(o.getAccountState()));
                 operatorJsonObject.put("phoneNumber",o.getPhoneNumber());
                 operatorJsonObject.put("workNumber",o.getWorkNumber());
                 operatorJsonObject.put("birthDate",o.getBirthDate());
-                operatorJsonObject.put("city",o.getCity());
-                operatorJsonObject.put("gender",o.getGender());
+                operatorJsonObject.put("city",cityConverter.convertToDatabaseColumn(o.getCity()));
+                operatorJsonObject.put("gender",genderConverter.convertToDatabaseColumn(o.getGender()));
                 operatorJsonObject.put("email",o.getEmail());
-                operatorJsonObject.put("role",o.getRole());
+                operatorJsonObject.put("role",userRoleConverter.convertToDatabaseColumn(o.getRole()));
                 operatorJsonArray.put(operatorJsonObject);
             }
             jsonObjectResponse.put("operators", operatorJsonArray);
             return jsonObjectResponse;
         } catch (NoResultException e){
+            e.printStackTrace();
             return  Status.NOT_FOUND;
         }
         catch (Exception e) {

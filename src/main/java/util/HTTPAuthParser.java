@@ -1,29 +1,20 @@
 package util;
 
-import java.nio.charset.Charset;
-import java.util.Base64;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import security.jwt.JwtService;
 
 /**
  * Created by kasra on 3/14/2017.
  */
 public class HTTPAuthParser {
-
     public String returnUsername(String auth) {
-        if (auth != null && auth.startsWith("Basic")) {
-            String base64Credentials = auth.substring("Basic".length()).trim();
-            String credentials = new String(Base64.getDecoder().decode(base64Credentials), Charset.forName("UTF-8"));
-            String[] userPass = credentials.split(":");
-            return userPass[0];
-        }
-        return null;
-    }
-
-    public String returnPassword(String auth) {
-        if (auth != null && auth.startsWith("Basic")) {
-            String base64Credentials = auth.substring("Basic".length()).trim();
-            String credentials = new String(Base64.getDecoder().decode(base64Credentials), Charset.forName("UTF-8"));
-            String[] userPass = credentials.split(":");
-            return userPass[1];
+        if (auth != null && !auth.equals("")) {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(JwtService.SECRET)
+                    .parseClaimsJws(auth.replace(JwtService.TOKEN_PREFIX, ""))
+                    .getBody();
+            return claims.getSubject();
         }
         return null;
     }

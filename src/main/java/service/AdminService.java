@@ -21,7 +21,7 @@ public interface AdminService {
 
     State isStateExist(String name);
 
-    City isCityExist(String name, Long stateID);
+    model.entity.persistent.City isCityExist(String name, Long stateID);
 
     boolean isPhoneNumberExist(String phoneNumber);
 
