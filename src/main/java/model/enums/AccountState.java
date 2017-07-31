@@ -9,7 +9,8 @@ public enum AccountState {
     ACTIVATED(1,Status.INCOMPLETE_REGISTERATION),
     READY_TO_VERIFY(2,Status.NEEDS_VERIFYING),
     VERIFIED(3,Status.OK),
-    BANNED(-1,Status.USER_BANNED);
+    BANNED(-1,Status.USER_BANNED),
+    DEACTIVATE(-2,Status.USER_DEACTIVATED);
 
     private int stateCode;
     private Status status;

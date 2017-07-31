@@ -29,6 +29,12 @@ public class UserRoleConverter implements AttributeConverter<UserRole, Character
                 return 'A';
             case CAR_OPERATOR:
                 return 'C';
+            case FINANCIAL_REPORTER:
+                return 'F';
+            case REPORTER:
+                return 'R';
+            case PROVIDER:
+                return 'V';
             default:
                 throw new IllegalArgumentException("UNKNOWN" + userRoles);
         }
@@ -51,6 +57,12 @@ public class UserRoleConverter implements AttributeConverter<UserRole, Character
                 return UserRole.MASTER_OPERATOR;
             case 'C':
                 return UserRole.CAR_OPERATOR;
+            case 'F':
+                return UserRole.FINANCIAL_REPORTER;
+            case 'R':
+                return UserRole.REPORTER;
+            case 'V':
+                return UserRole.PROVIDER;
             case '-':
                 return null;
             default:

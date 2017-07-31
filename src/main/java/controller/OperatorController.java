@@ -13,6 +13,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import service.OperatorService;
+import util.HTTPAuthParser;
 import util.IOCContainer;
 import util.ResponseProvider;
 import util.converter.FileTypeConverter;
@@ -81,11 +82,11 @@ public class OperatorController {
     }
 
     @RequestMapping(value = "/operator/confirmDriver/{driverUsername}", method = RequestMethod.PATCH, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> confirmUser(@PathVariable String driverUsername, @RequestBody String request) {
-        JSONObject jsonObjectRequest = new JSONObject(request);
+    public ResponseEntity<String> confirmUser(@PathVariable String driverUsername, @RequestHeader(value = "Authorization") String auth) {
         String op;
         try {
-            op = jsonObjectRequest.getString("operatorUsername");
+            HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+            op = httpAuthParser.returnUsername(auth);
             Status status = operatorService.confirmUser(driverUsername, op);
 
             return ResponseProvider.getInstance().getResponse(status);
@@ -664,6 +665,34 @@ public class OperatorController {
         }
 
     }
+
+    @RequestMapping(value = "/operator/trips", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> searchTrip(@RequestParam(value = "q") String q,@RequestParam(value = "count") String count,@RequestParam(value = "offset") String pageIndex) {
+        int c, p=0;
+        try {
+            if(!count.isEmpty()){
+                c = Integer.valueOf(count);
+            }else{
+                c = -1;
+            }
+            if(!pageIndex.isEmpty()){
+                p = Integer.valueOf(pageIndex);
+            }
+            Object driver = operatorService.searchTrip(q,c,p);
+
+            if(driver instanceof JSONObject){
+                return returnResponse(Status.OK,(JSONObject) driver);
+            }else {
+                return returnResponse(Status.NOT_FOUND);
+            }
+        } catch (JSONException e) {
+            return ResponseProvider.getInstance().getResponse(Status.BAD_JSON);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return ResponseProvider.getInstance().getResponse(Status.BAD_DATA);
+        }
+    }
+
 
     private ResponseEntity<String> returnResponse(Status status) {
         return ResponseProvider.getInstance().getResponse(status);

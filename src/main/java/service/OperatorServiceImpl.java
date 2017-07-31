@@ -1856,4 +1856,135 @@ public class OperatorServiceImpl implements OperatorService {
             return Status.UNKNOWN_ERROR;
         }
     }
+    public Object searchTrip(String q,int count,int pageIndex) {
+        JSONObject jsonObjectResponse = new JSONObject();
+        JSONArray trips = new JSONArray();
+        GenderConverter genderConverter = (GenderConverter) IOCContainer.getBean("genderConverter");
+        List<Trip> tripList = null;
+        try {
+            entityManager = LocalEntityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+            if (count == -1) {
+                tripList = entityManager.createNamedQuery("trip.searchLike")
+                        .setParameter("input", q + "%")
+                        .getResultList();
+            } else {
+                tripList = entityManager.createNamedQuery("trip.searchLike")
+                        .setParameter("input", q + "%")
+                        .setFirstResult(count * pageIndex)
+                        .setMaxResults(count)
+                        .getResultList();
+            }
+            System.out.println("*************************  " + tripList.size());
+            for (Trip tripObject : tripList) {
+                JSONObject driver = new JSONObject();
+                JSONObject trip = new JSONObject();
+                JSONObject vehicle = new JSONObject();
+                JSONObject loc = new JSONObject();
+                JSONObject tripInfo = new JSONObject();
+                JSONObject passenger = new JSONObject();
+                JSONObject subUser = new JSONObject();
+                JSONObject deliveryInfo = new JSONObject();
+
+                if (tripObject.getDriver() != null) {
+                    driver.put("id", tripObject.getDriver().getdId());
+                    driver.put("firstName", tripObject.getDriver().getFirstName());
+                    driver.put("lastName", tripObject.getDriver().getLastName());
+                    driver.put("gender", tripObject.getDriver().getGender());
+                    driver.put("nationalNumber", tripObject.getDriver().getNationalNumber());
+                    driver.put("phoneNumber", tripObject.getDriver().getPhoneNumber());
+                    driver.put("username", tripObject.getDriver().getUsername());
+
+                    tripInfo.put("driver", driver);
+                }
+                if (tripObject.getVehicle() != null) {
+                    vehicle.put("color", tripObject.getVehicle().getColor());
+                    vehicle.put("name", tripObject.getVehicle().getCar().getName());
+                    vehicle.put("manufacture", tripObject.getVehicle().getCar().getCarManufacture().getName());
+
+                    tripInfo.put("vehicle", vehicle);
+                }
+                if (tripObject.getOrigin() != null) {
+                    loc.put("originLng", tripObject.getOrigin().getLongitude());
+                    loc.put("originLat", tripObject.getOrigin().getLatitude());
+
+                    tripInfo.put("loc", loc);
+                }
+
+
+                tripInfo.put("id", tripObject.getId());
+                tripInfo.put("ETA", tripObject.getETA());
+                tripInfo.put("UUID", tripObject.getUUID());
+                tripInfo.put("cashPayment", tripObject.getCashPayment());
+                tripInfo.put("cost", tripObject.getCost());
+                tripInfo.put("creditPayment", tripObject.getCreditPayment());
+                tripInfo.put("distance", tripObject.getDistance());
+                tripInfo.put("originAddress", tripObject.getOriginAddress());
+//            tripInfo.put("paymentMethod", tripObject.getPaymentMethodDBValue());
+                tripInfo.put("serviceType", tripObject.getServiceTypeDBValue());
+                tripInfo.put("startDate", tripObject.getStartDate());
+                tripInfo.put("waitingTime", tripObject.getWaitingTime());
+                tripInfo.put("city", tripObject.getCityDBValue());
+
+
+                if (tripObject.getPassenger() != null) {
+                    passenger.put("id", tripObject.getPassenger().getpId());
+                    passenger.put("phoneNumber", tripObject.getPassenger().getPhoneNumber());
+                    passenger.put("username", tripObject.getPassenger().getUsername());
+
+                    tripInfo.put("passenger", passenger);
+                }
+                if (tripObject.getSubscribeUser() != null) {
+                    subUser.put("id", tripObject.getSubscribeUser().getId());
+                    subUser.put("firstName", tripObject.getSubscribeUser().getFirstName());
+                    subUser.put("lastName", tripObject.getSubscribeUser().getLastName());
+                    subUser.put("phoneNumber", tripObject.getSubscribeUser().getPhoneNumber());
+                    subUser.put("subscriptionCode", tripObject.getSubscribeUser().getSubscriptionCode());
+
+                    tripInfo.put("subUser", subUser);
+                }
+                if (tripObject.getDeliveryInfo() != null) {
+                    deliveryInfo.put("id", tripObject.getDeliveryInfo().getId());
+                    deliveryInfo.put("desc", tripObject.getDeliveryInfo().getDesc());
+                    deliveryInfo.put("destInfo", tripObject.getDeliveryInfo().getDestinationInfo());
+                    deliveryInfo.put("receiverFName", tripObject.getDeliveryInfo().getReceiverFirstName());
+                    deliveryInfo.put("receiverLName", tripObject.getDeliveryInfo().getReceiverLastName());
+
+                    tripInfo.put("deliveryInfo", deliveryInfo);
+                }
+                if (tripObject.getVoucherCode() != null) {
+                    tripInfo.put("voucherId", tripObject.getVoucherCode().getId());
+                }
+                JSONArray destinations = new JSONArray();
+
+                List<TripDestination> destinationList = tripObject.getDestinations();
+                for (TripDestination destination : destinationList) {
+                    JSONObject d = new JSONObject();
+                    d.put("destId", destination.getId());
+                    d.put("seq", destination.getSeqNumber());
+                    d.put("lng", destination.getLocation().getLongitude());
+                    d.put("lat", destination.getLocation().getLatitude());
+                    destinations.put(d);
+                }
+                tripInfo.put("destinations", destinations);
+                trips.put(tripInfo);
+
+            }
+            entityManager.getTransaction().commit();
+        } catch (NoResultException e) {
+            e.printStackTrace();
+            return Status.NOT_FOUND;
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+
+
+        jsonObjectResponse.put("trips", trips);
+        return jsonObjectResponse;
+    }
 }

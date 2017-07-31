@@ -27,6 +27,8 @@ public class AccountStateConverter implements AttributeConverter<AccountState, I
                 return 3;
             case BANNED:
                 return -1;
+            case DEACTIVATE:
+                return -2;
             default:
                 throw new IllegalArgumentException("Unknown " + accountState);
         }
@@ -48,6 +50,8 @@ public class AccountStateConverter implements AttributeConverter<AccountState, I
                 return AccountState.VERIFIED;
             case -1:
                 return AccountState.BANNED;
+            case -2:
+                return AccountState.DEACTIVATE;
             default:
                 throw new IllegalArgumentException("Unknown " + aInteger);
         }

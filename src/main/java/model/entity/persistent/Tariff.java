@@ -24,8 +24,8 @@ public class Tariff implements Serializable {
 
 
     @Basic
-    @Column(name = "CO_SHARE_PERCENTAGE",columnDefinition = "NUMBER(3)")
-    private Integer coSharePercentage;
+    @Column(name = "GENO_SHARE_PERCENTAGE",columnDefinition = "NUMBER(3)")
+    private Integer genoSharePercentage;
 
 
 
@@ -149,11 +149,11 @@ public class Tariff implements Serializable {
         this.twoWayCostPercentage = twoWayCostPercentage;
     }
 
-    public Integer getCoSharePercentage() {
-        return coSharePercentage;
+    public Integer getGenoSharePercentage() {
+        return genoSharePercentage;
     }
 
-    public void setCoSharePercentage(Integer coSharePercentage) {
-        this.coSharePercentage = coSharePercentage;
+    public void setGenoSharePercentage(Integer coSharePercentage) {
+        this.genoSharePercentage = coSharePercentage;
     }
 }

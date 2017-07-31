@@ -640,7 +640,6 @@ public class AdminController {
         return returnResponse(Status.OK);
     }
 
-
     private ResponseEntity<String> returnResponse(Status status) {
         return ResponseProvider.getInstance().getResponse(status);
     }

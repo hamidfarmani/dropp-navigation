@@ -24,10 +24,11 @@
             <property name="hibernate.connection.autocommit" value="false"/>
 
             <!--<property name="hibernate.hbm2ddl.auto" value="create"/>-->
+            <!--<property name="hibernate.hbm2ddl.auto" value="update"/>-->
 
             <!--<property name="hibernate.show_sql" value="true"/>-->
 
-            <!--<property name="hibernate.hbm2ddl.auto" value="update"/>-->
+
 
             <property name="hibernate.connection.provider_class"
                       value="com.zaxxer.hikari.hibernate.HikariConnectionProvider"/>

@@ -71,7 +71,7 @@
     <!-- -->
 
     <!--Services -->
-
+    <bean id="providerService" class="service.ProviderServiceImpl"/>
     <bean id="systemService" class="service.SystemServiceImpl"/>
     <bean id="operatorService" class="service.OperatorServiceImpl"/>
     <bean id="copService" class="service.COPServiceImpl"/>

@@ -424,7 +424,7 @@ public class AdminServiceImpl implements AdminService {
                 JSONObject tariffJsonObject = new JSONObject();
                 tariffJsonObject.put("id",t.getId());
                 tariffJsonObject.put("serviceType",serviceTypeConverter.convertToDatabaseColumn(t.getServiceType()));
-                tariffJsonObject.put("coShare",t.getCoSharePercentage());
+                tariffJsonObject.put("genoShare",t.getGenoSharePercentage());
                 tariffJsonObject.put("city",cityConverter.convertToDatabaseColumn(t.getCity()));
                 tariffJsonObject.put("after2KM",t.getCostPerMeterAfter2KM());
                 tariffJsonObject.put("before2KM",t.getCostPerMeterBefore2KM());
@@ -469,7 +469,7 @@ public class AdminServiceImpl implements AdminService {
                 tariff.setEntranceCost(entrance);
                 tariff.setServiceType(serviceType);
                 tariff.setTwoWayCostPercentage(twoWayCost);
-                tariff.setCoSharePercentage(coShare);
+                tariff.setGenoSharePercentage(coShare);
 
                 entityManager.persist(tariff);
                 entityManager.getTransaction().commit();
@@ -520,7 +520,7 @@ public class AdminServiceImpl implements AdminService {
             previousTariff.setCostPerWaitingMin(waitingMin);
             previousTariff.setEntranceCost(entrance);
             previousTariff.setTwoWayCostPercentage(twoWayCost);
-            previousTariff.setCoSharePercentage(coShare);
+            previousTariff.setGenoSharePercentage(coShare);
 
             entityManager.getTransaction().commit();
 
@@ -894,6 +894,36 @@ public class AdminServiceImpl implements AdminService {
         }catch (NoResultException e){
             e.printStackTrace();
             return city;
+        } finally {
+            if(entityManager.getTransaction().isActive()){
+                entityManager.getTransaction().rollback();
+            }if(entityManager.isOpen()){
+                entityManager.close();
+            }
+        }
+    }
+
+    public Object calculateDebt() {
+        JSONObject jsonObjectResponse = new JSONObject();
+        try {
+            entityManager = LocalEntityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+            ServiceProvider serviceProvider = (ServiceProvider) entityManager.createNamedQuery("serviceProvider.get.all")
+                    .getSingleResult();
+            entityManager.getTransaction().commit();
+            Long driversClaim = serviceProvider.getDriversClaim();
+            Long totalClaim = serviceProvider.getTotalClaim();
+            Long rem = driversClaim + totalClaim;
+            jsonObjectResponse.put("debt", rem);
+            return jsonObjectResponse;
+
+        } catch (RollbackException e) {
+            e.printStackTrace();
+            entityManager.getTransaction().rollback();
+            return Status.BAD_DATA;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         } finally {
             if(entityManager.getTransaction().isActive()){
                 entityManager.getTransaction().rollback();

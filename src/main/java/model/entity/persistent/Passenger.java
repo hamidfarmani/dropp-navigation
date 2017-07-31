@@ -32,7 +32,7 @@ public class Passenger implements Serializable {
     @Column(name = "PASSENGER_ID", columnDefinition = "NUMBER")
     @SequenceGenerator(name = "passengerGen", sequenceName = "passengerSeq")
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "passengerGen")
-    private Long pId;
+    private long pId;
 
     @Basic
     @Column(name = "PHONE_NUMBER", columnDefinition = "VARCHAR2(20)", unique = true)
@@ -48,7 +48,7 @@ public class Passenger implements Serializable {
 
     @Basic
     @Column(name = "IS_LOGGED_IN", columnDefinition = "CHAR")
-    private Boolean isLoggedIn;
+    private boolean isLoggedIn;
 
     @Basic
     @Column(name = "ACCOUNT_STATE", columnDefinition = "NUMBER(2)")
@@ -61,7 +61,7 @@ public class Passenger implements Serializable {
 
     @Basic
     @Column(name = "CREDIT", columnDefinition = "NUMBER(9)")
-    private Long credit;
+    private long credit;
 
     /*
     بیت صفر :دریافت خبرنامه
@@ -73,6 +73,16 @@ public class Passenger implements Serializable {
     @Basic
     @Column(name = "SETTING", columnDefinition = "CHAR(5) default 10000")
     private String setting;
+
+    @Basic
+    @Column(name = "POINT", columnDefinition = "NUMBER(9)")
+    private Integer point;
+
+
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "FK_RECOMMENDER", referencedColumnName = "PASSENGER_ID")
+    private Passenger recommender;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "FK_DEVICE", referencedColumnName = "ID")
@@ -91,22 +101,14 @@ public class Passenger implements Serializable {
     @JoinColumn(name = "FK_PASSENGER", referencedColumnName = "PASSENGER_ID")
     private List<Trip> trips;
 
-    @Basic
-    @Column(name = "POINT", columnDefinition = "NUMBER(9)")
-    private Integer point;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "FK_RECOMMENDER", referencedColumnName = "PASSENGER_ID")
-    private Passenger recommender;
-
     public Passenger() {
     }
 
-    public Long getpId() {
+    public long getpId() {
         return pId;
     }
 
-    public void setpId(Long pId) {
+    public void setpId(long pId) {
         this.pId = pId;
     }
 
@@ -150,11 +152,11 @@ public class Passenger implements Serializable {
         this.registrationTimestamp = registrationTimestamp;
     }
 
-    public Long getCredit() {
+    public long getCredit() {
         return credit;
     }
 
-    public void setCredit(Long credit) {
+    public void setCredit(long credit) {
         this.credit = credit;
     }
 
@@ -191,8 +193,12 @@ public class Passenger implements Serializable {
         this.trips = trips;
     }
 
-    public Boolean isLoggedIn() {
+    public boolean isLoggedIn() {
         return isLoggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
     }
 
     public String getSetting() {
@@ -201,14 +207,6 @@ public class Passenger implements Serializable {
 
     public void setSetting(String setting) {
         this.setting = setting;
-    }
-
-    public Boolean getLoggedIn() {
-        return isLoggedIn;
-    }
-
-    public void setLoggedIn(Boolean loggedIn) {
-        isLoggedIn = loggedIn;
     }
 
     public Integer getPoint() {
@@ -244,4 +242,5 @@ public class Passenger implements Serializable {
             return 6;
         else return 7;
     }
+
 }

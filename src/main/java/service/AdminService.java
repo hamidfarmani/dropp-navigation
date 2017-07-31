@@ -64,6 +64,7 @@ public interface AdminService {
     Status stateRegister(String name);
 
     Status cityRegister(String name, Long stateID);
+
 }
 
 

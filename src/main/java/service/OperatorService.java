@@ -105,4 +105,6 @@ public interface OperatorService {
     File downloadFile(String driverUsername,FileTypeState fileTypeState);
 
     Status uploadFile(MultipartFile file, String driverUsername,FileTypeState fileTypeState);
+
+    Object searchTrip(String q,int count, int pageIndex);
 }

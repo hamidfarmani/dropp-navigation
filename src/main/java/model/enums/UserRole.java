@@ -9,5 +9,8 @@ public enum UserRole {
     OPERATOR,
     MASTER_OPERATOR,
     ADMIN,
-    CAR_OPERATOR
+    CAR_OPERATOR,
+    PROVIDER,
+    REPORTER,
+    FINANCIAL_REPORTER
 }
