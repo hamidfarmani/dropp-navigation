@@ -74,6 +74,10 @@ public class SystemSetting {
     private Boolean criticalAndroidUpdate;
 
     @Basic
+    @Column(name = "STIS_STATE", columnDefinition = "CHAR")//sms trip info state
+    private Boolean smsTripInfoState;
+
+    @Basic
     @Column(name = "ALLOW_COMPETITORS", columnDefinition = "CHAR")
     private Boolean allowCompetitors;
 
@@ -199,5 +203,13 @@ public class SystemSetting {
 
     public void setAllowCompetitors(Boolean allowCompetitors) {
         this.allowCompetitors = allowCompetitors;
+    }
+
+    public Boolean getSmsTripInfoState() {
+        return smsTripInfoState;
+    }
+
+    public void setSmsTripInfoState(Boolean smsTripInfoState) {
+        this.smsTripInfoState = smsTripInfoState;
     }
 }

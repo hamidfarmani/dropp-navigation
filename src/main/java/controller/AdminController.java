@@ -20,6 +20,8 @@ import util.converter.CityConverter;
 import util.converter.GenderConverter;
 import util.converter.ServiceTypeConverter;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -638,6 +640,40 @@ public class AdminController {
             return returnResponse(Status.CITY_EXIST);
         }
         return returnResponse(Status.OK);
+    }
+
+    @RequestMapping(value = "/admin/file", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    public void csv(HttpServletResponse response) throws IOException {
+        String csvFileName = "File.xls";
+//        String headerKey = "Content-Disposition";
+//        String headerValue = String.format("attachment; filename=\"%s\"",csvFileName);
+        response.setContentType("text/csv;charset=UTF-8");
+//        response.setHeader(headerKey, headerValue);
+
+
+        response.setContentType("application/vnd.ms-excel");
+
+        response.setHeader("Content-Disposition", "attachment; filename=" + csvFileName);
+
+//        PrintWriter writer = response.getWriter();
+        adminManager.meth(response);
+
+
+
+
+//
+//        ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(),CsvPreference.STANDARD_PREFERENCE);
+//
+//        String[] header = { "FirstName" , "LastName", "Username" };
+//        csvWriter.write("invar");
+//        csvWriter.writeHeader(header);
+//
+//        for (Operator car3 : listBooks) {
+//            csvWriter.write(car3, header);
+//        }
+//
+//        csvWriter.close();
+
     }
 
     private ResponseEntity<String> returnResponse(Status status) {

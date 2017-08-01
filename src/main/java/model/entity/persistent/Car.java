@@ -27,7 +27,7 @@ public class Car implements Serializable {
     @Column(name = "NAME",columnDefinition = "NVARCHAR2(20)")
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "FK_MANUFACTURE", referencedColumnName = "MANUFACTURE_ID")
     private CarManufacture carManufacture;
 

@@ -7,6 +7,7 @@ import model.enums.ServiceType;
 import model.enums.Status;
 import org.json.JSONObject;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 public interface AdminService {
@@ -64,6 +65,8 @@ public interface AdminService {
     Status stateRegister(String name);
 
     Status cityRegister(String name, Long stateID);
+
+    void meth(HttpServletResponse resp);
 
 }
 
