@@ -12,7 +12,7 @@ import java.io.File;
 public interface OperatorService {
 
 
-    Object subscribeRegister(String firstName, String lastName, String phoneNumber, Address address);
+    Object subscribeRegister(String firstName, String lastName, String phoneNumber, Address address, String city);
 
     Object operatorLogin(String username, String password,String ip);
 
@@ -107,4 +107,8 @@ public interface OperatorService {
     Status uploadFile(MultipartFile file, String driverUsername,FileTypeState fileTypeState);
 
     Object searchTrip(String q,int count, int pageIndex);
+
+    boolean isOrganizationPhoneNumberExist(String phoneNumber);
+
+    boolean isOrganizationUsernameExist(String username);
 }

@@ -37,7 +37,7 @@ public class OperatorController {
     public ResponseEntity<String> subscribeRegister(@RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);
         String firstName, lastName, phoneNumber;
-        String line1,line2,postalCode,state,city;
+        String line1,line2,postalCode,city;
         try {
 
             firstName = jsonObjectRequest.getString("firstName");
@@ -46,12 +46,12 @@ public class OperatorController {
             line1 = jsonObjectRequest.getString("line1");
             line2 = jsonObjectRequest.getString("line2");
             postalCode = jsonObjectRequest.getString("postalCode");
-            state = jsonObjectRequest.getString("state");
             city = jsonObjectRequest.getString("city");
 
             if(firstName.isEmpty()
                     || lastName.isEmpty()
                     || phoneNumber.isEmpty()
+                    || city.isEmpty()
                     || line1.isEmpty()){
                 return returnResponse(Status.BAD_DATA);
             }
@@ -60,11 +60,9 @@ public class OperatorController {
             address.setLine1(line1);
             address.setLine2(line2);
             address.setPostalCode(postalCode);
-            address.setState(state);
-            address.setCity(city);
 
             if (!operatorService.isSubscribePhoneNumberExist(phoneNumber)){
-                Object subscribe = operatorService.subscribeRegister(firstName, lastName, phoneNumber, address);
+                Object subscribe = operatorService.subscribeRegister(firstName, lastName, phoneNumber, address, city);
                 if(subscribe instanceof JSONObject){
                     return returnResponse(Status.OK,(JSONObject) subscribe);
                 }else {
@@ -193,6 +191,7 @@ public class OperatorController {
     public ResponseEntity<String> organizationRegister(@RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);
         String name, username, password, email, phoneNumber, workNumber;
+        String employees;
         int employeeCount;
         try {
             name = jsonObjectRequest.getString("name");
@@ -201,14 +200,23 @@ public class OperatorController {
             email = jsonObjectRequest.getString("email");
             phoneNumber = jsonObjectRequest.getString("phoneNumber");
             workNumber = jsonObjectRequest.getString("workNumber");
-            employeeCount = jsonObjectRequest.getInt("employeeCount");
+            employees = jsonObjectRequest.getString("employeeCount");
             if(!name.isEmpty()
                     && !username.isEmpty()
                     && !password.isEmpty()
-                    && !phoneNumber.isEmpty()) {
-                Status status = operatorService.organizationRegister(name, username, password, email, phoneNumber, workNumber, employeeCount);
-
-                return ResponseProvider.getInstance().getResponse(status);
+                    && !phoneNumber.isEmpty()
+                    && !employees.isEmpty()) {
+                employeeCount = Integer.valueOf(employees);
+                if(!operatorService.isOrganizationUsernameExist(username)) {
+                    if (!operatorService.isOrganizationPhoneNumberExist(phoneNumber)) {
+                        Status status = operatorService.organizationRegister(name, username, password, email, phoneNumber, workNumber, employeeCount);
+                        return ResponseProvider.getInstance().getResponse(status);
+                    } else {
+                        return returnResponse(Status.PHONE_NUMBER_EXIST);
+                    }
+                }else{
+                    return returnResponse(Status.USERNAME_EXIST);
+                }
             }else{
                 return ResponseProvider.getInstance().getResponse(Status.BAD_DATA);
             }

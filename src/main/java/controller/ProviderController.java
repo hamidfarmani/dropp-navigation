@@ -143,14 +143,14 @@ public class ProviderController {
         }
     }
 
-    @RequestMapping(value = "/provider/drivers/gt/{credit}/deactive", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> deactiveDriverByCredit(@PathVariable String credit) {
+    @RequestMapping(value = "/provider/drivers/gt/{credit}/ban", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> banDriverByCredit(@PathVariable String credit) {
         try {
             if(credit.isEmpty()){
                 return returnResponse(Status.BAD_DATA);
             }
             Long value = Long.valueOf(credit);
-            Status status = providerService.deactiveDriverByCredit(value);
+            Status status = providerService.banDriverByCredit(value);
             return ResponseProvider.getInstance().getResponse(status);
         } catch (JSONException e) {
             return ResponseProvider.getInstance().getResponse(Status.BAD_JSON);

@@ -20,7 +20,7 @@ public interface ProviderService {
 
     Status deactiveDriver(String username);
 
-    Status deactiveDriverByCredit(Long value);
+    Status banDriverByCredit(Long value);
 
 }
 

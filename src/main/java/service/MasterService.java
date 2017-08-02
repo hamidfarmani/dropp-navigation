@@ -27,8 +27,6 @@ public interface MasterService {
 
     Object voucherRegister(int maxUse, String description, Date startDate, Date endDate, VoucherCodeGenerationType generationType, VoucherCodeType codeType, String value,String code);
 
-
-
     Status voucherUpdate(Long id, int maxUse, String description, Date startDate, Date endDate, VoucherCodeType codeType, String value);
 
     Status banOperator(String username);
@@ -37,5 +35,5 @@ public interface MasterService {
 
     Object searchOperators(String query, int count, int pageIndex, String operatorUsername);
 
-
+    boolean isVoucherCodeExist(String code);
 }

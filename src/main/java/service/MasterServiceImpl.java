@@ -550,5 +550,22 @@ public class MasterServiceImpl implements MasterService {
         }
     }
 
+    public boolean isVoucherCodeExist(String code) {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            return !entityManager.createNamedQuery("voucherCode.findBy.code")
+                    .setParameter("code", code)
+                    .setMaxResults(1)
+                    .getResultList()
+                    .isEmpty();
+        } finally {
+            if(entityManager.getTransaction().isActive()){
+                entityManager.getTransaction().rollback();
+            }if(entityManager.isOpen()){
+                entityManager.close();
+            }
+        }
+    }
 
 }

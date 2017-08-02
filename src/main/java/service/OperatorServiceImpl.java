@@ -40,18 +40,22 @@ public class OperatorServiceImpl implements OperatorService {
     private EntityManager entityManager;
 
 
-    public Object subscribeRegister(String firstName, String lastName, String phoneNumber, Address address) {
+    public Object subscribeRegister(String firstName, String lastName, String phoneNumber, Address address, String city) {
         try {
             JSONObject jsonObjectResponse = new JSONObject();
             entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             SubscribeUser subscribeUser = (SubscribeUser) IOCContainer.getBean("subscribeUser");
+            City c = (City) entityManager.createNamedQuery("city.by.id")
+                    .setParameter("id",Long.valueOf(city))
+                    .getSingleResult();
             Generator g = new Generator();
             String code = g.generateRandomCode(6);
             subscribeUser.setFirstName(firstName);
             subscribeUser.setLastName(lastName);
             subscribeUser.setSubscriptionCode(code);
             subscribeUser.setPhoneNumber(phoneNumber);
+            address.setCity(c);
             subscribeUser.setAddress(address);
             entityManager.persist(subscribeUser);
             entityManager.getTransaction().commit();
@@ -304,7 +308,7 @@ public class OperatorServiceImpl implements OperatorService {
                 }
 
                 if (d.getAddress() != null) {
-                    address.put("state", d.getAddress().getState());
+                    address.put("state", d.getAddress().getCity().getState().getName());
                     address.put("city", d.getAddress().getCity());
                     address.put("line1", d.getAddress().getLine1());
                     address.put("line2", d.getAddress().getLine2());
@@ -430,6 +434,8 @@ public class OperatorServiceImpl implements OperatorService {
             organization.setEmail(email);
             organization.setPhoneNumber(phoneNumber);
             organization.setWorkNumber(workNumber);
+            organization.setRegistrationTimestamp(new Date());
+            organization.setCredit(0);
             organization.setAccountState(AccountState.READY_TO_VERIFY);
             if (employeeCount < 10) {
                 organization.setEmpCount(EmployeeCount.LESS_THAN_10);
@@ -991,7 +997,7 @@ public class OperatorServiceImpl implements OperatorService {
                 o.put("username", organ.getUsername());
                 if(organ.getAddress()!=null){
                     Address add = organ.getAddress();
-                    address.put("state",add.getState());
+                    address.put("state",add.getCity().getState().getName());
                     address.put("city",add.getCity());
                     address.put("line1",add.getLine1());
                     address.put("line2",add.getLine2());
@@ -1416,7 +1422,7 @@ public class OperatorServiceImpl implements OperatorService {
                 subscribeJson.put("code", u.getSubscriptionCode());
                 subscribeJson.put("phoneNumber",u.getPhoneNumber());
                 if (u.getAddress() != null) {
-                    address.put("state", u.getAddress().getState());
+                    address.put("state", u.getAddress().getCity().getState().getName());
                     address.put("city", u.getAddress().getCity());
                     address.put("line1", u.getAddress().getLine1());
                     address.put("line2", u.getAddress().getLine2());
@@ -1856,6 +1862,7 @@ public class OperatorServiceImpl implements OperatorService {
             return Status.UNKNOWN_ERROR;
         }
     }
+
     public Object searchTrip(String q,int count,int pageIndex) {
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray trips = new JSONArray();
@@ -1875,27 +1882,15 @@ public class OperatorServiceImpl implements OperatorService {
                         .setMaxResults(count)
                         .getResultList();
             }
-            System.out.println("*************************  " + tripList.size());
             for (Trip tripObject : tripList) {
-                JSONObject driver = new JSONObject();
-                JSONObject trip = new JSONObject();
                 JSONObject vehicle = new JSONObject();
                 JSONObject loc = new JSONObject();
                 JSONObject tripInfo = new JSONObject();
-                JSONObject passenger = new JSONObject();
                 JSONObject subUser = new JSONObject();
                 JSONObject deliveryInfo = new JSONObject();
 
                 if (tripObject.getDriver() != null) {
-                    driver.put("id", tripObject.getDriver().getdId());
-                    driver.put("firstName", tripObject.getDriver().getFirstName());
-                    driver.put("lastName", tripObject.getDriver().getLastName());
-                    driver.put("gender", tripObject.getDriver().getGender());
-                    driver.put("nationalNumber", tripObject.getDriver().getNationalNumber());
-                    driver.put("phoneNumber", tripObject.getDriver().getPhoneNumber());
-                    driver.put("username", tripObject.getDriver().getUsername());
-
-                    tripInfo.put("driver", driver);
+                    tripInfo.put("driverUsername", tripObject.getDriver().getUsername());
                 }
                 if (tripObject.getVehicle() != null) {
                     vehicle.put("color", tripObject.getVehicle().getColor());
@@ -1926,13 +1921,8 @@ public class OperatorServiceImpl implements OperatorService {
                 tripInfo.put("waitingTime", tripObject.getWaitingTime());
                 tripInfo.put("city", tripObject.getCityDBValue());
 
-
                 if (tripObject.getPassenger() != null) {
-                    passenger.put("id", tripObject.getPassenger().getpId());
-                    passenger.put("phoneNumber", tripObject.getPassenger().getPhoneNumber());
-                    passenger.put("username", tripObject.getPassenger().getUsername());
-
-                    tripInfo.put("passenger", passenger);
+                    tripInfo.put("passengerUsername", tripObject.getPassenger().getUsername());
                 }
                 if (tripObject.getSubscribeUser() != null) {
                     subUser.put("id", tripObject.getSubscribeUser().getId());
@@ -1964,6 +1954,7 @@ public class OperatorServiceImpl implements OperatorService {
                     d.put("seq", destination.getSeqNumber());
                     d.put("lng", destination.getLocation().getLongitude());
                     d.put("lat", destination.getLocation().getLatitude());
+                    d.put("address", destination.getAddress());
                     destinations.put(d);
                 }
                 tripInfo.put("destinations", destinations);
@@ -1986,5 +1977,41 @@ public class OperatorServiceImpl implements OperatorService {
 
         jsonObjectResponse.put("trips", trips);
         return jsonObjectResponse;
+    }
+
+    public boolean isOrganizationPhoneNumberExist(String phoneNumber) {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            return !entityManager.createNamedQuery("organization.findBy.phoneNumber")
+                    .setParameter("phoneNumber", phoneNumber)
+                    .setMaxResults(1)
+                    .getResultList()
+                    .isEmpty();
+        } finally {
+            if(entityManager.getTransaction().isActive()){
+                entityManager.getTransaction().rollback();
+            }if(entityManager.isOpen()){
+                entityManager.close();
+            }
+        }
+    }
+
+    public boolean isOrganizationUsernameExist(String username) {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            return !entityManager.createNamedQuery("organization.exact.username")
+                    .setParameter("username", username)
+                    .setMaxResults(1)
+                    .getResultList()
+                    .isEmpty();
+        } finally {
+            if(entityManager.getTransaction().isActive()){
+                entityManager.getTransaction().rollback();
+            }if(entityManager.isOpen()){
+                entityManager.close();
+            }
+        }
     }
 }

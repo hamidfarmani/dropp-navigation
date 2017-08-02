@@ -28,22 +28,18 @@ public class Address implements Serializable {
     @Column(name = "POSTAL_CODE" , columnDefinition = "NVARCHAR2(10)")
     private String postalCode;
 
-    @Basic
-    @Column(name = "STATE" , columnDefinition = "NVARCHAR2(20)")
-    private String state;
 
-    @Basic
-    @Column(name = "CITY",columnDefinition = "NVARCHAR2(20)")
-    private String city;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "FK_CITY", referencedColumnName = "CITY_ID")
+    private City city;
 
     public Address() {
     }
 
-    public Address(String line1, String line2, String postalCode, String state, String city) {
+    public Address(String line1, String line2, String postalCode, City city) {
         this.line1 = line1;
         this.line2 = line2;
         this.postalCode = postalCode;
-        this.state = state;
         this.city = city;
     }
 
@@ -79,19 +75,12 @@ public class Address implements Serializable {
         this.postalCode = postalCode;
     }
 
-    public String getState() {
-        return state;
-    }
 
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getCity() {
+    public City getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(City city) {
         this.city = city;
     }
 }

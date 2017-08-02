@@ -141,7 +141,6 @@ public class ProviderServiceImpl implements ProviderService {
             entityManager.getTransaction().begin();
             List<Object[]> driversDebt = entityManager.createNamedQuery("driver.groupby.debt")
                     .getResultList();
-            entityManager.getTransaction().commit();
 
             for (Object[] obj : driversDebt) {
                 String username = String.valueOf(obj[0]);
@@ -154,6 +153,7 @@ public class ProviderServiceImpl implements ProviderService {
                 drivers.put(object);
             }
             jsonObjectResponse.put("drivers",drivers);
+            entityManager.getTransaction().commit();
         } catch (RollbackException e) {
             e.printStackTrace();
             entityManager.getTransaction().rollback();
@@ -180,7 +180,7 @@ public class ProviderServiceImpl implements ProviderService {
             List<Driver> driversDebt = entityManager.createNamedQuery("driver.orderby.credit")
                     .setMaxResults(10)
                     .getResultList();
-            entityManager.getTransaction().commit();
+
 
             for (Driver driver : driversDebt) {
                 JSONObject d = new JSONObject();
@@ -192,6 +192,7 @@ public class ProviderServiceImpl implements ProviderService {
                 drivers.put(d);
             }
             jsonObjectResponse.put("mostDebts",drivers);
+            entityManager.getTransaction().commit();
         } catch (RollbackException e) {
             e.printStackTrace();
             entityManager.getTransaction().rollback();
@@ -218,7 +219,7 @@ public class ProviderServiceImpl implements ProviderService {
             List<Driver> driversDebt = entityManager.createNamedQuery("driver.orderby.gt.credit")
                     .setParameter("value",value)
                     .getResultList();
-            entityManager.getTransaction().commit();
+
 
             for (Driver driver : driversDebt) {
                 JSONObject d = new JSONObject();
@@ -229,6 +230,7 @@ public class ProviderServiceImpl implements ProviderService {
                 d.put("credit", driver.getCredit());
                 drivers.put(d);
             }
+            entityManager.getTransaction().commit();
             jsonObjectResponse.put("mostDebts",drivers);
         } catch (RollbackException e) {
             e.printStackTrace();
@@ -293,7 +295,7 @@ public class ProviderServiceImpl implements ProviderService {
         }
     }
 
-    public Status deactiveDriverByCredit(Long value) {
+    public Status banDriverByCredit(Long value) {
         try {
             entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
@@ -301,7 +303,7 @@ public class ProviderServiceImpl implements ProviderService {
                     .setParameter("value",value)
                     .getResultList();
             for(Driver d : driversDebt){
-                d.setAccountState(AccountState.DEACTIVATE);
+                d.setAccountState(AccountState.BANNED);
             }
             entityManager.getTransaction().commit();
             return Status.OK;

@@ -247,24 +247,28 @@ public class MasterController {
 
             VoucherCodeGenerationType generationType = gConverter.convertToEntityAttribute(gtype.charAt(0));
             VoucherCodeType codeType = cConverter.convertToEntityAttribute(ctype.charAt(0));
-            if(generationType==VoucherCodeGenerationType.MANUAL){
+            if (generationType == VoucherCodeGenerationType.MANUAL) {
                 code = jsonObjectRequest.getString("code");
             }
             try {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 startDate = formatter.parse(SD);
-                if(!ED.isEmpty()) {
+                if (!ED.isEmpty()) {
                     endDate = formatter.parse(ED);
                 }
-            }catch (ParseException e){
+            } catch (ParseException e) {
                 e.printStackTrace();
                 return returnResponse(Status.BAD_DATA);
             }
-            Object object = masterService.voucherRegister(maxUse,description,startDate,endDate,generationType,codeType,value,code);
-            if(object instanceof JSONObject){
-                return returnResponse(Status.OK,(JSONObject) object);
-            }else {
-                return returnResponse((Status) object);
+            if (generationType==VoucherCodeGenerationType.AUTOMATIC || !masterService.isVoucherCodeExist(code)){
+                Object object = masterService.voucherRegister(maxUse, description, startDate, endDate, generationType, codeType, value, code);
+                if (object instanceof JSONObject) {
+                    return returnResponse(Status.OK, (JSONObject) object);
+                } else {
+                    return returnResponse((Status) object);
+                }
+            }else{
+                return returnResponse(Status.VOUCHER_CODE_EXIST);
             }
         } catch (JSONException e) {
             e.printStackTrace();

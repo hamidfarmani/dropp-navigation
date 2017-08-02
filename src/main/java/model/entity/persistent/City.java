@@ -8,7 +8,8 @@ import javax.persistence.*;
 
 @NamedQueries({
         @NamedQuery(name = "city.by.nameAndStateID", query = "select c from city c where c.name=:name and c.state.id=:stateID"),
-        @NamedQuery(name = "city.by.stateID", query = "select c from city c where c.state.id=:stateID")
+        @NamedQuery(name = "city.by.stateID", query = "select c from city c where c.state.id=:stateID"),
+        @NamedQuery(name = "city.by.id", query = "select c from city c where c.id=:id")
 })
 
 @Entity(name = "city")

@@ -13,8 +13,10 @@ import java.util.Date;
 @NamedQueries({
         @NamedQuery(name = "organization.findBy.username", query = "select o from organization o where o.username like :username"),
         @NamedQuery(name = "organization.like", query = "select o from organization o where o.orgName like :input or o.username like :input"),
-        @NamedQuery(name = "organization.new.count",query = "select count(o.id) from organization o where o.registrationTimestamp >= :date"),
-        @NamedQuery(name = "organization.all.count",query = "select count(o.id) from organization o")
+        @NamedQuery(name = "organization.new.count",query = "select count(o.id) from organization o where trunc(o.registrationTimestamp) >= trunc(:date)"),
+        @NamedQuery(name = "organization.all.count",query = "select count(o.id) from organization o"),
+        @NamedQuery(name = "organization.exact.username", query = "select o from organization o where o.username =:username"),
+        @NamedQuery(name = "organization.findBy.phoneNumber", query = "select o from organization o where o.phoneNumber=:phoneNumber")
 
 })
 @Entity(name = "organization")
@@ -201,5 +203,21 @@ public class Organization implements Serializable {
 
     public void setRegistrarLastName(String registrarLastName) {
         this.registrarLastName = registrarLastName;
+    }
+
+    public long getCredit() {
+        return credit;
+    }
+
+    public void setCredit(long credit) {
+        this.credit = credit;
+    }
+
+    public Date getRegistrationTimestamp() {
+        return registrationTimestamp;
+    }
+
+    public void setRegistrationTimestamp(Date registrationTimestamp) {
+        this.registrationTimestamp = registrationTimestamp;
     }
 }
