@@ -22,6 +22,7 @@ import util.converter.ServiceTypeConverter;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -642,26 +643,13 @@ public class AdminController {
         return returnResponse(Status.OK);
     }
 
-    @RequestMapping(value = "/admin/file", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
-    public void csv(HttpServletResponse response) throws IOException {
-        String csvFileName = "File.xls";
-//        String headerKey = "Content-Disposition";
-//        String headerValue = String.format("attachment; filename=\"%s\"",csvFileName);
-        response.setContentType("text/csv;charset=UTF-8");
-//        response.setHeader(headerKey, headerValue);
-
-
+    @RequestMapping(value = "/admin/report/drivers/age", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    public void driversAgeReport(HttpServletResponse response) throws IOException {
+        String fileName = "Drivers_Age_Report.xls";
         response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        adminManager.driversAgeReport(response);
 
-        response.setHeader("Content-Disposition", "attachment; filename=" + csvFileName);
-
-//        PrintWriter writer = response.getWriter();
-        adminManager.meth(response);
-
-
-
-
-//
 //        ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(),CsvPreference.STANDARD_PREFERENCE);
 //
 //        String[] header = { "FirstName" , "LastName", "Username" };
@@ -673,7 +661,40 @@ public class AdminController {
 //        }
 //
 //        csvWriter.close();
+    }
 
+    @RequestMapping(value = "/admin/report/passengers/age", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    public void passengersAgeReport(HttpServletResponse response) throws IOException {
+        String fileName = "Passengers_Age_Report.xls";
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        adminManager.passengersAgeReport(response);
+    }
+
+    @RequestMapping(value = "/admin/report/operators/age", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    public void operatorsAgeReport(HttpServletResponse response) throws IOException {
+        String fileName = "Operators_Age_Report.xls";
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        adminManager.operatorsAgeReport(response);
+    }
+
+    @RequestMapping(value = "/admin/report/trips/{startDate}/{endDate}", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    public void tripsReport(HttpServletResponse response,@PathVariable String startDate, @PathVariable String endDate) throws IOException {
+        String fileName = "Trips_Report.xls";
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date sDate = null;
+        Date eDate = null;
+        try {
+            sDate = df.parse(startDate);
+            eDate = df.parse(endDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        adminManager.tripsReport(response,sDate,eDate);
     }
 
     private ResponseEntity<String> returnResponse(Status status) {

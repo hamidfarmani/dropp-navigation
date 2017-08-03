@@ -21,6 +21,7 @@ import java.util.List;
         @NamedQuery(name = "passenger.findBy.usernameAndPassword", query = "select p from passenger p where p.username=:username and p.password=:password"),
         @NamedQuery(name = "passenger.findBy.accountState",query = "select p from passenger p where p.accountState=:accountState"),
         @NamedQuery(name = "passenger.all.count",query = "select count(p.id) from passenger p"),
+        @NamedQuery(name = "passenger.all",query = "select p from passenger p"),
         @NamedQuery(name = "passenger.new.count",query = "select count(p.id) from passenger p where p.registrationTimestamp >= :date")
 })
 @Entity(name = "passenger")

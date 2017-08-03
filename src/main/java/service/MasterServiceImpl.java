@@ -33,11 +33,9 @@ import java.util.List;
  */
 
 @Service("masterService")
-@Scope(value = "request", proxyMode = ScopedProxyMode.INTERFACES)
+@Scope(value = "singleton", proxyMode = ScopedProxyMode.INTERFACES)
 @Transactional
 public class MasterServiceImpl implements MasterService {
-
-    private EntityManager entityManager;
 
     public MasterServiceImpl() {
 
@@ -82,9 +80,8 @@ public class MasterServiceImpl implements MasterService {
     }
 
     public Status operatorRegister(String firstname, String lastname, Date birthDate,String email, String PhoneNumber, String workNumber, String username, String password, Gender gender, City city) {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
-
-            entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
             Operator operator = (Operator) IOCContainer.getBean("operator");
@@ -126,9 +123,8 @@ public class MasterServiceImpl implements MasterService {
     }
 
     public Status operatorUpdate(Long id, String firstname, String lastname, Date birthDate,String email, String PhoneNumber, String workNumber, String password, Gender gender, City city) {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
-
-            entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
             Operator operator = entityManager.find(Operator.class,id);
@@ -166,9 +162,8 @@ public class MasterServiceImpl implements MasterService {
     }
 
     public Status operatorRemove(Long operatorID) {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
-
-            entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Operator operator = (Operator) entityManager.createNamedQuery("operator.findBy.id")
                     .setParameter("id",operatorID)
@@ -258,7 +253,7 @@ public class MasterServiceImpl implements MasterService {
 
     public Status ticketSubjectRegister(String subject, String parentID, UserRole role){
         TicketSubject parent = null;
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             TicketSubject ticketSubject = (TicketSubject) IOCContainer.getBean("ticketSubject");
@@ -305,7 +300,7 @@ public class MasterServiceImpl implements MasterService {
     public Object viewAllTicketSubjects(){
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray subjects = new JSONArray();
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             List<TicketSubject> subjectsList =  entityManager.createNamedQuery("ticketSubject.All")
@@ -352,7 +347,7 @@ public class MasterServiceImpl implements MasterService {
     }
 
     public Object voucherRegister(int maxUse, String description, Date startDate, Date endDate, VoucherCodeGenerationType generationType, VoucherCodeType codeType, String value,String code){
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         JSONObject jsonObjectResponse = new JSONObject();
         VoucherCode voucherCode = (VoucherCode) IOCContainer.getBean("voucherCode");
         String voucher = "";
@@ -401,7 +396,7 @@ public class MasterServiceImpl implements MasterService {
 
 
     public Status voucherUpdate(Long id, int maxUse, String description, Date startDate, Date endDate,  VoucherCodeType codeType, String value){
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         JSONObject jsonObjectResponse = new JSONObject();
         VoucherCode voucherCode = entityManager.find(VoucherCode.class,id);
 
@@ -435,7 +430,7 @@ public class MasterServiceImpl implements MasterService {
     }
 
     public Status banOperator(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
@@ -461,7 +456,7 @@ public class MasterServiceImpl implements MasterService {
     }
 
     public Status unBanOperator(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
@@ -487,7 +482,7 @@ public class MasterServiceImpl implements MasterService {
     }
 
     public Object searchOperators(String query, int count, int pageIndex,String operatorUsername){
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray operatorJsonArray = new JSONArray();
         UserRoleConverter userRoleConverter = (UserRoleConverter) IOCContainer.getBean("userRoleConverter");

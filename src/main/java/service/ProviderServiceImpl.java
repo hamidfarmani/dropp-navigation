@@ -26,14 +26,13 @@ import java.util.List;
 @Transactional
 public class ProviderServiceImpl implements ProviderService {
 
-    private EntityManager entityManager;
 
     public ProviderServiceImpl() {
 
     }
 
     public Object viewSearchRadius(){
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray types = new JSONArray();
         try {
@@ -70,8 +69,8 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
     public Status payment(String username) {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
-            entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Driver driver = (Driver) entityManager.createNamedQuery("driver.almasDriver.username")
                     .setParameter("username",username)
@@ -105,8 +104,8 @@ public class ProviderServiceImpl implements ProviderService {
 
     public Object calculateClaim() {
         JSONObject jsonObjectResponse = new JSONObject();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
-            entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ServiceProvider serviceProvider = (ServiceProvider) entityManager.createNamedQuery("serviceProvider.get.all")
                     .getSingleResult();
@@ -136,19 +135,16 @@ public class ProviderServiceImpl implements ProviderService {
     public Object driversDebt() {
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray drivers = new JSONArray();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
-            entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             List<Object[]> driversDebt = entityManager.createNamedQuery("driver.groupby.debt")
                     .getResultList();
-
             for (Object[] obj : driversDebt) {
                 String username = String.valueOf(obj[0]);
-//                Long ccID = Long.valueOf(String.valueOf(obj[1]));
                 Long sum = (Long) obj[1];
                 JSONObject object = new JSONObject();
                 object.put("username", username);
-//                object.put("ccID", ccID);
                 object.put("debt", sum);
                 drivers.put(object);
             }
@@ -174,20 +170,15 @@ public class ProviderServiceImpl implements ProviderService {
     public Object mostDebtDrivers() {
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray drivers = new JSONArray();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
-            entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             List<Driver> driversDebt = entityManager.createNamedQuery("driver.orderby.credit")
                     .setMaxResults(10)
                     .getResultList();
-
-
             for (Driver driver : driversDebt) {
                 JSONObject d = new JSONObject();
-                d.put("firstName", driver.getFirstName());
-                d.put("lastName", driver.getLastName());
                 d.put("username", driver.getUsername());
-                d.put("phoneNumber", driver.getPhoneNumber());
                 d.put("credit", driver.getCredit());
                 drivers.put(d);
             }
@@ -213,8 +204,8 @@ public class ProviderServiceImpl implements ProviderService {
     public Object customDebtDrivers(Long value) {
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray drivers = new JSONArray();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
-            entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             List<Driver> driversDebt = entityManager.createNamedQuery("driver.orderby.gt.credit")
                     .setParameter("value",value)
@@ -223,10 +214,7 @@ public class ProviderServiceImpl implements ProviderService {
 
             for (Driver driver : driversDebt) {
                 JSONObject d = new JSONObject();
-                d.put("firstName", driver.getFirstName());
-                d.put("lastName", driver.getLastName());
                 d.put("username", driver.getUsername());
-                d.put("phoneNumber", driver.getPhoneNumber());
                 d.put("credit", driver.getCredit());
                 drivers.put(d);
             }
@@ -250,7 +238,7 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
     public Status banDriver(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Driver driver = (Driver) entityManager.createNamedQuery("driver.searchExact.username")
@@ -273,7 +261,7 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
     public Status deactiveDriver(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Driver driver = (Driver) entityManager.createNamedQuery("driver.searchExact.username")
@@ -296,8 +284,8 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
     public Status banDriverByCredit(Long value) {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
-            entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             List<Driver> driversDebt = entityManager.createNamedQuery("driver.orderby.gt.credit")
                     .setParameter("value",value)

@@ -31,8 +31,6 @@ import java.util.List;
 @Transactional
 public class COPServiceImpl implements COPService {
 
-    private EntityManager entityManager;
-
     public COPServiceImpl() {
 
     }
@@ -76,8 +74,8 @@ public class COPServiceImpl implements COPService {
     }
 
     public Status carRegister(String name, Long manufactureID) {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
-            entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
             List<Car> c =  entityManager.createNamedQuery("cars.findBy.name")
@@ -113,7 +111,7 @@ public class COPServiceImpl implements COPService {
     }
 
     public Status manufactureRegister(String name) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             List<CarManufacture> man = entityManager.createNamedQuery("manufacture.findBy.name")
@@ -145,7 +143,7 @@ public class COPServiceImpl implements COPService {
     }
 
     public JSONObject carDistance(Long vehicleID){
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Long distance;
@@ -175,7 +173,7 @@ public class COPServiceImpl implements COPService {
     }
 
     public Object getAllManufactures(){
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray allManufacture = new JSONArray();
         try {

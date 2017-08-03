@@ -32,18 +32,15 @@ import java.util.List;
 
 
 @Service("operatorService")
-@Scope(value = "request", proxyMode = ScopedProxyMode.INTERFACES)
+@Scope(value = "singleton", proxyMode = ScopedProxyMode.INTERFACES)
 @Transactional
 
 public class OperatorServiceImpl implements OperatorService {
 
-    private EntityManager entityManager;
-
-
     public Object subscribeRegister(String firstName, String lastName, String phoneNumber, Address address, String city) {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             JSONObject jsonObjectResponse = new JSONObject();
-            entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             SubscribeUser subscribeUser = (SubscribeUser) IOCContainer.getBean("subscribeUser");
             City c = (City) entityManager.createNamedQuery("city.by.id")
@@ -63,6 +60,7 @@ public class OperatorServiceImpl implements OperatorService {
             return jsonObjectResponse;
 
         } catch (NoResultException e) {
+            e.printStackTrace();
             return Status.NOT_FOUND;
         } finally {
             if (entityManager.getTransaction().isActive()) {
@@ -118,7 +116,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Status confirmUser(String username, String op) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Driver driver = (Driver) entityManager.createNamedQuery("driver.searchExact.username")
@@ -146,7 +144,7 @@ public class OperatorServiceImpl implements OperatorService {
 
     public JSONObject viewNumberOfAllDrivers() {
         JSONObject jsonObjectResponse = new JSONObject();
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Long driversCount = (Long) entityManager.createNamedQuery("driver.all.count").getSingleResult();
@@ -165,26 +163,6 @@ public class OperatorServiceImpl implements OperatorService {
         return jsonObjectResponse;
     }
 
-    public JSONObject viewAllDrivers() {
-
-        JSONObject jsonObjectResponse = new JSONObject();
-        JSONObject types = new JSONObject();
-        for (ServiceType serviceType : ServiceType.values()) {
-            List<Driver> allDriverServiceType = entityManager.createNamedQuery("driver.findBy.serviceType")
-                    .setParameter("serviceType",serviceType)
-                    .getResultList();
-            JSONArray drivers = new JSONArray();
-            for(Driver d : allDriverServiceType) {
-                JSONObject driver = new JSONObject();
-                driver.put("username", d.getUsername());
-                driver.put("phoneNumber", d.getPhoneNumber());
-                drivers.put(driver);
-            }
-            types.put(serviceType.toString(), drivers);
-        }
-        jsonObjectResponse.put("allDriver", types);
-        return jsonObjectResponse;
-    }
 
     public JSONObject viewOnlineAllDrivers() {
 
@@ -254,9 +232,9 @@ public class OperatorServiceImpl implements OperatorService {
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray drivers = new JSONArray();
         GenderConverter genderConverter = (GenderConverter)IOCContainer.getBean("genderConverter");
+        EntityManager  entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             List<Driver> driversList = null;
-            entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             if(count==-1){
                 driversList = entityManager.createNamedQuery("driver.searchLike")
@@ -354,9 +332,10 @@ public class OperatorServiceImpl implements OperatorService {
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray passengers = new JSONArray();
         GenderConverter genderConverter = (GenderConverter)IOCContainer.getBean("genderConverter");
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             List<Passenger> passengersList = null;
-            entityManager = LocalEntityManagerFactory.createEntityManager();
+
             entityManager.getTransaction().begin();
             if(count==-1){
                 passengersList = entityManager.createNamedQuery("passenger.searchLike")
@@ -423,7 +402,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Status organizationRegister(String name, String username, String password, String email, String phoneNumber, String workNumber, int employeeCount) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
 
             entityManager.getTransaction().begin();
@@ -469,7 +448,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Status banDriver(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Driver driver = (Driver) entityManager.createNamedQuery("driver.searchExact.username")
@@ -492,7 +471,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Status unBanDriver(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Driver driver = (Driver) entityManager.createNamedQuery("driver.searchExact.username")
@@ -515,7 +494,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Status banPassenger(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Passenger passenger = (Passenger) entityManager.createNamedQuery("passenger.exact.username")
@@ -538,7 +517,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Status unBanPassenger(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Passenger passenger = (Passenger) entityManager.createNamedQuery("passenger.exact.username")
@@ -564,8 +543,9 @@ public class OperatorServiceImpl implements OperatorService {
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray banDrivers = new JSONArray();
         List<Driver> drivers;
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
-            entityManager = LocalEntityManagerFactory.createEntityManager();
+
             entityManager.getTransaction().begin();
             drivers = entityManager.createNamedQuery("driver.findBy.accountState")
                     .setParameter("accountState", AccountState.BANNED)
@@ -599,8 +579,8 @@ public class OperatorServiceImpl implements OperatorService {
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray banPassengers = new JSONArray();
         List<Passenger> passengers;
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
-            entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             passengers = entityManager.createNamedQuery("passenger.findBy.accountState")
                     .setParameter("accountState", AccountState.BANNED)
@@ -626,343 +606,8 @@ public class OperatorServiceImpl implements OperatorService {
         }
     }
 
-    public Object searchTripByDriverUsername(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
-        List<Trip> d;
-        JSONObject jsonObjectResponse = new JSONObject();
-        JSONArray trips = new JSONArray();
-        JSONObject driver = new JSONObject();
-        try {
-            entityManager.getTransaction().begin();
-            d = entityManager.createNamedQuery("trip.findBy.driverUsername")
-                    .setParameter("username","%"+ username+"%").getResultList();
-
-
-            for (int i = 0; i < d.size(); i++) {
-                Trip t = d.get(i);
-                JSONObject trip = new JSONObject();
-                JSONObject passenger = new JSONObject();
-
-                trip.put("cost", t.getCost());
-                trip.put("rate", t.getRate());
-                trip.put("distance", t.getDistance());
-                trip.put("UUID", t.getUUID());
-                trip.put("state", t.getState());
-                trip.put("originAddress", t.getOriginAddress());
-                trip.put("waitingTime", t.getWaitingTime());
-                trip.put("ETA", t.getETA());
-                trip.put("startDate", t.getStartDate());
-                trip.put("endDate", t.getEndDate());
-
-                driver.put("username", t.getDriver().getUsername());
-                driver.put("phoneNumber", t.getDriver().getPhoneNumber());
-                driver.put("firstName", t.getDriver().getFirstName());
-                driver.put("lastName", t.getDriver().getLastName());
-
-                passenger.put("username", t.getPassenger().getUsername());
-                passenger.put("phoneNumber", t.getPassenger().getPhoneNumber());
-                passenger.put("firstName", t.getPassenger().getPassengerInfo().getFirstName());
-                passenger.put("lastName", t.getPassenger().getPassengerInfo().getLastName());
-
-                trip.put("driver", driver);
-                trip.put("passenger", passenger);
-
-                trips.put(trip);
-            }
-            jsonObjectResponse.put("trips", trips);
-
-            entityManager.getTransaction().commit();
-        } catch (NoResultException e) {
-            e.printStackTrace();
-            return Status.NOT_FOUND;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return Status.BAD_JSON;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Status.UNKNOWN_ERROR;
-        } finally {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
-
-        return jsonObjectResponse;
-    }
-
-    public Object searchTripByDriverPhoneNumber(String phoneNumber) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
-        List<Trip> d;
-        JSONObject jsonObjectResponse = new JSONObject();
-        JSONArray trips = new JSONArray();
-        JSONObject driver = new JSONObject();
-        try {
-            entityManager.getTransaction().begin();
-            d = entityManager.createNamedQuery("trip.findBy.driverPhoneNumber")
-                    .setParameter("phoneNumber", "%" + phoneNumber+ "%").getResultList();
-
-
-            for (int i = 0; i < d.size(); i++) {
-                Trip t = d.get(i);
-                JSONObject trip = new JSONObject();
-                JSONObject passenger = new JSONObject();
-
-                trip.put("cost", t.getCost());
-                trip.put("rate", t.getRate());
-                trip.put("distance", t.getDistance());
-                trip.put("UUID", t.getUUID());
-                trip.put("state", t.getState());
-                trip.put("originAddress", t.getOriginAddress());
-                trip.put("waitingTime", t.getWaitingTime());
-                trip.put("ETA", t.getETA());
-                trip.put("startDate", t.getStartDate());
-                trip.put("endDate", t.getEndDate());
-
-                driver.put("username", t.getDriver().getUsername());
-                driver.put("phoneNumber", t.getDriver().getPhoneNumber());
-                driver.put("firstName", t.getDriver().getFirstName());
-                driver.put("lastName", t.getDriver().getLastName());
-
-                passenger.put("username", t.getPassenger().getUsername());
-                passenger.put("phoneNumber", t.getPassenger().getPhoneNumber());
-                passenger.put("firstName", t.getPassenger().getPassengerInfo().getFirstName());
-                passenger.put("lastName", t.getPassenger().getPassengerInfo().getLastName());
-
-                trip.put("driver", driver);
-                trip.put("passenger", passenger);
-
-                trips.put(trip);
-            }
-            jsonObjectResponse.put("trips", trips);
-
-            entityManager.getTransaction().commit();
-        } catch (NoResultException e) {
-            e.printStackTrace();
-            return Status.NOT_FOUND;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return Status.BAD_JSON;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Status.UNKNOWN_ERROR;
-        } finally {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
-
-        return jsonObjectResponse;
-    }
-
-    public Object searchTripByPassengerUsername(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
-        List<Trip> d;
-        JSONObject jsonObjectResponse = new JSONObject();
-        JSONArray trips = new JSONArray();
-        JSONObject driver = new JSONObject();
-        try {
-            entityManager.getTransaction().begin();
-            d = entityManager.createNamedQuery("trip.findBy.passengerUsername")
-                    .setParameter("username", "%"+ username+ "%").getResultList();
-
-
-            for (int i = 0; i < d.size(); i++) {
-                Trip t = d.get(i);
-                JSONObject trip = new JSONObject();
-                JSONObject passenger = new JSONObject();
-
-                trip.put("cost", t.getCost());
-                trip.put("rate", t.getRate());
-                trip.put("distance", t.getDistance());
-                trip.put("UUID", t.getUUID());
-                trip.put("state", t.getState());
-                trip.put("originAddress", t.getOriginAddress());
-                trip.put("waitingTime", t.getWaitingTime());
-                trip.put("ETA", t.getETA());
-                trip.put("startDate", t.getStartDate());
-                trip.put("endDate", t.getEndDate());
-
-                driver.put("username", t.getDriver().getUsername());
-                driver.put("phoneNumber", t.getDriver().getPhoneNumber());
-                driver.put("firstName", t.getDriver().getFirstName());
-                driver.put("lastName", t.getDriver().getLastName());
-
-                passenger.put("username", t.getPassenger().getUsername());
-                passenger.put("phoneNumber", t.getPassenger().getPhoneNumber());
-                passenger.put("firstName", t.getPassenger().getPassengerInfo().getFirstName());
-                passenger.put("lastName", t.getPassenger().getPassengerInfo().getLastName());
-
-                trip.put("driver", driver);
-                trip.put("passenger", passenger);
-
-                trips.put(trip);
-            }
-            jsonObjectResponse.put("trips", trips);
-
-            entityManager.getTransaction().commit();
-        } catch (NoResultException e) {
-            e.printStackTrace();
-            return Status.NOT_FOUND;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return Status.BAD_JSON;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Status.UNKNOWN_ERROR;
-        } finally {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
-
-        return jsonObjectResponse;
-    }
-
-    public Object searchTripByPassengerPhoneNumber(String phoneNumber) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
-        List<Trip> d;
-        JSONObject jsonObjectResponse = new JSONObject();
-        JSONArray trips = new JSONArray();
-        JSONObject driver = new JSONObject();
-        try {
-            entityManager.getTransaction().begin();
-            d = entityManager.createNamedQuery("trip.findBy.passengerPhoneNumber")
-                    .setParameter("phoneNumber", "%"+ phoneNumber + "%").getResultList();
-
-
-            for (int i = 0; i < d.size(); i++) {
-                Trip t = d.get(i);
-                JSONObject trip = new JSONObject();
-                JSONObject passenger = new JSONObject();
-
-                trip.put("cost", t.getCost());
-                trip.put("rate", t.getRate());
-                trip.put("distance", t.getDistance());
-                trip.put("UUID", t.getUUID());
-                trip.put("state", t.getState());
-                trip.put("originAddress", t.getOriginAddress());
-                trip.put("waitingTime", t.getWaitingTime());
-                trip.put("ETA", t.getETA());
-                trip.put("startDate", t.getStartDate());
-                trip.put("endDate", t.getEndDate());
-
-                driver.put("username", t.getDriver().getUsername());
-                driver.put("phoneNumber", t.getDriver().getPhoneNumber());
-                driver.put("firstName", t.getDriver().getFirstName());
-                driver.put("lastName", t.getDriver().getLastName());
-
-                passenger.put("username", t.getPassenger().getUsername());
-                passenger.put("phoneNumber", t.getPassenger().getPhoneNumber());
-                passenger.put("firstName", t.getPassenger().getPassengerInfo().getFirstName());
-                passenger.put("lastName", t.getPassenger().getPassengerInfo().getLastName());
-
-                trip.put("driver", driver);
-                trip.put("passenger", passenger);
-
-                trips.put(trip);
-            }
-            jsonObjectResponse.put("trips", trips);
-
-            entityManager.getTransaction().commit();
-        } catch (NoResultException e) {
-            e.printStackTrace();
-            return Status.NOT_FOUND;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return Status.BAD_JSON;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Status.UNKNOWN_ERROR;
-        } finally {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
-
-        return jsonObjectResponse;
-    }
-
-    public Object searchTripByUUID(String UUID) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
-        List<Trip> d;
-        JSONObject jsonObjectResponse = new JSONObject();
-        JSONArray trips = new JSONArray();
-        JSONObject driver = new JSONObject();
-        try {
-            entityManager.getTransaction().begin();
-            d = entityManager.createNamedQuery("trip.findBy.uuid")
-                    .setParameter("uuid", "%"+  UUID+"%").getResultList();
-
-
-            for (int i = 0; i < d.size(); i++) {
-                Trip t = d.get(i);
-                JSONObject trip = new JSONObject();
-                JSONObject passenger = new JSONObject();
-
-                trip.put("cost", t.getCost());
-                trip.put("rate", t.getRate());
-                trip.put("distance", t.getDistance());
-                trip.put("UUID", t.getUUID());
-                trip.put("state", t.getState());
-                trip.put("originAddress", t.getOriginAddress());
-                trip.put("waitingTime", t.getWaitingTime());
-                trip.put("ETA", t.getETA());
-                trip.put("startDate", t.getStartDate());
-                trip.put("endDate", t.getEndDate());
-
-                driver.put("username", t.getDriver().getUsername());
-                driver.put("phoneNumber", t.getDriver().getPhoneNumber());
-                driver.put("firstName", t.getDriver().getFirstName());
-                driver.put("lastName", t.getDriver().getLastName());
-
-                passenger.put("username", t.getPassenger().getUsername());
-                passenger.put("phoneNumber", t.getPassenger().getPhoneNumber());
-                passenger.put("firstName", t.getPassenger().getPassengerInfo().getFirstName());
-                passenger.put("lastName", t.getPassenger().getPassengerInfo().getLastName());
-
-                trip.put("driver", driver);
-                trip.put("passenger", passenger);
-
-                trips.put(trip);
-            }
-            jsonObjectResponse.put("trips", trips);
-
-            entityManager.getTransaction().commit();
-        } catch (NoResultException e) {
-            e.printStackTrace();
-            return Status.NOT_FOUND;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return Status.BAD_JSON;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Status.UNKNOWN_ERROR;
-        } finally {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
-
-        return jsonObjectResponse;
-    }
-
     public Object searchOrganization(String q,int count, int pageIndex){
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray organizations = new JSONArray();
 
@@ -1032,7 +677,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Object viewOrganization(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         JSONObject jsonObjectResponse = new JSONObject();
         try {
             entityManager.getTransaction().begin();
@@ -1075,7 +720,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Status confirmOrganization(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Organization org = (Organization) entityManager.createNamedQuery("organization.findBy.username")
@@ -1103,7 +748,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Status removeOrganization(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Organization org = (Organization) entityManager.createNamedQuery("organization.findBy.username")
@@ -1131,7 +776,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Object viewDriverCredit(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray drivers = new JSONArray();
         try {
@@ -1171,7 +816,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Object viewAllDriverCredit() {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray drivers = new JSONArray();
         try {
@@ -1212,7 +857,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Object viewPassengersTicket(String username) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         JSONObject jsonObjectResponse = new JSONObject();
 
         JSONArray driversTicket = new JSONArray();
@@ -1270,7 +915,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Status sendMessage(String username, String message, String operatorUsername) {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Message m = (Message) IOCContainer.getBean("message");
@@ -1306,7 +951,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Status resolveTicket(Long ticketID){
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Ticket t = (Ticket) entityManager.createNamedQuery("ticket.findBy.id")
@@ -1335,7 +980,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Object viewTickets() {
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray allTickets = new JSONArray();
         try {
@@ -1398,9 +1043,9 @@ public class OperatorServiceImpl implements OperatorService {
     public Object searchSubscribe(String q,int count,int pageIndex) {
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray subscribeUsers = new JSONArray();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             List<SubscribeUser> subscribesList = null;
-            entityManager = LocalEntityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             if(count==-1){
                 subscribesList = entityManager.createNamedQuery("subscribe.searchLike")
@@ -1475,15 +1120,7 @@ public class OperatorServiceImpl implements OperatorService {
             JSONObject deliveryInfo = new JSONObject();
 
             if(driverDoc!=null) {
-                driver.put("id", driverDoc.get("id"));
-                driver.put("firstName", driverDoc.get("firstName"));
-                driver.put("lastName", driverDoc.get("lastName"));
-                driver.put("gender", driverDoc.get("gender"));
-                driver.put("nationalNumber", driverDoc.get("nationalNumber"));
-                driver.put("phoneNumber", driverDoc.get("phoneNumber"));
-                driver.put("username", driverDoc.get("username"));
-
-                tripInfo.put("driver", driver);
+                tripInfo.put("driverUsername", driverDoc.get("username"));
             }
             if(vehicleDoc!=null) {
                 vehicle.put("color", vehicleDoc.get("color"));
@@ -1517,24 +1154,10 @@ public class OperatorServiceImpl implements OperatorService {
 
 
             if(passengerDoc!=null) {
-                passenger.put("id", passengerDoc.get("id"));
-                passenger.put("phoneNumber", passengerDoc.get("phoneNumber"));
-                passenger.put("username", passengerDoc.get("username"));
-                passenger.put("gender", passengerDoc.get("gender"));
-                passenger.put("firstName", passengerDoc.get("firstName"));
-                passenger.put("lastName", passengerDoc.get("lastName"));
-
-                tripInfo.put("passenger", passenger);
+                tripInfo.put("passengerUsername", passengerDoc.get("username"));
             }
             if(subscribeUserDoc!=null) {
-                subUser.put("id", subscribeUserDoc.get("id"));
-                subUser.put("firstName", subscribeUserDoc.get("firstName"));
-                subUser.put("lastName", subscribeUserDoc.get("lastName"));
-                subUser.put("phoneNumber", subscribeUserDoc.get("phoneNumber"));
-                subUser.put("subscriptionCode", subscribeUserDoc.get("subscriptionCode"));
-                subUser.put("address", subscribeUserDoc.get("address"));
-
-                tripInfo.put("subUser", subUser);
+                tripInfo.put("subscriptionCode", subscribeUserDoc.get("subscriptionCode"));
             }
             if(deliveryInfoDoc!=null) {
                 deliveryInfo.put("id", deliveryInfoDoc.get("id"));
@@ -1557,6 +1180,7 @@ public class OperatorServiceImpl implements OperatorService {
                 d.put("seq", destination.get("seq"));
                 d.put("lng", destination.get("lng"));
                 d.put("lat", destination.get("lat"));
+                d.put("address", destination.get("address"));
                 destinations.put(d);
             }
             tripInfo.append("destinations", destinations);
@@ -1570,7 +1194,7 @@ public class OperatorServiceImpl implements OperatorService {
 
     public Object viewNumberOfPassengers() {
         JSONObject jsonObjectResponse = new JSONObject();
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Long passengerCount = (Long) entityManager.createNamedQuery("passenger.all.count")
@@ -1592,7 +1216,7 @@ public class OperatorServiceImpl implements OperatorService {
 
     public Object viewNumberOfNewPassengers() {
         JSONObject jsonObjectResponse = new JSONObject();
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Calendar cal = Calendar.getInstance();
@@ -1625,7 +1249,7 @@ public class OperatorServiceImpl implements OperatorService {
 
     public Object viewNumberOfTrips(){
         JSONObject jsonObjectResponse = new JSONObject();
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Long allTripsCount = (Long) entityManager.createNamedQuery("trip.today.count")
@@ -1647,7 +1271,7 @@ public class OperatorServiceImpl implements OperatorService {
 
     public Object viewNumberOfOrganization(){
         JSONObject jsonObjectResponse = new JSONObject();
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Long allOrganizationCount = (Long) entityManager.createNamedQuery("organization.all.count")
@@ -1669,7 +1293,7 @@ public class OperatorServiceImpl implements OperatorService {
 
     public Object viewNumberOfNewOrganization(){
         JSONObject jsonObjectResponse = new JSONObject();
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Calendar cal = Calendar.getInstance();
@@ -1694,7 +1318,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     public Status paymentRequestRegister(String driverUsername){
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Driver driver = (Driver) entityManager.createNamedQuery("driver.searchExact.username")
@@ -1718,7 +1342,7 @@ public class OperatorServiceImpl implements OperatorService {
     public Object viewAllStates(){
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray statesJSONArray = new JSONArray();
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             List<State> stateList = entityManager.createNamedQuery("state.all")
@@ -1747,7 +1371,7 @@ public class OperatorServiceImpl implements OperatorService {
     public Object viewCityByStateID(Long stateID){
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray cityJSONArray = new JSONArray();
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             List<City> cityList = entityManager.createNamedQuery("city.by.stateID")
@@ -1776,7 +1400,7 @@ public class OperatorServiceImpl implements OperatorService {
 
     public Object viewAllVouchers(){
         JSONObject jsonObjectResponse = new JSONObject();
-        entityManager = LocalEntityManagerFactory.createEntityManager();
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             List<VoucherCode> vouchersList =  entityManager.createNamedQuery("voucherCode.all")
@@ -1868,8 +1492,9 @@ public class OperatorServiceImpl implements OperatorService {
         JSONArray trips = new JSONArray();
         GenderConverter genderConverter = (GenderConverter) IOCContainer.getBean("genderConverter");
         List<Trip> tripList = null;
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
-            entityManager = LocalEntityManagerFactory.createEntityManager();
+
             entityManager.getTransaction().begin();
             if (count == -1) {
                 tripList = entityManager.createNamedQuery("trip.searchLike")
@@ -1920,6 +1545,8 @@ public class OperatorServiceImpl implements OperatorService {
                 tripInfo.put("startDate", tripObject.getStartDate());
                 tripInfo.put("waitingTime", tripObject.getWaitingTime());
                 tripInfo.put("city", tripObject.getCityDBValue());
+                tripInfo.put("rate", tripObject.getRate());
+                tripInfo.put("isOneWay", tripObject.isOneWay());
 
                 if (tripObject.getPassenger() != null) {
                     tripInfo.put("passengerUsername", tripObject.getPassenger().getUsername());

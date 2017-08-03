@@ -25,8 +25,8 @@ import java.util.List;
         @NamedQuery(name = "driver.all",query = "select d from driver d"),
         @NamedQuery(name = "driver.all.count",query = "select count(d.id) from driver d"),
         @NamedQuery(name = "driver.findBy.serviceType",query = "select d from driver d where d.serviceType=:serviceType"),
-        @NamedQuery(name = "driver.groupby.debt", query = "select d.username, sum(credit) from driver d where d.serviceProvider is not null GROUP by d.username having sum(credit)<0"),
-        @NamedQuery(name = "driver.orderby.credit", query = "select d from driver d order by d.credit asc"),
+        @NamedQuery(name = "driver.groupby.debt", query = "select d.username, sum(d.credit) from driver d where d.serviceProvider is not null GROUP by d.username having sum(d.credit)<0"),
+        @NamedQuery(name = "driver.orderby.credit", query = "select d from driver d where d.credit<0 order by d.credit asc"),
         @NamedQuery(name = "driver.orderby.gt.credit", query = "select d from driver d where d.credit <= :value order by d.credit asc")
 })
 @Entity(name = "driver")

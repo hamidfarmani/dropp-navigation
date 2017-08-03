@@ -66,7 +66,7 @@ public class OperatorController {
                 if(subscribe instanceof JSONObject){
                     return returnResponse(Status.OK,(JSONObject) subscribe);
                 }else {
-                    return returnResponse(Status.BAD_DATA);
+                    return returnResponse(Status.UNKNOWN_ERROR);
                 }
             }else{
                 return ResponseProvider.getInstance().getResponse(Status.PHONE_NUMBER_EXIST);

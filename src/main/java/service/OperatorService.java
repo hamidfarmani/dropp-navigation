@@ -20,8 +20,6 @@ public interface OperatorService {
 
     JSONObject viewNumberOfAllDrivers();
 
-    JSONObject viewAllDrivers();
-
     JSONObject viewOnlineAllDrivers();
 
     JSONObject viewNumberOfOnlineDrivers();
@@ -45,16 +43,6 @@ public interface OperatorService {
     Object viewBanDrivers();
 
     Object viewBanPassengers();
-
-    Object searchTripByDriverUsername(String username);
-
-    Object searchTripByDriverPhoneNumber(String phoneNumber);
-
-    Object searchTripByPassengerUsername(String username);
-
-    Object searchTripByPassengerPhoneNumber(String phoneNumber);
-
-    Object searchTripByUUID(String uuid);
 
     Object searchOrganization(String q,int count, int pageIndex);
 

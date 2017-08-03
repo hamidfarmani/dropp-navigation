@@ -66,7 +66,13 @@ public interface AdminService {
 
     Status cityRegister(String name, Long stateID);
 
-    void meth(HttpServletResponse resp);
+    void driversAgeReport(HttpServletResponse resp);
+
+    void passengersAgeReport(HttpServletResponse resp);
+
+    void operatorsAgeReport(HttpServletResponse resp);
+
+    void tripsReport(HttpServletResponse resp,Date startDate, Date endDate);
 
 }
 

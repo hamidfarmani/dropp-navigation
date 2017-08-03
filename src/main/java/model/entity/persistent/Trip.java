@@ -27,6 +27,7 @@ import java.util.List;
          @NamedQuery(name = "trip.findBy.passengerUsername",query = "select t from trip t left join passenger p on t.passenger.id=p.id where p.username like :username"),
          @NamedQuery(name = "trip.findBy.passengerPhoneNumber",query = "select t from trip t left join passenger p on t.passenger.id=p.id where p.phoneNumber like :phoneNumber"),
          @NamedQuery(name = "trip.findBy.uuid",query = "select t from trip t where t.UUID like :uuid"),
+         @NamedQuery(name = "trip.between.date",query = "select t from trip t where trunc(t.startDate)>=:startDate and trunc(endDate)<=:endDate"),
          @NamedQuery(name = "trip.today.count",query = "select count(t.id) from trip t where trunc(t.startDate) = trunc(current_date)"),
          @NamedQuery(name = "trip.distance.findBy.vehicleID",query = "select SUM(t.distance) from trip t where (t.serviceType!='R' or t.serviceType!='D') and t.vehicle.id=:vehicleID"),
          @NamedQuery(name = "trip.searchLike", query = "select t from trip t left join t.driver d left join t.passenger p left join t.subscribeUser s left join t.origin o  where t.UUID like :input or  p.username like :input or d.username like :input or s.subscriptionCode like :input " ),
