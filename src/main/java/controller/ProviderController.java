@@ -8,6 +8,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.ProviderService;
+import util.HTTPAuthParser;
+import util.IOCContainer;
 import util.ResponseProvider;
 
 @RestController
@@ -22,10 +24,11 @@ public class ProviderController {
     }
 
     @RequestMapping(value = "/provider/payment/{driverUsername}", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> driverPayment(@PathVariable String driverUsername) {
+    public ResponseEntity<String> driverPayment(@PathVariable String driverUsername,@RequestHeader(value = "Authorization") String auth) {
         try{
-
-            return returnResponse(providerService.payment(driverUsername));
+            HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+            String providerUsername = httpAuthParser.returnUsername(auth);
+            return returnResponse(providerService.payment(driverUsername,providerUsername));
         } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
             return returnResponse(Status.BAD_DATA);
         } catch (JSONException e) {
@@ -53,9 +56,11 @@ public class ProviderController {
     }
 
     @RequestMapping(value = "/provider/drivers/debt", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> providerClaimFromDrivers() {
+    public ResponseEntity<String> providerClaimFromDrivers(@RequestHeader(value = "Authorization") String auth) {
         try{
-            Object debt = providerService.driversDebt();
+            HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+            String providerUsername = httpAuthParser.returnUsername(auth);
+            Object debt = providerService.driversDebt(providerUsername);
             if(debt instanceof JSONObject){
                 return returnResponse(Status.OK, (JSONObject)debt);
             }else{
@@ -71,9 +76,11 @@ public class ProviderController {
     }
 
     @RequestMapping(value = "/provider/drivers/mostDebt", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> mostDebtDrivers() {
+    public ResponseEntity<String> mostDebtDrivers(@RequestHeader(value = "Authorization") String auth) {
         try{
-            Object mostDebtDrivers = providerService.mostDebtDrivers();
+            HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+            String providerUsername = httpAuthParser.returnUsername(auth);
+            Object mostDebtDrivers = providerService.mostDebtDrivers(providerUsername);
             if(mostDebtDrivers instanceof JSONObject){
                 return returnResponse(Status.OK, (JSONObject)mostDebtDrivers);
             }else{

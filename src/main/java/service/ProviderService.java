@@ -4,15 +4,15 @@ import model.enums.Status;
 
 public interface ProviderService {
 
-    Status payment(String username);
+    Status payment(String username,String providerUsername);
 
     Object viewSearchRadius();
 
     Object calculateClaim();
 
-    Object driversDebt();
+    Object driversDebt(String providerUsername);
 
-    Object mostDebtDrivers();
+    Object mostDebtDrivers(String providerUsername);
 
     Object customDebtDrivers(Long value);
 

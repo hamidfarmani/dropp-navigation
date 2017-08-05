@@ -105,40 +105,58 @@ public class MasterController {
     public ResponseEntity<String> operatorUpdate(@RequestBody String request,@PathVariable String operatorID) {
         JSONObject jsonObjectRequest = new JSONObject(request);
         Long id;
-        String password, PhoneNumber, cityStr, genderStr,firstname,lastname,workNumber,email;
-        City city;
-        Gender gender;
-        Date birthDate;
+        String password = null, PhoneNumber = null, cityStr, genderStr,firstname = null,lastname = null,workNumber=null,email=null;
+        City city=null;
+        Gender gender=null;
+        Date birthDate = null;
         int year,month,day;
         try {
             id= Long.valueOf(operatorID);
-            firstname = jsonObjectRequest.getString("firstName").trim();
-            lastname = jsonObjectRequest.getString("lastName").trim();
-            email = jsonObjectRequest.getString("email").trim();
-            PhoneNumber = jsonObjectRequest.getString("phoneNumber").trim().replace(" ", "");
-            workNumber = jsonObjectRequest.getString("workNumber").trim().replace(" ", "");
-            password = jsonObjectRequest.getString("password").trim();
-            JSONObject birthD = jsonObjectRequest.getJSONObject("birthDate");
-            year = Integer.valueOf(String.valueOf(birthD.get("year")));
-            month = Integer.valueOf(String.valueOf(birthD.get("month")));
-            day = Integer.valueOf(String.valueOf(birthD.get("day")));
-            cityStr = jsonObjectRequest.getString("city").trim();
-            genderStr = jsonObjectRequest.getString("gender").trim();
-            GenderConverter genderConverter = (GenderConverter)IOCContainer.getBean("genderConverter");
-            gender = genderConverter.convertToEntityAttribute(genderStr.charAt(0));
-            CityConverter cityConverter = (CityConverter)IOCContainer.getBean("cityConverter");
-            city = cityConverter.convertToEntityAttribute(cityStr);
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-            birthDate = new Date();
-            String dataStr = String.valueOf(year + "/" + month + "/" + day);
-            birthDate = dateFormat.parse(dataStr);
-
-
-            if (PhoneNumber.isEmpty() || password.isEmpty()
-                    || firstname.isEmpty() || lastname.isEmpty()) {
-                return returnResponse(Status.BAD_DATA);
+            if (jsonObjectRequest.has("firstName")){
+                firstname = jsonObjectRequest.getString("firstName").trim();
             }
+            if (jsonObjectRequest.has("lastName")) {
+                lastname = jsonObjectRequest.getString("lastName").trim();
+            }
+            if (jsonObjectRequest.has("email")) {
+                email = jsonObjectRequest.getString("email").trim();
+            }
+            if (jsonObjectRequest.has("phoneNumber")) {
+                PhoneNumber = jsonObjectRequest.getString("phoneNumber").trim().replace(" ", "");
+                if (!Validation.getInstance().validatePhoneNumber(PhoneNumber)) {
+                    return returnResponse(Status.BAD_PHONE_NUMBER);
+                }
+            }
+            if (jsonObjectRequest.has("workNumber")) {
+                workNumber = jsonObjectRequest.getString("workNumber").trim().replace(" ", "");
+            }
+            if (jsonObjectRequest.has("password")) {
+                password = jsonObjectRequest.getString("password").trim();
+                if ((!Validation.getInstance().validatePassword(password)) || password.length() > 30) {
+                    return returnResponse(Status.BAD_PASSWORD);
+                }
+            }
+            if (jsonObjectRequest.has("birthDate")) {
+                JSONObject birthD = jsonObjectRequest.getJSONObject("birthDate");
+                year = Integer.valueOf(String.valueOf(birthD.get("year")));
+                month = Integer.valueOf(String.valueOf(birthD.get("month")));
+                day = Integer.valueOf(String.valueOf(birthD.get("day")));
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                birthDate = new Date();
+                String dataStr = String.valueOf(year + "/" + month + "/" + day);
+                birthDate = dateFormat.parse(dataStr);
+            }
+            if (jsonObjectRequest.has("city")) {
+                cityStr = jsonObjectRequest.getString("city").trim();
+                CityConverter cityConverter = (CityConverter)IOCContainer.getBean("cityConverter");
+                city = cityConverter.convertToEntityAttribute(cityStr);
+            }
+            if (jsonObjectRequest.has("gender")) {
+                genderStr = jsonObjectRequest.getString("gender").trim();
+                GenderConverter genderConverter = (GenderConverter)IOCContainer.getBean("genderConverter");
+                gender = genderConverter.convertToEntityAttribute(genderStr.charAt(0));
+            }
+
         } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
             return returnResponse(Status.BAD_DATA);
         } catch (JSONException e) {
@@ -148,14 +166,11 @@ public class MasterController {
             e.printStackTrace();
             return returnResponse(Status.BAD_DATA);
         }
-        if ((!Validation.getInstance().validatePassword(password)) || password.length() > 30) {
-            return returnResponse(Status.BAD_PASSWORD);
+        Operator op = null;
+        if(PhoneNumber!=null) {
+            op = masterService.isPhoneNumberExist(PhoneNumber);
         }
-        if (!Validation.getInstance().validatePhoneNumber(PhoneNumber)) {
-            return returnResponse(Status.BAD_PHONE_NUMBER);
-        }
-        Operator op = masterService.isPhoneNumberExist(PhoneNumber);
-        if(op == null || op.getoId()==id) {
+        if(PhoneNumber==null || op == null || op.getoId()==id) {
             Object object = masterService.operatorUpdate(id, firstname, lastname, birthDate, email, PhoneNumber, workNumber, password, gender, city);
             if (object == null) {
                 return returnResponse(Status.UNKNOWN_ERROR);

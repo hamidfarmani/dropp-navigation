@@ -129,18 +129,36 @@ public class MasterServiceImpl implements MasterService {
 
             Operator operator = entityManager.find(Operator.class,id);
 
-            String hashedPassword = EncoderUtil.getSHA512Hash(password).toLowerCase();
-            operator.setFirstName(firstname);
-            operator.setLastName(lastname);
-            operator.setPassword(hashedPassword);
-            operator.setPhoneNumber(PhoneNumber);
-            operator.setBirthDate(birthDate);
-            operator.setWorkNumber(workNumber);
-            operator.setCity(city);
+            if(firstname!=null) {
+                operator.setFirstName(firstname);
+            }
+            if(lastname!=null) {
+                operator.setLastName(lastname);
+            }
+            if(password!=null) {
+                String hashedPassword = EncoderUtil.getSHA512Hash(password).toLowerCase();
+                operator.setPassword(hashedPassword);
+            }
+            if(PhoneNumber!=null) {
+                operator.setPhoneNumber(PhoneNumber);
+            }
+            if(birthDate!=null) {
+                operator.setBirthDate(birthDate);
+            }
+            if(workNumber!=null) {
+                operator.setWorkNumber(workNumber);
+            }
+            if(city!=null) {
+                operator.setCity(city);
+            }
+            if(email!=null) {
+                operator.setEmail(email);
+            }
+            if(gender!=null) {
+                operator.setGender(gender);
+            }
+            operator.setAccountState(AccountState.VERIFIED);
             operator.setLoggedIn(false);
-            operator.setEmail(email);
-            operator.setGender(gender);
-            operator.setAccountState(AccountState.READY_TO_VERIFY);
 
             entityManager.getTransaction().commit();
 

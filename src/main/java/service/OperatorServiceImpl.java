@@ -1068,7 +1068,7 @@ public class OperatorServiceImpl implements OperatorService {
                 subscribeJson.put("phoneNumber",u.getPhoneNumber());
                 if (u.getAddress() != null) {
                     address.put("state", u.getAddress().getCity().getState().getName());
-                    address.put("city", u.getAddress().getCity());
+                    address.put("city", u.getAddress().getCity().getName());
                     address.put("line1", u.getAddress().getLine1());
                     address.put("line2", u.getAddress().getLine2());
                     address.put("postalCode", u.getAddress().getPostalCode());
@@ -1130,10 +1130,7 @@ public class OperatorServiceImpl implements OperatorService {
                 tripInfo.put("vehicle", vehicle);
             }
             if(locDoc!=null) {
-                loc.put("originLng", locDoc.get("originLng"));
-                loc.put("originLat", locDoc.get("originLat"));
-
-                tripInfo.put("loc", loc);
+                tripInfo.put("originAddress", locDoc.get("originAddress"));
             }
 
 
@@ -1183,7 +1180,7 @@ public class OperatorServiceImpl implements OperatorService {
                 d.put("address", destination.get("address"));
                 destinations.put(d);
             }
-            tripInfo.append("destinations", destinations);
+            tripInfo.put("destinations", destinations);
             trips.put(tripInfo);
 
         }

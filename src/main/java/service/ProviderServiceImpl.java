@@ -1,6 +1,7 @@
 package service;
 
 import model.entity.persistent.Driver;
+import model.entity.persistent.Operator;
 import model.entity.persistent.SearchRadius;
 import model.entity.persistent.ServiceProvider;
 import model.enums.AccountState;
@@ -68,11 +69,15 @@ public class ProviderServiceImpl implements ProviderService {
         return jsonObjectResponse;
     }
 
-    public Status payment(String username) {
+    public Status payment(String username,String providerUsername) {
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            Driver driver = (Driver) entityManager.createNamedQuery("driver.almasDriver.username")
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", providerUsername)
+                    .getSingleResult();
+            Driver driver = (Driver) entityManager.createNamedQuery("driver.provider.username")
+                    .setParameter("providerID",operator.getServiceProvider().getId())
                     .setParameter("username",username)
                     .setMaxResults(1).getSingleResult();
             ServiceProvider serviceProvider = (ServiceProvider) entityManager.createNamedQuery("serviceProvider.findby.id")
@@ -132,13 +137,17 @@ public class ProviderServiceImpl implements ProviderService {
         }
     }
 
-    public Object driversDebt() {
+    public Object driversDebt(String providerUsername) {
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray drivers = new JSONArray();
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", providerUsername)
+                    .getSingleResult();
             List<Object[]> driversDebt = entityManager.createNamedQuery("driver.groupby.debt")
+                    .setParameter("providerID", operator.getServiceProvider().getId())
                     .getResultList();
             for (Object[] obj : driversDebt) {
                 String username = String.valueOf(obj[0]);
@@ -167,13 +176,17 @@ public class ProviderServiceImpl implements ProviderService {
         return jsonObjectResponse;
     }
 
-    public Object mostDebtDrivers() {
+    public Object mostDebtDrivers(String providerUsername) {
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray drivers = new JSONArray();
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", providerUsername)
+                    .getSingleResult();
             List<Driver> driversDebt = entityManager.createNamedQuery("driver.orderby.credit")
+                    .setParameter("providerID",operator.getServiceProvider().getId())
                     .setMaxResults(10)
                     .getResultList();
             for (Driver driver : driversDebt) {

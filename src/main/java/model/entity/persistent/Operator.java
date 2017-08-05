@@ -100,6 +100,10 @@ public class Operator implements Serializable {
     @Column(name = "ROLE", columnDefinition = "CHAR")
     private UserRole role;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "FK_SERVICE_PROVIDER", referencedColumnName = "ID")
+    private ServiceProvider serviceProvider;
+
     public Operator() {
     }
 
@@ -237,5 +241,13 @@ public class Operator implements Serializable {
 
     public void setMessages(List<Message> messages) {
         this.messages = messages;
+    }
+
+    public ServiceProvider getServiceProvider() {
+        return serviceProvider;
+    }
+
+    public void setServiceProvider(ServiceProvider serviceProvider) {
+        this.serviceProvider = serviceProvider;
     }
 }
