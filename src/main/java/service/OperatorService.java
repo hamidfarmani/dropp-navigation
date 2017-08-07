@@ -16,7 +16,7 @@ public interface OperatorService {
 
     Object operatorLogin(String username, String password,String ip);
 
-    Status confirmUser(String username,String operatorUsername);
+    Status confirmDriver(String username,String providerID,String operatorUsername);
 
     JSONObject viewNumberOfAllDrivers();
 

@@ -1,24 +1,27 @@
 package service;
 
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 import model.entity.persistent.Driver;
 import model.entity.persistent.Operator;
-import model.entity.persistent.SearchRadius;
 import model.entity.persistent.ServiceProvider;
 import model.enums.AccountState;
 import model.enums.Status;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.transaction.annotation.Transactional;
-import util.IOCContainer;
 import util.LocalEntityManagerFactory;
-import util.converter.ServiceTypeConverter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.RollbackException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -30,43 +33,6 @@ public class ProviderServiceImpl implements ProviderService {
 
     public ProviderServiceImpl() {
 
-    }
-
-    public Object viewSearchRadius(){
-        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
-        JSONObject jsonObjectResponse = new JSONObject();
-        JSONArray types = new JSONArray();
-        try {
-            entityManager.getTransaction().begin();
-            List<SearchRadius> searchRadius = entityManager.createNamedQuery("searchRadius.all")
-                    .getResultList();
-            for(int i=0;i<searchRadius.size();i++) {
-                JSONObject type = new JSONObject();
-                type.put("radius", searchRadius.get(i).getRadius());
-                type.put("serviceType", ((ServiceTypeConverter)IOCContainer.getBean("serviceTypeConverter")).convertToDatabaseColumn(searchRadius.get(i).getServiceType()));
-                types.put(type);
-            }
-            jsonObjectResponse.put("searchRadius", types);
-            entityManager.getTransaction().commit();
-        }catch (NoResultException e) {
-            e.printStackTrace();
-            return Status.NOT_FOUND;
-        }catch (JSONException e){
-            e.printStackTrace();
-            return Status.BAD_JSON;
-        }catch(Exception e){
-            e.printStackTrace();
-            return Status.UNKNOWN_ERROR;
-        }finally{
-            if(entityManager.getTransaction().isActive()){
-                entityManager.getTransaction().rollback();
-            }
-            if(entityManager.isOpen()){
-                entityManager.close();
-            }
-        }
-
-        return jsonObjectResponse;
     }
 
     public Status payment(String username,String providerUsername) {
@@ -107,12 +73,16 @@ public class ProviderServiceImpl implements ProviderService {
         }
     }
 
-    public Object calculateClaim() {
+    public Object calculateClaim(String providerUsername) {
         JSONObject jsonObjectResponse = new JSONObject();
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            ServiceProvider serviceProvider = (ServiceProvider) entityManager.createNamedQuery("serviceProvider.get.all")
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", providerUsername)
+                    .getSingleResult();
+            ServiceProvider serviceProvider = (ServiceProvider) entityManager.createNamedQuery("serviceProvider.findby.id")
+                    .setParameter("id",operator.getServiceProvider().getId())
                     .getSingleResult();
             entityManager.getTransaction().commit();
             Long driversClaim = serviceProvider.getDriversClaim();
@@ -135,45 +105,6 @@ public class ProviderServiceImpl implements ProviderService {
                 entityManager.close();
             }
         }
-    }
-
-    public Object driversDebt(String providerUsername) {
-        JSONObject jsonObjectResponse = new JSONObject();
-        JSONArray drivers = new JSONArray();
-        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
-        try {
-            entityManager.getTransaction().begin();
-            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
-                    .setParameter("username", providerUsername)
-                    .getSingleResult();
-            List<Object[]> driversDebt = entityManager.createNamedQuery("driver.groupby.debt")
-                    .setParameter("providerID", operator.getServiceProvider().getId())
-                    .getResultList();
-            for (Object[] obj : driversDebt) {
-                String username = String.valueOf(obj[0]);
-                Long sum = (Long) obj[1];
-                JSONObject object = new JSONObject();
-                object.put("username", username);
-                object.put("debt", sum);
-                drivers.put(object);
-            }
-            jsonObjectResponse.put("drivers",drivers);
-            entityManager.getTransaction().commit();
-        } catch (RollbackException e) {
-            e.printStackTrace();
-            entityManager.getTransaction().rollback();
-            return Status.BAD_DATA;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            if(entityManager.getTransaction().isActive()){
-                entityManager.getTransaction().rollback();
-            }if(entityManager.isOpen()){
-                entityManager.close();
-            }
-        }
-        return jsonObjectResponse;
     }
 
     public Object mostDebtDrivers(String providerUsername) {
@@ -214,13 +145,18 @@ public class ProviderServiceImpl implements ProviderService {
         return jsonObjectResponse;
     }
 
-    public Object customDebtDrivers(Long value) {
+    public Object customDebtDrivers(String providerUsername, Long value) {
         JSONObject jsonObjectResponse = new JSONObject();
         JSONArray drivers = new JSONArray();
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            List<Driver> driversDebt = entityManager.createNamedQuery("driver.orderby.gt.credit")
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", providerUsername)
+                    .getSingleResult();
+
+            List<Driver> driversDebt = entityManager.createNamedQuery("driver.orderby.gt.creditAndProviderID")
+                    .setParameter("providerID", operator.getServiceProvider().getId())
                     .setParameter("value",value)
                     .getResultList();
 
@@ -250,11 +186,16 @@ public class ProviderServiceImpl implements ProviderService {
         return jsonObjectResponse;
     }
 
-    public Status banDriver(String username) {
+    public Status banDriver(String providerUsername, String username) {
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            Driver driver = (Driver) entityManager.createNamedQuery("driver.searchExact.username")
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", providerUsername)
+                    .getSingleResult();
+
+            Driver driver = (Driver) entityManager.createNamedQuery("driver.searchExact.usernameAndProviderID")
+                    .setParameter("providerID", operator.getServiceProvider().getId())
                     .setParameter("username", username)
                     .getSingleResult();
             driver.setAccountState(AccountState.BANNED);
@@ -273,11 +214,18 @@ public class ProviderServiceImpl implements ProviderService {
         }
     }
 
-    public Status deactiveDriver(String username) {
+    public Status deactiveDriver(String providerUsername, String username) {
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            Driver driver = (Driver) entityManager.createNamedQuery("driver.searchExact.username")
+
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", providerUsername)
+                    .getSingleResult();
+
+
+            Driver driver = (Driver) entityManager.createNamedQuery("driver.searchExact.usernameAndProviderID")
+                    .setParameter("providerID", operator.getServiceProvider().getId())
                     .setParameter("username", username)
                     .getSingleResult();
             driver.setAccountState(AccountState.DEACTIVATE);
@@ -296,11 +244,16 @@ public class ProviderServiceImpl implements ProviderService {
         }
     }
 
-    public Status banDriverByCredit(Long value) {
+    public Status banDriverByCredit(String providerUsername, Long value) {
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            List<Driver> driversDebt = entityManager.createNamedQuery("driver.orderby.gt.credit")
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", providerUsername)
+                    .getSingleResult();
+
+            List<Driver> driversDebt = entityManager.createNamedQuery("driver.orderby.gt.creditAndProviderID")
+                    .setParameter("providerID",operator.getServiceProvider().getId())
                     .setParameter("value",value)
                     .getResultList();
             for(Driver d : driversDebt){
@@ -320,6 +273,150 @@ public class ProviderServiceImpl implements ProviderService {
                 entityManager.getTransaction().rollback();
             }if(entityManager.isOpen()){
                 entityManager.close();
+            }
+        }
+    }
+
+    public Object viewDriverOfProvider(String providerUsername,String q,int count,int pageIndex) {
+        JSONObject jsonObjectResponse = new JSONObject();
+        JSONArray drivers = new JSONArray();
+        List<Driver> driverList = null;
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", providerUsername)
+                    .getSingleResult();
+
+            if (count == -1) {
+                driverList = entityManager.createNamedQuery("driver.findBy.providerID.searchLike")
+                        .setParameter("providerID",operator.getServiceProvider().getId())
+                        .setParameter("input", q + "%")
+                        .getResultList();
+            } else {
+                driverList = entityManager.createNamedQuery("driver.findBy.providerID.searchLike")
+                        .setParameter("providerID",operator.getServiceProvider().getId())
+                        .setParameter("input", q + "%")
+                        .setFirstResult(count * pageIndex)
+                        .setMaxResults(count)
+                        .getResultList();
+            }
+
+            for (Driver driver : driverList) {
+                JSONObject d = new JSONObject();
+                d.put("credit", driver.getCredit());
+                d.put("username", driver.getUsername());
+                drivers.put(d);
+            }
+            jsonObjectResponse.put("drivers",drivers);
+            entityManager.getTransaction().commit();
+        } catch (RollbackException e) {
+            e.printStackTrace();
+            entityManager.getTransaction().rollback();
+            return Status.BAD_DATA;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if(entityManager.getTransaction().isActive()){
+                entityManager.getTransaction().rollback();
+            }if(entityManager.isOpen()){
+                entityManager.close();
+            }
+        }
+        return jsonObjectResponse;
+    }
+
+    public void driverOfProviderReport(HttpServletResponse resp,String providerUsername) {
+        List<Driver> driverList = null;
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+
+        try {
+            entityManager.getTransaction().begin();
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", providerUsername)
+                    .getSingleResult();
+
+            driverList = entityManager.createNamedQuery("driver.findBy.providerID")
+                    .setParameter("providerID", operator.getServiceProvider().getId())
+                    .getResultList();
+            entityManager.getTransaction().commit();
+        } catch (RollbackException e) {
+            e.printStackTrace();
+            entityManager.getTransaction().rollback();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        WritableWorkbook driverOfProviderExcelWorkSheet = null;
+        try {
+            Long mostDebt = Long.valueOf(0);
+            String mostDebtor = null;
+            driverOfProviderExcelWorkSheet = Workbook.createWorkbook(resp.getOutputStream());
+
+            WritableSheet excelSheet = driverOfProviderExcelWorkSheet.createSheet("رانندگان", 0);
+
+            Label label = new Label(0, 4, "نام کاربری");
+            excelSheet.addCell(label);
+            label = new Label(1, 4, "شماره تلفن همراه");
+            excelSheet.addCell(label);
+            label = new Label(2, 4, "موجودی حساب");
+            excelSheet.addCell(label);
+            label = new Label(3, 4, "وضعیت حساب");
+            excelSheet.addCell(label);
+            for(int i=0;i<driverList.size();i++){
+                Driver driver = driverList.get(i);
+                if(driver.getCredit()<mostDebt){
+                    mostDebt = driver.getCredit();
+                    mostDebtor = driver.getUsername();
+                }
+                label = new Label(0, i+5, driver.getUsername());
+                excelSheet.addCell(label);
+                label = new Label(1, i+5, driver.getPhoneNumber());
+                excelSheet.addCell(label);
+                label = new Label(2, i+5, String.valueOf(driver.getCredit()));
+                excelSheet.addCell(label);
+                label = new Label(3, i+5, String.valueOf(driver.getAccountState()));
+                excelSheet.addCell(label);
+
+            }
+            label = new Label(0, 0, "بیشترین بدهی");
+            excelSheet.addCell(label);
+            label = new Label(1, 0, "نام کاربری بدهکار");
+            excelSheet.addCell(label);
+            label = new Label(2, 0, "تعداد کل رانندگان");
+            excelSheet.addCell(label);
+
+
+
+            label = new Label(0, 1, String.valueOf(mostDebt));
+            excelSheet.addCell(label);
+            label = new Label(1, 1, String.valueOf(mostDebtor));
+            excelSheet.addCell(label);
+            label = new Label(2, 1, String.valueOf(driverList.size()));
+            excelSheet.addCell(label);
+
+            driverOfProviderExcelWorkSheet.write();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WriteException e) {
+            e.printStackTrace();
+        } finally {
+            if (driverOfProviderExcelWorkSheet != null) {
+                try {
+                    driverOfProviderExcelWorkSheet.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (WriteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

@@ -1,6 +1,6 @@
 package model.entity.persistent;
 
-//import model.enums.ResetPassState;
+import model.enums.PassResetCodeState;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -31,9 +31,9 @@ public class PasswordResetCode {
     @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
 
-//    @Basic
-//    @Column(name = "STATE", columnDefinition = "CHAR")
-//    private ResetPassState state;
+    @Basic
+    @Column(name = "STATE", columnDefinition = "CHAR")
+    private PassResetCodeState state;
 
     @Basic
     @Column(name = "RESET_CODE", columnDefinition = "VARCHAR2(8)")
@@ -74,13 +74,13 @@ public class PasswordResetCode {
         this.startDate = startDate;
     }
 
-//    public ResetPassState getState() {
-//        return state;
-//    }
-//
-//    public void setState(ResetPassState state) {
-//        this.state = state;
-//    }
+    public PassResetCodeState getState() {
+        return state;
+    }
+
+    public void setState(PassResetCodeState state) {
+        this.state = state;
+    }
 
     public String getResetCode() {
         return resetCode;

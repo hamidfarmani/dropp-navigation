@@ -79,13 +79,19 @@ public class OperatorController {
         }
     }
 
-    @RequestMapping(value = "/operator/confirmDriver/{driverUsername}", method = RequestMethod.PATCH, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> confirmUser(@PathVariable String driverUsername, @RequestHeader(value = "Authorization") String auth) {
+    @RequestMapping(value = "/operator/confirmDriver", method = RequestMethod.PATCH, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> confirmUser(@RequestBody String request, @RequestHeader(value = "Authorization") String auth) {
+        JSONObject jsonObjectRequest = new JSONObject(request);
         String op;
         try {
+            String driverUsername = jsonObjectRequest.getString("username");
+            String providerID = jsonObjectRequest.getString("providerID");
+            if(driverUsername.isEmpty()){
+                return returnResponse(Status.BAD_DATA);
+            }
             HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
             op = httpAuthParser.returnUsername(auth);
-            Status status = operatorService.confirmUser(driverUsername, op);
+            Status status = operatorService.confirmDriver(driverUsername,providerID, op);
 
             return ResponseProvider.getInstance().getResponse(status);
         } catch (JSONException e) {

@@ -12,6 +12,9 @@ import util.HTTPAuthParser;
 import util.IOCContainer;
 import util.ResponseProvider;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @RestController
 @CrossOrigin
 public class ProviderController {
@@ -38,29 +41,11 @@ public class ProviderController {
     }
 
     @RequestMapping(value = "/provider/claim", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> providerClaim() {
-        try{
-            Object debt = providerService.calculateClaim();
-            if(debt instanceof JSONObject){
-                return returnResponse(Status.OK, (JSONObject)debt);
-            }else{
-                return returnResponse(Status.UNKNOWN_ERROR);
-            }
-
-        } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
-            return returnResponse(Status.BAD_DATA);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return returnResponse(Status.BAD_JSON);
-        }
-    }
-
-    @RequestMapping(value = "/provider/drivers/debt", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> providerClaimFromDrivers(@RequestHeader(value = "Authorization") String auth) {
+    public ResponseEntity<String> providerClaim(@RequestHeader(value = "Authorization") String auth) {
         try{
             HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
             String providerUsername = httpAuthParser.returnUsername(auth);
-            Object debt = providerService.driversDebt(providerUsername);
+            Object debt = providerService.calculateClaim(providerUsername);
             if(debt instanceof JSONObject){
                 return returnResponse(Status.OK, (JSONObject)debt);
             }else{
@@ -96,16 +81,18 @@ public class ProviderController {
     }
 
     @RequestMapping(value = "/provider/drivers/debt/gt/{value}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> customDebtDrivers(@PathVariable String value) {
+    public ResponseEntity<String> customDebtDrivers(@RequestHeader(value = "Authorization") String auth, @PathVariable String value) {
 
         try{
             if(value.isEmpty()){
                 return returnResponse(Status.BAD_DATA);
             }
             Long debtValue = Long.valueOf(value);
-            Object mostDebtDrivers = providerService.customDebtDrivers(debtValue);
-            if(mostDebtDrivers instanceof JSONObject){
-                return returnResponse(Status.OK, (JSONObject)mostDebtDrivers);
+            HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+            String providerUsername = httpAuthParser.returnUsername(auth);
+            Object customDebtDrivers = providerService.customDebtDrivers(providerUsername, debtValue);
+            if(customDebtDrivers instanceof JSONObject){
+                return returnResponse(Status.OK, (JSONObject)customDebtDrivers);
             }else{
                 return returnResponse(Status.UNKNOWN_ERROR);
             }
@@ -119,12 +106,14 @@ public class ProviderController {
     }
 
     @RequestMapping(value = "/provider/banDriver", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> banDriver(@RequestBody String request) {
+    public ResponseEntity<String> banDriver(@RequestHeader(value = "Authorization") String auth,@RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);
         String username;
         try {
             username = jsonObjectRequest.getString("username");
-            Status status = providerService.banDriver(username);
+            HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+            String providerUsername = httpAuthParser.returnUsername(auth);
+            Status status = providerService.banDriver(providerUsername,username);
             return returnResponse(status);
         } catch (JSONException e) {
             return ResponseProvider.getInstance().getResponse(Status.BAD_JSON);
@@ -135,12 +124,14 @@ public class ProviderController {
     }
 
     @RequestMapping(value = "/provider/deactiveDriver", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> deactiveDriver(@RequestBody String request) {
+    public ResponseEntity<String> deactiveDriver(@RequestHeader(value = "Authorization") String auth,@RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);
         String username;
         try {
             username = jsonObjectRequest.getString("username");
-            Status status = providerService.deactiveDriver(username);
+            HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+            String providerUsername = httpAuthParser.returnUsername(auth);
+            Status status = providerService.deactiveDriver(providerUsername,username);
             return ResponseProvider.getInstance().getResponse(status);
         } catch (JSONException e) {
             return ResponseProvider.getInstance().getResponse(Status.BAD_JSON);
@@ -151,13 +142,15 @@ public class ProviderController {
     }
 
     @RequestMapping(value = "/provider/drivers/gt/{credit}/ban", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> banDriverByCredit(@PathVariable String credit) {
+    public ResponseEntity<String> banDriverByCredit(@RequestHeader(value = "Authorization") String auth,@PathVariable String credit) {
         try {
             if(credit.isEmpty()){
                 return returnResponse(Status.BAD_DATA);
             }
             Long value = Long.valueOf(credit);
-            Status status = providerService.banDriverByCredit(value);
+            HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+            String providerUsername = httpAuthParser.returnUsername(auth);
+            Status status = providerService.banDriverByCredit(providerUsername,value);
             return ResponseProvider.getInstance().getResponse(status);
         } catch (JSONException e) {
             return ResponseProvider.getInstance().getResponse(Status.BAD_JSON);
@@ -165,6 +158,45 @@ public class ProviderController {
             e.printStackTrace();
             return ResponseProvider.getInstance().getResponse(Status.BAD_DATA);
         }
+    }
+
+    @RequestMapping(value = "/provider/drivers", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> viewDriverOfProvider(@RequestHeader(value = "Authorization") String auth,@RequestParam(value = "q") String q,@RequestParam(value = "count") String count,@RequestParam(value = "offset") String pageIndex) {
+        int c, p=0;
+        try {
+            if(!count.isEmpty()){
+                c = Integer.valueOf(count);
+            }else{
+                c = -1;
+            }
+            if(!pageIndex.isEmpty()){
+                p = Integer.valueOf(pageIndex);
+            }
+            HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+            String providerUsername = httpAuthParser.returnUsername(auth);
+            Object driverOfProvider = providerService.viewDriverOfProvider(providerUsername, q, c, p);
+            if(driverOfProvider instanceof JSONObject){
+                return returnResponse(Status.OK, (JSONObject)driverOfProvider);
+            }else{
+                return returnResponse(Status.UNKNOWN_ERROR);
+            }
+
+        } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
+            return returnResponse(Status.BAD_DATA);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return returnResponse(Status.BAD_JSON);
+        }
+    }
+
+    @RequestMapping(value = "/provider/report/drivers", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    public void driverOfProviderReport(@RequestHeader(value = "Authorization") String auth,HttpServletResponse response) throws IOException {
+        String fileName = "Provider_Drivers_Report.xls";
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+        String providerUsername = httpAuthParser.returnUsername(auth);
+        providerService.driverOfProviderReport(response,providerUsername);
     }
 
     private ResponseEntity<String> returnResponse(Status status) {

@@ -43,6 +43,7 @@
     <bean id="voucherCode" class="model.entity.persistent.VoucherCode" scope="prototype"/>
     <bean id="state" class="model.entity.persistent.State" scope="prototype"/>
     <bean id="city" class="model.entity.persistent.City" scope="prototype"/>
+    <bean id="serviceProvider" class="model.entity.persistent.ServiceProvider" scope="prototype"/>
 
     <!-- entity -->
 

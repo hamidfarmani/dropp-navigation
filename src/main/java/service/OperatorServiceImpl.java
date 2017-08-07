@@ -115,16 +115,36 @@ public class OperatorServiceImpl implements OperatorService {
         }
     }
 
-    public Status confirmUser(String username, String op) {
+    public Status confirmDriver(String username,String providerID, String op) {
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        Long serviceProviderID;
         try {
             entityManager.getTransaction().begin();
+
             Driver driver = (Driver) entityManager.createNamedQuery("driver.searchExact.username")
                     .setParameter("username", username)
                     .getSingleResult();
+            if(driver.getAccountState()==AccountState.DEACTIVATE){
+                entityManager.getTransaction().rollback();
+                return Status.USER_DEACTIVATED;
+            }
+            if(driver.getAccountState()==AccountState.BANNED){
+                entityManager.getTransaction().rollback();
+                return Status.USER_BANNED;
+            }
             Operator operator = (Operator)entityManager.createNamedQuery("operator.exact.username")
                     .setParameter("username",op)
                     .getSingleResult();
+            if(providerID.isEmpty()){
+                driver.setServiceProvider(null);
+            }else{
+                serviceProviderID = Long.valueOf(providerID);
+                ServiceProvider serviceProvider = (ServiceProvider)entityManager.createNamedQuery("serviceProvider.findby.id")
+                        .setParameter("id",serviceProviderID)
+                        .getSingleResult();
+                driver.setServiceProvider(serviceProvider);
+            }
+
             driver.setOperator(operator);
             driver.setAccountState(AccountState.VERIFIED);
             entityManager.getTransaction().commit();
@@ -162,7 +182,6 @@ public class OperatorServiceImpl implements OperatorService {
         }
         return jsonObjectResponse;
     }
-
 
     public JSONObject viewOnlineAllDrivers() {
 

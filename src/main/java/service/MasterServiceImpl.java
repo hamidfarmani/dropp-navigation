@@ -412,7 +412,6 @@ public class MasterServiceImpl implements MasterService {
         return jsonObjectResponse;
     }
 
-
     public Status voucherUpdate(Long id, int maxUse, String description, Date startDate, Date endDate,  VoucherCodeType codeType, String value){
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         JSONObject jsonObjectResponse = new JSONObject();

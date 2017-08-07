@@ -17,17 +17,19 @@ import java.util.List;
         @NamedQuery(name = "driver.phoneNumber.exist", query = "select d.id from driver d where d.phoneNumber=:phoneNumber"),
         @NamedQuery(name = "driver.searchLike.username", query = "select d from driver d where d.username like :username"),
         @NamedQuery(name = "driver.searchExact.username", query = "select d from driver d where d.username =:username"),
+        @NamedQuery(name = "driver.searchExact.usernameAndProviderID", query = "select d from driver d where d.username =:username and d.serviceProvider.id=:providerID"),
         @NamedQuery(name = "driver.provider.username", query = "select d from driver d where d.username =:username and d.serviceProvider.id=:providerID and d.accountState!=-2"),
         @NamedQuery(name = "driver.searchLike", query = "select d from driver d left join d.vehicle v left  join  v.car c where d.username like :input or d.firstName like :input or d.lastName like :input or d.phoneNumber like :input or d.nationalNumber like :input or (v is not null and c is not null and c.name like :input) or (v is not null and v.licencePlate like :input) " ),
         @NamedQuery(name = "driver.findBy.usernameAndPassword", query = "select d from driver d where d.username=:username and d.password=:password"),
         @NamedQuery(name = "driver.get.credit",query = "select d.credit from driver d where username=:username"),
         @NamedQuery(name = "driver.findBy.accountState",query = "select d from driver d where d.accountState=:accountState"),
         @NamedQuery(name = "driver.all",query = "select d from driver d"),
+        @NamedQuery(name = "driver.findBy.providerID.searchLike",query = "select d from driver d where d.serviceProvider.id=:providerID and d.username like :input"),
+        @NamedQuery(name = "driver.findBy.providerID",query = "select d from driver d where d.serviceProvider.id=:providerID"),
         @NamedQuery(name = "driver.all.count",query = "select count(d.id) from driver d"),
         @NamedQuery(name = "driver.findBy.serviceType",query = "select d from driver d where d.serviceType=:serviceType"),
-        @NamedQuery(name = "driver.groupby.debt", query = "select d.username, sum(d.credit) from driver d where d.serviceProvider.id=:providerID GROUP by d.username having sum(d.credit)<0"),
         @NamedQuery(name = "driver.orderby.credit", query = "select d from driver d where d.serviceProvider.id=:providerID and d.credit<0 order by d.credit asc"),
-        @NamedQuery(name = "driver.orderby.gt.credit", query = "select d from driver d where d.credit <= :value order by d.credit asc")
+        @NamedQuery(name = "driver.orderby.gt.creditAndProviderID", query = "select d from driver d where d.serviceProvider.id=:providerID and d.credit <= :value order by d.credit asc")
 })
 @Entity(name = "driver")
 @Table(name = "DRIVER", indexes = {

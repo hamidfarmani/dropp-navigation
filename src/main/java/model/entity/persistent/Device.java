@@ -11,7 +11,8 @@ import java.io.Serializable;
 @NamedQueries({
 
         @NamedQuery(name = "device.find.byUniqueID", query = "select d from device d where d.uniqueID=:uniqueID"),
-        @NamedQuery(name = "device.isExist.byUniqueID", query = "select d.id from device d where d.uniqueID=:uniqueID")
+        @NamedQuery(name = "device.isExist.byUniqueID", query = "select d.id from device d where d.uniqueID=:uniqueID"),
+        @NamedQuery(name = "device.all", query = "select d from device d")
 
 })
 

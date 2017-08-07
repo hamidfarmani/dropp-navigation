@@ -679,6 +679,14 @@ public class AdminController {
         adminManager.operatorsAgeReport(response);
     }
 
+    @RequestMapping(value = "/admin/report/devices", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    public void devicesReport(HttpServletResponse response) throws IOException {
+        String fileName = "Devices_Report.xls";
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        adminManager.OSReport(response);
+    }
+
     @RequestMapping(value = "/admin/report/trips/{startDate}/{endDate}", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
     public void tripsReport(HttpServletResponse response,@PathVariable String startDate, @PathVariable String endDate) throws IOException {
         String fileName = "Trips_Report.xls";
@@ -695,6 +703,33 @@ public class AdminController {
             e.printStackTrace();
         }
         adminManager.tripsReport(response,sDate,eDate);
+    }
+
+    @RequestMapping(value = "/admin/providers", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8",  produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> insertProvider(@RequestBody String request) {
+        JSONObject jsonObjectRequest = new JSONObject(request);
+        try {
+            String name = jsonObjectRequest.getString("name");
+            if(name.isEmpty()){
+                return returnResponse(Status.BAD_DATA);
+            }
+            Status status = adminManager.insertProvider(name);
+            return returnResponse(status);
+        } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
+            return returnResponse(Status.BAD_DATA);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return returnResponse(Status.BAD_JSON);
+        }
+    }
+
+    @RequestMapping(value = "/admin/providers", method = RequestMethod.GET,  produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> viewProviders() {
+        Object object = adminManager.viewProviders();
+        if (object instanceof JSONObject) {
+            return returnResponse(Status.OK, (JSONObject) object);
+        }
+        return returnResponse(Status.UNKNOWN_ERROR);
     }
 
     private ResponseEntity<String> returnResponse(Status status) {

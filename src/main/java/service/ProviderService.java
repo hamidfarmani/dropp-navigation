@@ -2,26 +2,27 @@ package service;
 
 import model.enums.Status;
 
+import javax.servlet.http.HttpServletResponse;
+
 public interface ProviderService {
 
     Status payment(String username,String providerUsername);
 
-    Object viewSearchRadius();
-
-    Object calculateClaim();
-
-    Object driversDebt(String providerUsername);
+    Object calculateClaim(String providerUsername);
 
     Object mostDebtDrivers(String providerUsername);
 
-    Object customDebtDrivers(Long value);
+    Object customDebtDrivers(String providerUsername, Long value);
 
-    Status banDriver(String username);
+    Status banDriver(String providerUsername, String username);
 
-    Status deactiveDriver(String username);
+    Status deactiveDriver(String providerUsername, String username);
 
-    Status banDriverByCredit(Long value);
+    Status banDriverByCredit(String providerUsername, Long value);
 
+    Object viewDriverOfProvider(String providerUsername,String q,int count,int pageIndex);
+
+    void driverOfProviderReport(HttpServletResponse resp,String providerUsername);
 }
 
 

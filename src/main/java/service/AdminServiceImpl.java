@@ -948,6 +948,7 @@ public class AdminServiceImpl implements AdminService {
         WritableWorkbook driverExcelWorkSheet = null;
         try {
             int sum = 0;
+            int num = 0;
             driverExcelWorkSheet = Workbook.createWorkbook(resp.getOutputStream());
 
             WritableSheet excelSheet = driverExcelWorkSheet.createSheet("رانندگان", 0);
@@ -962,17 +963,19 @@ public class AdminServiceImpl implements AdminService {
             for(int i=0;i<driversList.size();i++){
                 Driver driver = driversList.get(i);
                 birthDate = driver.getBirthDate();
-                if(birthDate.before(oldest)){
-                    oldest = birthDate;
-                }
-                if(birthDate.after(youngest)){
-                    youngest = birthDate;
-                }
+                if(birthDate!=null) {
+                    if (birthDate.before(oldest)) {
+                        oldest = birthDate;
+                    }
+                    if (birthDate.after(youngest)) {
+                        youngest = birthDate;
+                    }
 
-                LocalDate bDateLocal = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                LocalDate tDateLocal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                sum = sum + Period.between(bDateLocal, tDateLocal).getYears();
-
+                    LocalDate bDateLocal = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate tDateLocal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    sum = sum + Period.between(bDateLocal, tDateLocal).getYears();
+                    num++;
+                }
                 label = new Label(0, i+5, driver.getUsername());
                 excelSheet.addCell(label);
                 label = new Label(1, i+5, driver.getPhoneNumber());
@@ -1008,7 +1011,7 @@ public class AdminServiceImpl implements AdminService {
             excelSheet.addCell(label);
             label = new Label(1, 1, String.valueOf(oldestAge));
             excelSheet.addCell(label);
-            label = new Label(2, 1, String.valueOf(Double.valueOf(sum)/driversList.size()));
+            label = new Label(2, 1, String.valueOf(Double.valueOf(sum)/num));
             excelSheet.addCell(label);
             label = new Label(3, 1, String.valueOf(driversList.size()));
             excelSheet.addCell(label);
@@ -1043,6 +1046,7 @@ public class AdminServiceImpl implements AdminService {
             passengersList = entityManager.createNamedQuery("passenger.all")
                     .getResultList();
             int sum = 0;
+            int num = 0;
             passengerExcelWorkSheet = Workbook.createWorkbook(resp.getOutputStream());
             WritableSheet excelSheet = passengerExcelWorkSheet.createSheet("مسافران", 0);
 //            excelSheet.getSettings().setProtected(true);
@@ -1056,17 +1060,19 @@ public class AdminServiceImpl implements AdminService {
             for(int i=0;i<passengersList.size();i++){
                 Passenger passenger = passengersList.get(i);
                 birthDate = passenger.getPassengerInfo().getBirthDate();
-                if(birthDate.before(oldest)){
-                    oldest = birthDate;
-                }
-                if(birthDate.after(youngest)){
-                    youngest = birthDate;
-                }
+                if(birthDate!=null) {
+                    if (birthDate.before(oldest)) {
+                        oldest = birthDate;
+                    }
+                    if (birthDate.after(youngest)) {
+                        youngest = birthDate;
+                    }
 
-                LocalDate bDateLocal = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                LocalDate tDateLocal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                sum = sum + Period.between(bDateLocal, tDateLocal).getYears();
-
+                    LocalDate bDateLocal = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate tDateLocal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    sum = sum + Period.between(bDateLocal, tDateLocal).getYears();
+                    num++;
+                }
                 label = new Label(0, i+5, passenger.getUsername());
                 excelSheet.addCell(label);
                 label = new Label(1, i+5, passenger.getPhoneNumber());
@@ -1102,7 +1108,7 @@ public class AdminServiceImpl implements AdminService {
             excelSheet.addCell(label);
             label = new Label(1, 1, String.valueOf(oldestAge));
             excelSheet.addCell(label);
-            label = new Label(2, 1, String.valueOf(Double.valueOf(sum)/passengersList.size()));
+            label = new Label(2, 1, String.valueOf(Double.valueOf(sum)/num));
             excelSheet.addCell(label);
             label = new Label(3, 1, String.valueOf(passengersList.size()));
             excelSheet.addCell(label);
@@ -1163,6 +1169,7 @@ public class AdminServiceImpl implements AdminService {
         WritableWorkbook operatorExcelWorkSheet = null;
         try {
             int sum = 0;
+            int num = 0;
             operatorExcelWorkSheet = Workbook.createWorkbook(resp.getOutputStream());
 
             WritableSheet excelSheet = operatorExcelWorkSheet.createSheet("اپراتورها", 0);
@@ -1177,17 +1184,19 @@ public class AdminServiceImpl implements AdminService {
             for(int i=0;i<operatorsList.size();i++){
                 Operator operator = operatorsList.get(i);
                 birthDate = operator.getBirthDate();
-                if(birthDate.before(oldest)){
-                    oldest = birthDate;
-                }
-                if(birthDate.after(youngest)){
-                    youngest = birthDate;
-                }
+                if(birthDate!=null) {
+                    if (birthDate.before(oldest)) {
+                        oldest = birthDate;
+                    }
+                    if (birthDate.after(youngest)) {
+                        youngest = birthDate;
+                    }
 
-                LocalDate bDateLocal = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                LocalDate tDateLocal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                sum = sum + Period.between(bDateLocal, tDateLocal).getYears();
-
+                    LocalDate bDateLocal = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate tDateLocal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    sum = sum + Period.between(bDateLocal, tDateLocal).getYears();
+                    num++;
+                }
                 label = new Label(0, i+5, operator.getUsername());
                 excelSheet.addCell(label);
                 label = new Label(1, i+5, operator.getPhoneNumber());
@@ -1223,7 +1232,7 @@ public class AdminServiceImpl implements AdminService {
             excelSheet.addCell(label);
             label = new Label(1, 1, String.valueOf(oldestAge));
             excelSheet.addCell(label);
-            label = new Label(2, 1, String.valueOf(Double.valueOf(sum)/operatorsList.size()));
+            label = new Label(2, 1, String.valueOf(Double.valueOf(sum)/num));
             excelSheet.addCell(label);
             label = new Label(3, 1, String.valueOf(operatorsList.size()));
             excelSheet.addCell(label);
@@ -1399,6 +1408,164 @@ public class AdminServiceImpl implements AdminService {
             if (operatorExcelWorkSheet != null) {
                 try {
                     operatorExcelWorkSheet.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (WriteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public Status insertProvider(String name) {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            ServiceProvider serviceProvider = (ServiceProvider) IOCContainer.getBean("serviceProvider");
+            serviceProvider.setTotalClaim(Long.valueOf(0));
+            serviceProvider.setDriversClaim(Long.valueOf(0));
+            serviceProvider.setName(name);
+            entityManager.persist(serviceProvider);
+            entityManager.getTransaction().commit();
+            return Status.OK;
+
+        } catch (NoResultException e) {
+            return Status.NOT_FOUND;
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+    }
+
+    public Object viewProviders() {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        JSONObject jsonObjectResponse = new JSONObject();
+        List<ServiceProvider> serviceProvidersList = null;
+        JSONArray providersJSONArray = new JSONArray();
+        try {
+            entityManager.getTransaction().begin();
+            serviceProvidersList = entityManager.createNamedQuery("serviceProvider.get.all")
+                    .getResultList();
+
+            entityManager.getTransaction().commit();
+        } catch (NoResultException e) {
+            e.printStackTrace();
+            return Status.NOT_FOUND;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return Status.BAD_JSON;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Status.UNKNOWN_ERROR;
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        for(ServiceProvider s : serviceProvidersList){
+            JSONObject providerJSON = new JSONObject();
+
+            providerJSON.put("driversClaim", s.getDriversClaim());
+            providerJSON.put("totalClaim", s.getTotalClaim());
+            providerJSON.put("id", s.getId());
+            providerJSON.put("name", s.getName());
+
+            providersJSONArray.put(providerJSON);
+        }
+        jsonObjectResponse.put("serviceProvider", providersJSONArray);
+        return jsonObjectResponse;
+    }
+
+    public void OSReport(HttpServletResponse resp) {
+        List<Device> deviceList = null;
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            deviceList = entityManager.createNamedQuery("device.all")
+                    .getResultList();
+            entityManager.getTransaction().commit();
+        } catch (RollbackException e) {
+            e.printStackTrace();
+            entityManager.getTransaction().rollback();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        WritableWorkbook deviceExcelWorkSheet = null;
+        try {
+            int numAnd = 0;
+            int numIOS = 0;
+            deviceExcelWorkSheet = Workbook.createWorkbook(resp.getOutputStream());
+
+            WritableSheet excelSheet = deviceExcelWorkSheet.createSheet("سیستم عامل", 0);
+            Label label = new Label(0, 4, "مدل");
+            excelSheet.addCell(label);
+            label = new Label(1, 4, "سیستم عامل");
+            excelSheet.addCell(label);
+            label = new Label(2, 4, "نسخه");
+            excelSheet.addCell(label);
+            label = new Label(3, 4, "سازنده");
+            excelSheet.addCell(label);
+            for(int i=0;i<deviceList.size();i++){
+                Device device = deviceList.get(i);
+                if(device.getOS()!=null) {
+                    if (device.getOS().toLowerCase().contains("and")) {
+                        numAnd++;
+                    }
+                    if (device.getOS().toLowerCase().contains("ios")) {
+                        numIOS++;
+                    }
+                }
+                label = new Label(0, i+5, device.getModel());
+                excelSheet.addCell(label);
+                label = new Label(1, i+5, device.getOS());
+                excelSheet.addCell(label);
+                label = new Label(2, i+5, device.getOSVersion());
+                excelSheet.addCell(label);
+                label = new Label(3, i+5, device.getManufacturer());
+                excelSheet.addCell(label);
+
+            }
+            label = new Label(0, 0, "تعداد دستگاه های ثبت شده");
+            excelSheet.addCell(label);
+            label = new Label(1, 0, "تعداد دستگاه های ANDROID");
+            excelSheet.addCell(label);
+            label = new Label(2, 0, "تعداد دستگاه های IOS");
+            excelSheet.addCell(label);
+
+
+
+
+            label = new Label(0, 1, String.valueOf(deviceList.size()));
+            excelSheet.addCell(label);
+            label = new Label(1, 1, String.valueOf(numAnd));
+            excelSheet.addCell(label);
+            label = new Label(2, 1, String.valueOf(numIOS));
+            excelSheet.addCell(label);
+
+            deviceExcelWorkSheet.write();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WriteException e) {
+            e.printStackTrace();
+        } finally {
+            if (deviceExcelWorkSheet != null) {
+                try {
+                    deviceExcelWorkSheet.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (WriteException e) {

@@ -74,6 +74,12 @@ public interface AdminService {
 
     void tripsReport(HttpServletResponse resp,Date startDate, Date endDate);
 
+    Status insertProvider(String name);
+
+    Object viewProviders();
+
+    void OSReport(HttpServletResponse resp);
+
 }
 
 
