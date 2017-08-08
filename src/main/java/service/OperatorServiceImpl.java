@@ -1657,4 +1657,46 @@ public class OperatorServiceImpl implements OperatorService {
             }
         }
     }
+
+    public Object viewProviders() {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        JSONObject jsonObjectResponse = new JSONObject();
+        List<ServiceProvider> serviceProvidersList = null;
+        JSONArray providersJSONArray = new JSONArray();
+        try {
+            entityManager.getTransaction().begin();
+            serviceProvidersList = entityManager.createNamedQuery("serviceProvider.get.all")
+                    .getResultList();
+
+            entityManager.getTransaction().commit();
+        } catch (NoResultException e) {
+            e.printStackTrace();
+            return Status.NOT_FOUND;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return Status.BAD_JSON;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Status.UNKNOWN_ERROR;
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        for(ServiceProvider s : serviceProvidersList){
+            JSONObject providerJSON = new JSONObject();
+
+            providerJSON.put("driversClaim", s.getDriversClaim());
+            providerJSON.put("totalClaim", s.getTotalClaim());
+            providerJSON.put("id", s.getId());
+            providerJSON.put("name", s.getName());
+
+            providersJSONArray.put(providerJSON);
+        }
+        jsonObjectResponse.put("serviceProvider", providersJSONArray);
+        return jsonObjectResponse;
+    }
 }

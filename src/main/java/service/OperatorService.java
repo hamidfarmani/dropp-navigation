@@ -99,4 +99,6 @@ public interface OperatorService {
     boolean isOrganizationPhoneNumberExist(String phoneNumber);
 
     boolean isOrganizationUsernameExist(String username);
+
+    Object viewProviders();
 }

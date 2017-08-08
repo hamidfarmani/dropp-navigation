@@ -22,7 +22,7 @@ import java.util.List;
         @NamedQuery(name = "passenger.findBy.accountState",query = "select p from passenger p where p.accountState=:accountState"),
         @NamedQuery(name = "passenger.all.count",query = "select count(p.id) from passenger p"),
         @NamedQuery(name = "passenger.all",query = "select p from passenger p"),
-        @NamedQuery(name = "passenger.new.count",query = "select count(p.id) from passenger p where p.registrationTimestamp >= :date")
+        @NamedQuery(name = "passenger.new.count",query = "select count(p.id) from passenger p where trunc(p.registrationTimestamp) >= trunc(:date)")
 })
 @Entity(name = "passenger")
 @Table(name = "PASSENGER", indexes = {

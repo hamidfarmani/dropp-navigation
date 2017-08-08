@@ -29,14 +29,16 @@ public class MasterController {
     }
 
     @RequestMapping(value = "/master/operators", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> operatorRegister(@RequestBody String request) {
+    public ResponseEntity<String> operatorRegister(@RequestBody String request, @RequestHeader(value = "Authorization") String auth) {
         JSONObject jsonObjectRequest = new JSONObject(request);
-        String username, password, PhoneNumber, cityStr, genderStr,firstname,lastname,workNumber,email;
+        String username,creatorUsername, password, PhoneNumber, cityStr, genderStr,firstname,lastname,workNumber,email;
         City city;
         Gender gender;
         Date birthDate;
         int year,month,day;
         try {
+            HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+            creatorUsername = httpAuthParser.returnUsername(auth);
             firstname = jsonObjectRequest.getString("firstName").trim();
             lastname = jsonObjectRequest.getString("lastName").trim();
             username = jsonObjectRequest.getString("username").trim();
@@ -88,7 +90,7 @@ public class MasterController {
             return returnResponse(Status.PHONE_NUMBER_EXIST);
         }
         if (!masterService.isUsernameExist(username)) {
-            Object object = masterService.operatorRegister(firstname,lastname,birthDate,email,PhoneNumber,workNumber, username, password,gender,city);
+            Object object = masterService.operatorRegister(creatorUsername,firstname,lastname,birthDate,email,PhoneNumber,workNumber, username, password,gender,city);
             if (object == null) {
                 return returnResponse(Status.UNKNOWN_ERROR);
             }

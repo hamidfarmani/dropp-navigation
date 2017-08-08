@@ -31,6 +31,8 @@ import java.util.List;
          @NamedQuery(name = "trip.today.count",query = "select count(t.id) from trip t where trunc(t.startDate) = trunc(current_date)"),
          @NamedQuery(name = "trip.distance.findBy.vehicleID",query = "select SUM(t.distance) from trip t where (t.serviceType!='R' or t.serviceType!='D') and t.vehicle.id=:vehicleID"),
          @NamedQuery(name = "trip.searchLike", query = "select t from trip t left join t.driver d left join t.passenger p left join t.subscribeUser s left join t.origin o  where t.UUID like :input or  p.username like :input or d.username like :input or s.subscriptionCode like :input " ),
+         @NamedQuery(name = "trip.groupBy.city", query = "select t.city,sum(t.cost) from trip t group by t.city" ),
+         @NamedQuery(name = "trip.groupBy.serviceType", query = "select t.serviceType,sum(t.cost) from trip t group by t.serviceType" )
  })
 
 @Entity(name = "trip")

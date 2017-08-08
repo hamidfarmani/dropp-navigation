@@ -189,7 +189,7 @@ public class ProviderController {
         }
     }
 
-    @RequestMapping(value = "/provider/report/drivers", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    @RequestMapping(value = "/provider/report/drivers", method = RequestMethod.GET, produces = "application/vnd.ms-excel;charset=UTF-8")
     public void driverOfProviderReport(@RequestHeader(value = "Authorization") String auth,HttpServletResponse response) throws IOException {
         String fileName = "Provider_Drivers_Report.xls";
         response.setContentType("application/vnd.ms-excel");
@@ -197,6 +197,16 @@ public class ProviderController {
         HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
         String providerUsername = httpAuthParser.returnUsername(auth);
         providerService.driverOfProviderReport(response,providerUsername);
+    }
+
+    @RequestMapping(value = "/provider/report/claim", method = RequestMethod.GET, produces = "application/vnd.ms-excel;charset=UTF-8")
+    public void providerClaim(@RequestHeader(value = "Authorization") String auth,HttpServletResponse response) throws IOException {
+        String fileName = "Provider_Claim_Report.xls";
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+        String providerUsername = httpAuthParser.returnUsername(auth);
+        providerService.providerClaim(response,providerUsername);
     }
 
     private ResponseEntity<String> returnResponse(Status status) {

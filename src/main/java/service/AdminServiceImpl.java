@@ -28,6 +28,8 @@ import javax.persistence.RollbackException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
@@ -78,10 +80,13 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-    public Status masterRegister(String firstname, String lastname, Date birthDate, String email, String PhoneNumber, String workNumber, String username, String password, Gender gender, City city) {
+    public Status masterRegister(String creatorUsername, String firstname, String lastname, Date birthDate, String email, String PhoneNumber, String workNumber, String username, String password, Gender gender, City city) {
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
+            Operator creator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username",creatorUsername)
+                    .getSingleResult();
             Operator operator = (Operator) IOCContainer.getBean("operator");
 
             String hashedPassword = EncoderUtil.getSHA512Hash(password).toLowerCase();
@@ -96,6 +101,7 @@ public class AdminServiceImpl implements AdminService {
             operator.setLoggedIn(false);
             operator.setEmail(email);
             operator.setGender(gender);
+            operator.setCreator(creator);
             operator.setAccountState(AccountState.REGISTERED);
             operator.setRegistrationTimestamp(new Timestamp(System.currentTimeMillis()));
             operator.setRole(UserRole.MASTER_OPERATOR);
@@ -980,8 +986,12 @@ public class AdminServiceImpl implements AdminService {
                 excelSheet.addCell(label);
                 label = new Label(1, i+5, driver.getPhoneNumber());
                 excelSheet.addCell(label);
-                label = new Label(2, i+5, String.valueOf(birthDate));
-                excelSheet.addCell(label);
+                if(birthDate!=null) {
+                    DateFormat outputFormatter = new SimpleDateFormat("yyyy/MM/dd");
+                    String outputDate = outputFormatter.format(birthDate);
+                    label = new Label(2, i + 5, String.valueOf(outputDate));
+                    excelSheet.addCell(label);
+                }
 
             }
             label = new Label(0, 0, "جوان ترین راننده");
@@ -1077,8 +1087,12 @@ public class AdminServiceImpl implements AdminService {
                 excelSheet.addCell(label);
                 label = new Label(1, i+5, passenger.getPhoneNumber());
                 excelSheet.addCell(label);
-                label = new Label(2, i+5, String.valueOf(birthDate));
-                excelSheet.addCell(label);
+                if(birthDate!=null) {
+                    DateFormat outputFormatter = new SimpleDateFormat("yyyy/MM/dd");
+                    String outputDate = outputFormatter.format(birthDate);
+                    label = new Label(2, i + 5, String.valueOf(outputDate));
+                    excelSheet.addCell(label);
+                }
 
             }
             label = new Label(0, 0, "جوان ترین راننده");
@@ -1201,8 +1215,13 @@ public class AdminServiceImpl implements AdminService {
                 excelSheet.addCell(label);
                 label = new Label(1, i+5, operator.getPhoneNumber());
                 excelSheet.addCell(label);
-                label = new Label(2, i+5, String.valueOf(birthDate));
-                excelSheet.addCell(label);
+
+                if(birthDate!=null) {
+                    DateFormat outputFormatter = new SimpleDateFormat("yyyy/MM/dd");
+                    String outputDate = outputFormatter.format(birthDate);
+                    label = new Label(2, i + 5, String.valueOf(outputDate));
+                    excelSheet.addCell(label);
+                }
 
             }
             label = new Label(0, 0, "جوان ترین اپراتور");
@@ -1441,48 +1460,6 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-    public Object viewProviders() {
-        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
-        JSONObject jsonObjectResponse = new JSONObject();
-        List<ServiceProvider> serviceProvidersList = null;
-        JSONArray providersJSONArray = new JSONArray();
-        try {
-            entityManager.getTransaction().begin();
-            serviceProvidersList = entityManager.createNamedQuery("serviceProvider.get.all")
-                    .getResultList();
-
-            entityManager.getTransaction().commit();
-        } catch (NoResultException e) {
-            e.printStackTrace();
-            return Status.NOT_FOUND;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return Status.BAD_JSON;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Status.UNKNOWN_ERROR;
-        } finally {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
-        for(ServiceProvider s : serviceProvidersList){
-            JSONObject providerJSON = new JSONObject();
-
-            providerJSON.put("driversClaim", s.getDriversClaim());
-            providerJSON.put("totalClaim", s.getTotalClaim());
-            providerJSON.put("id", s.getId());
-            providerJSON.put("name", s.getName());
-
-            providersJSONArray.put(providerJSON);
-        }
-        jsonObjectResponse.put("serviceProvider", providersJSONArray);
-        return jsonObjectResponse;
-    }
-
     public void OSReport(HttpServletResponse resp) {
         List<Device> deviceList = null;
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
@@ -1508,6 +1485,7 @@ public class AdminServiceImpl implements AdminService {
         try {
             int numAnd = 0;
             int numIOS = 0;
+            String maxIOS="0", maxAndroid="0", minIOS="99999999999999", minAndroid="99999999999999";
             deviceExcelWorkSheet = Workbook.createWorkbook(resp.getOutputStream());
 
             WritableSheet excelSheet = deviceExcelWorkSheet.createSheet("سیستم عامل", 0);
@@ -1523,11 +1501,24 @@ public class AdminServiceImpl implements AdminService {
                 Device device = deviceList.get(i);
                 if(device.getOS()!=null) {
                     if (device.getOS().toLowerCase().contains("and")) {
+                        if(device.getOSVersion().compareTo(maxAndroid)>0){
+                            maxAndroid = device.getOSVersion();
+                        }
+                        if(device.getOSVersion().compareTo(minAndroid)<0){
+                            minAndroid = device.getOSVersion();
+                        }
                         numAnd++;
                     }
                     if (device.getOS().toLowerCase().contains("ios")) {
+                        if(device.getOSVersion().compareTo(maxIOS)>0){
+                            maxIOS = device.getOSVersion();
+                        }
+                        if(device.getOSVersion().compareTo(minIOS)<0){
+                            minIOS = device.getOSVersion();
+                        }
                         numIOS++;
                     }
+
                 }
                 label = new Label(0, i+5, device.getModel());
                 excelSheet.addCell(label);
@@ -1541,9 +1532,17 @@ public class AdminServiceImpl implements AdminService {
             }
             label = new Label(0, 0, "تعداد دستگاه های ثبت شده");
             excelSheet.addCell(label);
-            label = new Label(1, 0, "تعداد دستگاه های ANDROID");
+            label = new Label(1, 0, "تعداد دستگاه های Android");
             excelSheet.addCell(label);
             label = new Label(2, 0, "تعداد دستگاه های IOS");
+            excelSheet.addCell(label);
+            label = new Label(3, 0, "پایین ترین نسخه ی Android");
+            excelSheet.addCell(label);
+            label = new Label(4, 0, "بالاترین نسخه ی Android");
+            excelSheet.addCell(label);
+            label = new Label(5, 0, "پایین ترین نسخه ی IOS");
+            excelSheet.addCell(label);
+            label = new Label(6, 0, "بالاترین نسخه ی IOS");
             excelSheet.addCell(label);
 
 
@@ -1554,6 +1553,22 @@ public class AdminServiceImpl implements AdminService {
             label = new Label(1, 1, String.valueOf(numAnd));
             excelSheet.addCell(label);
             label = new Label(2, 1, String.valueOf(numIOS));
+            excelSheet.addCell(label);
+            if(!minAndroid.equals("99999999999999")){
+                label = new Label(3, 1, String.valueOf(minAndroid));
+            }else{
+                label = new Label(3, 1, "0");
+            }
+            excelSheet.addCell(label);
+            label = new Label(4, 1, String.valueOf(maxAndroid));
+            excelSheet.addCell(label);
+            if(!minIOS.equals("99999999999999")){
+                label = new Label(5, 1, String.valueOf(minIOS));
+            }else{
+                label = new Label(5, 1, "0");
+            }
+            excelSheet.addCell(label);
+            label = new Label(6, 1, String.valueOf(maxIOS));
             excelSheet.addCell(label);
 
             deviceExcelWorkSheet.write();
@@ -1566,6 +1581,85 @@ public class AdminServiceImpl implements AdminService {
             if (deviceExcelWorkSheet != null) {
                 try {
                     deviceExcelWorkSheet.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (WriteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void costTripsReport(HttpServletResponse resp) {
+        List<Object[]> tripsGroupByCityList = null;
+        List<Object[]> tripsGroupByServiceTypeList = null;
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            tripsGroupByCityList = entityManager.createNamedQuery("trip.groupBy.city")
+                    .getResultList();
+            tripsGroupByServiceTypeList = entityManager.createNamedQuery("trip.groupBy.serviceType")
+                    .getResultList();
+            entityManager.getTransaction().commit();
+        } catch (RollbackException e) {
+            e.printStackTrace();
+            entityManager.getTransaction().rollback();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        WritableWorkbook tripCostExcelWorkSheet = null;
+        try {
+            tripCostExcelWorkSheet = Workbook.createWorkbook(resp.getOutputStream());
+
+            WritableSheet excelSheet = tripCostExcelWorkSheet.createSheet("درآمد", 0);
+            Label label = new Label(0, 0, "نام شهر");
+            excelSheet.addCell(label);
+            label = new Label(1, 0, "مجموع درآمد");
+            excelSheet.addCell(label);
+
+            label = new Label(4, 0, "نام سرویس");
+            excelSheet.addCell(label);
+            label = new Label(5, 0, "مجموع درآمد");
+            excelSheet.addCell(label);
+
+
+            for (int i=0;i<tripsGroupByCityList.size();i++) {
+                Object[] obj = tripsGroupByCityList.get(i);
+                String city = String.valueOf(obj[0]);
+                Long totalCost = (Long) obj[1];
+                label = new Label(0, i+1, city);
+                excelSheet.addCell(label);
+                label = new Label(1, i+1, String.valueOf(totalCost));
+                excelSheet.addCell(label);
+            }
+
+            for (int i=0;i<tripsGroupByServiceTypeList.size();i++) {
+                Object[] obj = tripsGroupByServiceTypeList.get(i);
+                String serviceType = String.valueOf(obj[0]);
+                Long totalCost = (Long) obj[1];
+                label = new Label(4, i+1, serviceType);
+                excelSheet.addCell(label);
+                label = new Label(5, i+1, String.valueOf(totalCost));
+                excelSheet.addCell(label);
+            }
+
+            tripCostExcelWorkSheet.write();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WriteException e) {
+            e.printStackTrace();
+        } finally {
+            if (tripCostExcelWorkSheet != null) {
+                try {
+                    tripCostExcelWorkSheet.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (WriteException e) {

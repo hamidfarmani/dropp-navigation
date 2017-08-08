@@ -707,6 +707,14 @@ public class OperatorController {
         }
     }
 
+    @RequestMapping(value = "/operator/providers", method = RequestMethod.GET,  produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> viewProviders() {
+        Object object = operatorService.viewProviders();
+        if (object instanceof JSONObject) {
+            return returnResponse(Status.OK, (JSONObject) object);
+        }
+        return returnResponse(Status.UNKNOWN_ERROR);
+    }
 
     private ResponseEntity<String> returnResponse(Status status) {
         return ResponseProvider.getInstance().getResponse(status);

@@ -14,7 +14,7 @@ public interface AdminService {
 
     Object adminLogin(String username, String password);
 
-    Status masterRegister(String firstname, String lastname, Date birthDate, String email, String PhoneNumber, String workNumber, String username, String password, Gender gender, City city);
+    Status masterRegister(String creatorUsername, String firstname, String lastname, Date birthDate, String email, String PhoneNumber, String workNumber, String username, String password, Gender gender, City city);
 
     Status operatorRemove(Long operatorID);
 
@@ -76,9 +76,10 @@ public interface AdminService {
 
     Status insertProvider(String name);
 
-    Object viewProviders();
-
     void OSReport(HttpServletResponse resp);
+
+    void costTripsReport(HttpServletResponse resp);
+
 
 }
 

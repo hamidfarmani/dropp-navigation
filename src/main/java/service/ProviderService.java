@@ -23,6 +23,8 @@ public interface ProviderService {
     Object viewDriverOfProvider(String providerUsername,String q,int count,int pageIndex);
 
     void driverOfProviderReport(HttpServletResponse resp,String providerUsername);
+
+    void providerClaim(HttpServletResponse resp,String providerUsername);
 }
 
 

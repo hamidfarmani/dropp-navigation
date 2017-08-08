@@ -12,10 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.AdminService;
-import util.IOCContainer;
-import util.Reloader;
-import util.ResponseProvider;
-import util.Validation;
+import util.*;
 import util.converter.CityConverter;
 import util.converter.GenderConverter;
 import util.converter.ServiceTypeConverter;
@@ -41,14 +38,16 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/masters", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> masterRegister(@RequestBody String request) {
+    public ResponseEntity<String> masterRegister(@RequestBody String request, @RequestHeader(value = "Authorization") String auth) {
         JSONObject jsonObjectRequest = new JSONObject(request);
-        String username, password, PhoneNumber, cityStr, genderStr,firstname,lastname,workNumber,email;
+        String username,creatorUsername, password, PhoneNumber, cityStr, genderStr,firstname,lastname,workNumber,email;
         City city;
         Gender gender;
         Date birthDate;
         int year,month,day;
         try {
+            HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+            creatorUsername = httpAuthParser.returnUsername(auth);
             firstname = jsonObjectRequest.getString("firstName").trim();
             lastname = jsonObjectRequest.getString("lastName").trim();
             username = jsonObjectRequest.getString("username").trim();
@@ -99,7 +98,7 @@ public class AdminController {
 
         if (!adminManager.isUsernameExist(username)) {
             if(!adminManager.isPhoneNumberExist(PhoneNumber)) {
-                Object object = adminManager.masterRegister(firstname,lastname,birthDate,email,PhoneNumber,workNumber, username, password,gender,city);
+                Object object = adminManager.masterRegister(creatorUsername, firstname,lastname,birthDate,email,PhoneNumber,workNumber, username, password,gender,city);
                 if (object == null) {
                     return returnResponse(Status.UNKNOWN_ERROR);
                 }
@@ -643,7 +642,7 @@ public class AdminController {
         return returnResponse(Status.OK);
     }
 
-    @RequestMapping(value = "/admin/report/drivers/age", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    @RequestMapping(value = "/admin/report/drivers/age", method = RequestMethod.GET, produces = "application/vnd.ms-excel;charset=UTF-8")
     public void driversAgeReport(HttpServletResponse response) throws IOException {
         String fileName = "Drivers_Age_Report.xls";
         response.setContentType("application/vnd.ms-excel");
@@ -663,7 +662,7 @@ public class AdminController {
 //        csvWriter.close();
     }
 
-    @RequestMapping(value = "/admin/report/passengers/age", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    @RequestMapping(value = "/admin/report/passengers/age", method = RequestMethod.GET, produces = "application/vnd.ms-excel;charset=UTF-8")
     public void passengersAgeReport(HttpServletResponse response) throws IOException {
         String fileName = "Passengers_Age_Report.xls";
         response.setContentType("application/vnd.ms-excel");
@@ -671,7 +670,7 @@ public class AdminController {
         adminManager.passengersAgeReport(response);
     }
 
-    @RequestMapping(value = "/admin/report/operators/age", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    @RequestMapping(value = "/admin/report/operators/age", method = RequestMethod.GET, produces = "application/vnd.ms-excel;charset=UTF-8")
     public void operatorsAgeReport(HttpServletResponse response) throws IOException {
         String fileName = "Operators_Age_Report.xls";
         response.setContentType("application/vnd.ms-excel");
@@ -679,7 +678,7 @@ public class AdminController {
         adminManager.operatorsAgeReport(response);
     }
 
-    @RequestMapping(value = "/admin/report/devices", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    @RequestMapping(value = "/admin/report/devices", method = RequestMethod.GET, produces = "application/vnd.ms-excel;charset=UTF-8")
     public void devicesReport(HttpServletResponse response) throws IOException {
         String fileName = "Devices_Report.xls";
         response.setContentType("application/vnd.ms-excel");
@@ -687,7 +686,7 @@ public class AdminController {
         adminManager.OSReport(response);
     }
 
-    @RequestMapping(value = "/admin/report/trips/{startDate}/{endDate}", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    @RequestMapping(value = "/admin/report/trips/{startDate}/{endDate}", method = RequestMethod.GET, produces = "application/vnd.ms-excel;charset=UTF-8")
     public void tripsReport(HttpServletResponse response,@PathVariable String startDate, @PathVariable String endDate) throws IOException {
         String fileName = "Trips_Report.xls";
         response.setContentType("application/vnd.ms-excel");
@@ -723,13 +722,12 @@ public class AdminController {
         }
     }
 
-    @RequestMapping(value = "/admin/providers", method = RequestMethod.GET,  produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> viewProviders() {
-        Object object = adminManager.viewProviders();
-        if (object instanceof JSONObject) {
-            return returnResponse(Status.OK, (JSONObject) object);
-        }
-        return returnResponse(Status.UNKNOWN_ERROR);
+    @RequestMapping(value = "/admin/report/trips/cost", method = RequestMethod.GET, produces = "application/vnd.ms-excel;charset=UTF-8")
+    public void costTripsReport(HttpServletResponse response) throws IOException {
+        String fileName = "Trips_Cost_Report.xls";
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        adminManager.costTripsReport(response);
     }
 
     private ResponseEntity<String> returnResponse(Status status) {

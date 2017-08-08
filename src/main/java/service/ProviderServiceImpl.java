@@ -421,4 +421,112 @@ public class ProviderServiceImpl implements ProviderService {
         }
     }
 
+    public void providerClaim(HttpServletResponse resp,String providerUsername) {
+        List<Driver> driverList = null;
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        Long driversClaim = Long.valueOf(0),totalClaim= Long.valueOf(0);
+        try {
+            entityManager.getTransaction().begin();
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", providerUsername)
+                    .getSingleResult();
+            ServiceProvider serviceProvider = operator.getServiceProvider();
+            driversClaim = serviceProvider.getDriversClaim();
+            totalClaim = serviceProvider.getTotalClaim();
+            driverList = entityManager.createNamedQuery("driver.orderby.credit")
+                    .setParameter("providerID", serviceProvider.getId())
+                    .getResultList();
+            entityManager.getTransaction().commit();
+        } catch (RollbackException e) {
+            e.printStackTrace();
+            entityManager.getTransaction().rollback();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        WritableWorkbook providerClaimExcelWorkSheet = null;
+        try {
+            Long mostDebt = Long.valueOf(0);
+            String mostDebtor = null;
+            providerClaimExcelWorkSheet = Workbook.createWorkbook(resp.getOutputStream());
+
+            WritableSheet excelSheet = providerClaimExcelWorkSheet.createSheet("بدهی", 0);
+
+            Label label = new Label(0, 4, "نام کاربری");
+            excelSheet.addCell(label);
+            label = new Label(1, 4, "شماره تلفن همراه");
+            excelSheet.addCell(label);
+            label = new Label(2, 4, "موجودی حساب");
+            excelSheet.addCell(label);
+            label = new Label(3, 4, "وضعیت حساب");
+            excelSheet.addCell(label);
+            for(int i=0;i<driverList.size();i++){
+                Driver driver = driverList.get(i);
+                if(driver.getCredit()<mostDebt){
+                    mostDebt = driver.getCredit();
+                    mostDebtor = driver.getUsername();
+                }
+                label = new Label(0, i+5, driver.getUsername());
+                excelSheet.addCell(label);
+                label = new Label(1, i+5, driver.getPhoneNumber());
+                excelSheet.addCell(label);
+                label = new Label(2, i+5, String.valueOf(driver.getCredit()));
+                excelSheet.addCell(label);
+                label = new Label(3, i+5, String.valueOf(driver.getAccountState()));
+                excelSheet.addCell(label);
+
+            }
+            label = new Label(0, 0, "بیشترین بدهی");
+            excelSheet.addCell(label);
+            label = new Label(1, 0, "نام کاربری بدهکار");
+            excelSheet.addCell(label);
+            label = new Label(2, 0, "تعداد رانندگان بدهکار");
+            excelSheet.addCell(label);
+            label = new Label(3, 0, "کل بدهی رانندگان");
+            excelSheet.addCell(label);
+            if (totalClaim - driversClaim >= 0) {
+                label = new Label(4, 0, "بدهی گنو");
+                excelSheet.addCell(label);
+            }else{
+                label = new Label(4, 0, "طلب گنو");
+                excelSheet.addCell(label);
+            }
+
+
+            label = new Label(0, 1, String.valueOf(mostDebt));
+            excelSheet.addCell(label);
+            label = new Label(1, 1, String.valueOf(mostDebtor));
+            excelSheet.addCell(label);
+            label = new Label(2, 1, String.valueOf(driverList.size()));
+            excelSheet.addCell(label);
+            label = new Label(3, 1, String.valueOf(driversClaim));
+            excelSheet.addCell(label);
+            label = new Label(4, 1, String.valueOf(Math.abs(totalClaim-driversClaim)));
+            excelSheet.addCell(label);
+
+            providerClaimExcelWorkSheet.write();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WriteException e) {
+            e.printStackTrace();
+        } finally {
+            if (providerClaimExcelWorkSheet != null) {
+                try {
+                    providerClaimExcelWorkSheet.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (WriteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 }

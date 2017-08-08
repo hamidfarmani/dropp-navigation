@@ -79,11 +79,13 @@ public class MasterServiceImpl implements MasterService {
         }
     }
 
-    public Status operatorRegister(String firstname, String lastname, Date birthDate,String email, String PhoneNumber, String workNumber, String username, String password, Gender gender, City city) {
+    public Status operatorRegister(String creatorUsername,String firstname, String lastname, Date birthDate,String email, String PhoneNumber, String workNumber, String username, String password, Gender gender, City city) {
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-
+            Operator creator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username",creatorUsername)
+                    .getSingleResult();
             Operator operator = (Operator) IOCContainer.getBean("operator");
 
             String hashedPassword = EncoderUtil.getSHA512Hash(password).toLowerCase();
@@ -98,6 +100,7 @@ public class MasterServiceImpl implements MasterService {
             operator.setLoggedIn(false);
             operator.setEmail(email);
             operator.setGender(gender);
+            operator.setCreator(creator);
             operator.setAccountState(AccountState.REGISTERED);
             operator.setRegistrationTimestamp(new Timestamp(System.currentTimeMillis()));
             operator.setRole(UserRole.OPERATOR);
