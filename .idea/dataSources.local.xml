@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="GenoWebService/Hibernate" uuid="4adb1ab1-3611-4dec-a19d-d5a4fa943543">
+      <database-info product="Oracle" version="Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production&#10;With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options" jdbc-version="4.1" driver-name="Oracle JDBC driver" driver-version="12.1.0.2.0">
+        <extra-name-characters>$#</extra-name-characters>
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact" />
+      <user-name>TS</user-name>
+      <introspection-schemas>*:TS</introspection-schemas>
+    </data-source>
+    <data-source name="GenoTSWebService/Hibernate" uuid="b45ddfcc-0686-4f61-8236-d4c6915b94d8">
+      <database-info product="Oracle" version="Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production&#10;With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options" jdbc-version="4.1" driver-name="Oracle JDBC driver" driver-version="12.1.0.2.0">
+        <extra-name-characters>$#</extra-name-characters>
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact" />
+      <user-name>TS</user-name>
+      <introspection-schemas>*:TS</introspection-schemas>
+      <resolve-scope>*:PUBLIC,TS</resolve-scope>
+      <unqualified-resolve-schemas>*:PUBLIC,TS</unqualified-resolve-schemas>
+    </data-source>
+  </component>
+</project>

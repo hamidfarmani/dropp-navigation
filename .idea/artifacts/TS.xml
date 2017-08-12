@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="TS">
+    <output-path>$PROJECT_DIR$/out/artifacts/TS</output-path>
+    <root id="archive" name="TS.war">
+      <element id="artifact" artifact-name="Transportation System Web Services:war exploded" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="super-csv-2.0.1" />
+          <element id="library" level="project" name="net.sourceforge.jexcelapi:jxl:2.6.12" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
