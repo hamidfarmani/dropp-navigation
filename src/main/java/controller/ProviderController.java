@@ -123,6 +123,25 @@ public class ProviderController {
         }
     }
 
+    @RequestMapping(value = "/provider/unBanDriver", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> unBanDriver(@RequestHeader(value = "Authorization") String auth,@RequestBody String request) {
+        JSONObject jsonObjectRequest = new JSONObject(request);
+        String username;
+        try {
+            username = jsonObjectRequest.getString("username");
+            HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+            String providerUsername = httpAuthParser.returnUsername(auth);
+            Status status = providerService.unBanDriver(providerUsername,username);
+            return returnResponse(status);
+        } catch (JSONException e) {
+            return ResponseProvider.getInstance().getResponse(Status.BAD_JSON);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return ResponseProvider.getInstance().getResponse(Status.BAD_DATA);
+        }
+    }
+
+
     @RequestMapping(value = "/provider/deactiveDriver", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> deactiveDriver(@RequestHeader(value = "Authorization") String auth,@RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);

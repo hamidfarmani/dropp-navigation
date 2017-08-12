@@ -20,23 +20,29 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JWTAuthenticationFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws AuthenticationException, IOException, ServletException {
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
         try {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             Authentication authentication = JwtService.getAuthentication(httpRequest);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
         } catch (TimeLimitExceededException e) {
-            response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-            response.getOutputStream().write(JsonErrorProvider.getJsonError(Status.TOKEN_EXPIRED).getBytes());
+            httpResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+            httpResponse.getOutputStream().write(JsonErrorProvider.getJsonError(Status.TOKEN_EXPIRED).getBytes());
+            httpResponse.addHeader("access-control-allow-origin","*");// TODO: 8/12/2017  وقتی میخوای بذاری رو سرور اصلی، پاگش کن
+            response=httpResponse;
         } catch (JwtAuthenticationException | JwtException e) {
-            response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-            response.getOutputStream().write(JsonErrorProvider.getJsonError(Status.UNAUTHORIZED).getBytes());
+            httpResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+            httpResponse.getOutputStream().write(JsonErrorProvider.getJsonError(Status.UNAUTHORIZED).getBytes());
+            httpResponse.addHeader("access-control-allow-origin","*"); // TODO: 8/12/2017  وقتی میخوای بذاری رو سرور اصلی، پاگش کن
+            response=httpResponse;
         }
     }
 }

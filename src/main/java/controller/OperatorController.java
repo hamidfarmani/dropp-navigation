@@ -23,7 +23,7 @@ import java.io.*;
 
 
 @RestController
-@CrossOrigin
+@CrossOrigin // TODO: 8/12/2017  وقتی میخوای بذاری رو سرور اصلی، پاگش کن
 public class OperatorController {
 
     private OperatorService operatorService;

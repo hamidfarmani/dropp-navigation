@@ -1,6 +1,7 @@
 package service;
 
 import model.entity.persistent.Operator;
+import model.entity.persistent.ServiceProvider;
 import model.entity.persistent.TicketSubject;
 import model.entity.persistent.VoucherCode;
 import model.enums.*;
@@ -79,7 +80,7 @@ public class MasterServiceImpl implements MasterService {
         }
     }
 
-    public Status operatorRegister(String creatorUsername,String firstname, String lastname, Date birthDate,String email, String PhoneNumber, String workNumber, String username, String password, Gender gender, City city) {
+    public Status operatorRegister(String creatorUsername,String firstname, String lastname, Date birthDate,String email, String PhoneNumber, String workNumber, String username, String password, Gender gender, City city, Long providerID) {
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
@@ -103,12 +104,22 @@ public class MasterServiceImpl implements MasterService {
             operator.setCreator(creator);
             operator.setAccountState(AccountState.REGISTERED);
             operator.setRegistrationTimestamp(new Timestamp(System.currentTimeMillis()));
-            operator.setRole(UserRole.OPERATOR);
-
+            if(providerID==null) {
+                operator.setRole(UserRole.OPERATOR);
+            }else{
+                ServiceProvider serviceProvider = (ServiceProvider) entityManager.createNamedQuery("serviceProvider.findby.id")
+                        .setParameter("id",providerID)
+                        .getSingleResult();
+                operator.setServiceProvider(serviceProvider);
+                operator.setRole(UserRole.PROVIDER);
+            }
             entityManager.persist(operator);
             entityManager.getTransaction().commit();
 
             return Status.OK;
+        } catch (NoResultException e) {
+            e.printStackTrace();
+            return Status.NOT_FOUND;
         } catch (RollbackException e) {
             e.printStackTrace();
             entityManager.getTransaction().rollback();
@@ -456,7 +467,7 @@ public class MasterServiceImpl implements MasterService {
             Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
                     .setParameter("username", username)
                     .getSingleResult();
-            if(operator.getRole()== UserRole.OPERATOR) {
+            if(operator.getRole()== UserRole.OPERATOR || operator.getRole()== UserRole.PROVIDER) {
                 operator.setAccountState(AccountState.BANNED);
                 entityManager.getTransaction().commit();
                 return Status.OK;
@@ -482,7 +493,7 @@ public class MasterServiceImpl implements MasterService {
             Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
                     .setParameter("username", username)
                     .getSingleResult();
-            if(operator.getRole()== UserRole.OPERATOR) {
+            if(operator.getRole()== UserRole.OPERATOR || operator.getRole()== UserRole.PROVIDER) {
                 operator.setAccountState(AccountState.VERIFIED);
                 entityManager.getTransaction().commit();
                 return Status.OK;

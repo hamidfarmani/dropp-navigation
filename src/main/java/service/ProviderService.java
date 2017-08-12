@@ -16,6 +16,8 @@ public interface ProviderService {
 
     Status banDriver(String providerUsername, String username);
 
+    Status unBanDriver(String providerUsername, String username);
+
     Status deactiveDriver(String providerUsername, String username);
 
     Status banDriverByCredit(String providerUsername, Long value);

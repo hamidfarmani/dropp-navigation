@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/rest/operator/**").hasAnyAuthority("O", "M", "A")
                 .antMatchers("/api/rest/master/**").hasAnyAuthority("M", "A")
                 .antMatchers("/api/rest/cop/**").hasAnyAuthority("C","A")
-                .antMatchers("/api/rest/provider/**").hasAnyAuthority("P","A")
+                .antMatchers("/api/rest/provider/**").hasAnyAuthority("V","A")
                 .antMatchers("/api/rest/admin/**").hasAuthority("A")
                 .anyRequest().authenticated()
                 .and()

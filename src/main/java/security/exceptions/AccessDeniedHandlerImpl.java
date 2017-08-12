@@ -18,5 +18,6 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, org.springframework.security.access.AccessDeniedException e) throws IOException, ServletException {
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         httpServletResponse.getOutputStream().write(JsonErrorProvider.getJsonError(Status.ACCESS_DENIED).getBytes());
+        httpServletResponse.addHeader("access-control-allow-origin","*"); // TODO: 8/12/2017 remove this for production
     }
 }

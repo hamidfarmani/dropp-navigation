@@ -84,8 +84,12 @@ public class OperatorServiceImpl implements OperatorService {
                         .setParameter("password", hashedPassword)
                         .setMaxResults(1)
                         .getSingleResult();
-                if (operator.getAccountState() != AccountState.VERIFIED) {
-                    entityManager.getTransaction().commit();
+
+                if (operator.getAccountState() == AccountState.BANNED) {
+                    return Status.USER_BANNED;
+                }else if(operator.getAccountState() == AccountState.DEACTIVATE){
+                    return Status.USER_DEACTIVATED;
+                }else if(operator.getAccountState() != AccountState.VERIFIED){
                     return Status.USER_NOT_ACTIVATED;
                 }
 
@@ -305,8 +309,12 @@ public class OperatorServiceImpl implements OperatorService {
                 }
 
                 if (d.getAddress() != null) {
-                    address.put("state", d.getAddress().getCity().getState().getName());
-                    address.put("city", d.getAddress().getCity());
+                    if(d.getAddress().getCity()!=null){
+                        address.put("city", d.getAddress().getCity().getName());
+                        if(d.getAddress().getCity().getState()!=null){
+                            address.put("state", d.getAddress().getCity().getState().getName());
+                        }
+                    }
                     address.put("line1", d.getAddress().getLine1());
                     address.put("line2", d.getAddress().getLine2());
                     address.put("postalCode", d.getAddress().getPostalCode());
@@ -1129,13 +1137,8 @@ public class OperatorServiceImpl implements OperatorService {
             Document subscribeUserDoc = (Document) cursorDoc.get("subUser");
             Document deliveryInfoDoc = (Document) cursorDoc.get("deliveryInfo");
 
-            JSONObject driver = new JSONObject();
-            JSONObject trip = new JSONObject();
             JSONObject vehicle = new JSONObject();
-            JSONObject loc = new JSONObject();
             JSONObject tripInfo = new JSONObject();
-            JSONObject passenger = new JSONObject();
-            JSONObject subUser = new JSONObject();
             JSONObject deliveryInfo = new JSONObject();
 
             if(driverDoc!=null) {
@@ -1186,6 +1189,7 @@ public class OperatorServiceImpl implements OperatorService {
             }
             if(cursorDoc.get("voucherId")!=null) {
                 tripInfo.append("voucherId", cursorDoc.get("voucherId"));
+                tripInfo.append("voucherCode", cursorDoc.get("voucherCode"));
             }
             JSONArray destinations = new JSONArray();
 
@@ -1573,7 +1577,7 @@ public class OperatorServiceImpl implements OperatorService {
                     subUser.put("lastName", tripObject.getSubscribeUser().getLastName());
                     subUser.put("phoneNumber", tripObject.getSubscribeUser().getPhoneNumber());
                     subUser.put("subscriptionCode", tripObject.getSubscribeUser().getSubscriptionCode());
-
+                    subUser.put("operatorUsername", tripObject.getOperator().getUsername());
                     tripInfo.put("subUser", subUser);
                 }
                 if (tripObject.getDeliveryInfo() != null) {

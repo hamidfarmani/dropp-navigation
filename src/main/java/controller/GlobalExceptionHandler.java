@@ -10,31 +10,36 @@ import util.ResponseProvider;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Created by kasra on 7/10/2017.
+ */
 @Controller
 public class GlobalExceptionHandler {
 
     @RequestMapping(value = "/errors")
     public ResponseEntity<String> errors(HttpServletRequest httpRequest) {
         int httpErrorCode = getErrorCode(httpRequest);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("access-control-allow-origin", "*"); // TODO: 8/12/2017 سرور نهایی پاک شه
         switch (httpErrorCode) {
             case 400:
-                return returnResponse(Status.BAD_REQUEST);
+                return returnResponse(Status.BAD_REQUEST, headers);
             case 401:
-                return returnResponse(Status.UNAUTHORIZED);
+                return returnResponse(Status.UNAUTHORIZED, headers);
             case 403:
-                return returnResponse(Status.ACCESS_DENIED);
+                return returnResponse(Status.ACCESS_DENIED, headers);
             case 404:
-                return returnResponse(Status.RESOURCE_NOT_FOUND);
+                return returnResponse(Status.RESOURCE_NOT_FOUND, headers);
             case 500:
-                return returnResponse(Status.UNKNOWN_ERROR);
+                return returnResponse(Status.UNKNOWN_ERROR, headers);
             case 405:
-                return returnResponse(Status.METHOD_NOT_ALLOWED);
+                return returnResponse(Status.METHOD_NOT_ALLOWED, headers);
             case 415:
-                return returnResponse(Status.UNSUPPORTED_MEDIA_TYPE);
+                return returnResponse(Status.UNSUPPORTED_MEDIA_TYPE, headers);
             default:
                 JSONObject jsonObject = new JSONObject()
                         .put("httpStatusCode", httpErrorCode);
-                return returnResponse(Status.OK, jsonObject);
+                return returnResponse(Status.OK, jsonObject, headers);
         }
     }
 
@@ -64,4 +69,5 @@ public class GlobalExceptionHandler {
     private ResponseEntity<String> returnResponse(Status status, JSONObject jsonObject, HttpHeaders headers) {
         return ResponseProvider.getInstance().getResponse(status, jsonObject, headers);
     }
+
 }

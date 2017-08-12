@@ -11,7 +11,7 @@ public interface MasterService {
 
     Status operatorRemove(Long id);
 
-    Status operatorRegister(String creatorUsername,String firstname, String lastname, Date birthDate, String email, String PhoneNumber, String workNumber, String username, String password, Gender gender, City city);
+    Status operatorRegister(String creatorUsername,String firstname, String lastname, Date birthDate, String email, String PhoneNumber, String workNumber, String username, String password, Gender gender, City city,Long providerID);
 
     Object operatorUpdate(Long id, String firstname, String lastname, Date birthDate, String email, String PhoneNumber, String workNumber, String password, Gender gender, City city);
 

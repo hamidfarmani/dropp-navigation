@@ -1069,31 +1069,36 @@ public class AdminServiceImpl implements AdminService {
             excelSheet.addCell(label);
             for(int i=0;i<passengersList.size();i++){
                 Passenger passenger = passengersList.get(i);
-                birthDate = passenger.getPassengerInfo().getBirthDate();
-                if(birthDate!=null) {
-                    if (birthDate.before(oldest)) {
-                        oldest = birthDate;
-                    }
-                    if (birthDate.after(youngest)) {
-                        youngest = birthDate;
-                    }
 
-                    LocalDate bDateLocal = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    LocalDate tDateLocal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    sum = sum + Period.between(bDateLocal, tDateLocal).getYears();
-                    num++;
-                }
                 label = new Label(0, i+5, passenger.getUsername());
                 excelSheet.addCell(label);
                 label = new Label(1, i+5, passenger.getPhoneNumber());
                 excelSheet.addCell(label);
-                if(birthDate!=null) {
-                    DateFormat outputFormatter = new SimpleDateFormat("yyyy/MM/dd");
-                    String outputDate = outputFormatter.format(birthDate);
-                    label = new Label(2, i + 5, String.valueOf(outputDate));
-                    excelSheet.addCell(label);
-                }
 
+                if(passenger.getPassengerInfo()!=null) {
+                    birthDate = passenger.getPassengerInfo().getBirthDate();
+                    if (birthDate != null) {
+                        if (birthDate.before(oldest)) {
+                            oldest = birthDate;
+                        }
+                        if (birthDate.after(youngest)) {
+                            youngest = birthDate;
+                        }
+
+                        LocalDate bDateLocal = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        LocalDate tDateLocal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        sum = sum + Period.between(bDateLocal, tDateLocal).getYears();
+
+                        if (birthDate != null) {
+                            DateFormat outputFormatter = new SimpleDateFormat("yyyy/MM/dd");
+                            String outputDate = outputFormatter.format(birthDate);
+                            label = new Label(2, i + 5, String.valueOf(outputDate));
+                            excelSheet.addCell(label);
+                        }
+
+                        num++;
+                    }
+                }
             }
             label = new Label(0, 0, "جوان ترین راننده");
             excelSheet.addCell(label);

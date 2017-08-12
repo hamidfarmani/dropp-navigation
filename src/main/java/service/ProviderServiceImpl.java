@@ -15,7 +15,9 @@ import org.json.JSONObject;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.transaction.annotation.Transactional;
+import util.IOCContainer;
 import util.LocalEntityManagerFactory;
+import util.converter.AccountStateConverter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -87,7 +89,7 @@ public class ProviderServiceImpl implements ProviderService {
             entityManager.getTransaction().commit();
             Long driversClaim = serviceProvider.getDriversClaim();
             Long totalClaim = serviceProvider.getTotalClaim();
-            Long rem = driversClaim + totalClaim;
+            Long rem = totalClaim - driversClaim;
             jsonObjectResponse.put("debt", rem);
             return jsonObjectResponse;
 
@@ -214,6 +216,34 @@ public class ProviderServiceImpl implements ProviderService {
         }
     }
 
+    public Status unBanDriver(String providerUsername, String username) {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", providerUsername)
+                    .getSingleResult();
+
+            Driver driver = (Driver) entityManager.createNamedQuery("driver.searchExact.usernameAndProviderID")
+                    .setParameter("providerID", operator.getServiceProvider().getId())
+                    .setParameter("username", username)
+                    .getSingleResult();
+            driver.setAccountState(AccountState.VERIFIED);
+            entityManager.getTransaction().commit();
+            return Status.OK;
+
+        } catch (NoResultException e) {
+            return Status.NOT_FOUND;
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+    }
+
     public Status deactiveDriver(String providerUsername, String username) {
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
@@ -301,11 +331,13 @@ public class ProviderServiceImpl implements ProviderService {
                         .setMaxResults(count)
                         .getResultList();
             }
+            AccountStateConverter accountStateConverter = (AccountStateConverter) IOCContainer.getBean("accountStateConverter");
 
             for (Driver driver : driverList) {
                 JSONObject d = new JSONObject();
                 d.put("credit", driver.getCredit());
                 d.put("username", driver.getUsername());
+                d.put("accountState", accountStateConverter.convertToDatabaseColumn(driver.getAccountState()));
                 drivers.put(d);
             }
             jsonObjectResponse.put("drivers",drivers);

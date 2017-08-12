@@ -36,9 +36,13 @@ public class MasterController {
         Gender gender;
         Date birthDate;
         int year,month,day;
+        Long providerID = null;
         try {
             HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
             creatorUsername = httpAuthParser.returnUsername(auth);
+            if(jsonObjectRequest.has("providerID")){
+                providerID = jsonObjectRequest.getLong("providerID");
+            }
             firstname = jsonObjectRequest.getString("firstName").trim();
             lastname = jsonObjectRequest.getString("lastName").trim();
             username = jsonObjectRequest.getString("username").trim();
@@ -90,7 +94,7 @@ public class MasterController {
             return returnResponse(Status.PHONE_NUMBER_EXIST);
         }
         if (!masterService.isUsernameExist(username)) {
-            Object object = masterService.operatorRegister(creatorUsername,firstname,lastname,birthDate,email,PhoneNumber,workNumber, username, password,gender,city);
+            Object object = masterService.operatorRegister(creatorUsername,firstname,lastname,birthDate,email,PhoneNumber,workNumber, username, password,gender,city,providerID);
             if (object == null) {
                 return returnResponse(Status.UNKNOWN_ERROR);
             }
