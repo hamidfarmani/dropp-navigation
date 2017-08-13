@@ -82,11 +82,16 @@ public class OperatorController {
     @RequestMapping(value = "/operator/confirmDriver", method = RequestMethod.PATCH, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> confirmUser(@RequestBody String request, @RequestHeader(value = "Authorization") String auth) {
         JSONObject jsonObjectRequest = new JSONObject(request);
-        String op;
+        String op,providerID = null;
         try {
             String driverUsername = jsonObjectRequest.getString("username");
-            String providerID = jsonObjectRequest.getString("providerID");
-            if(driverUsername.isEmpty()){
+            if(jsonObjectRequest.has("providerID")) {
+                providerID = jsonObjectRequest.getString("providerID");
+                if(providerID.isEmpty()){
+                    return returnResponse(Status.BAD_DATA);
+                }
+            }
+            if (driverUsername.isEmpty()) {
                 return returnResponse(Status.BAD_DATA);
             }
             HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");

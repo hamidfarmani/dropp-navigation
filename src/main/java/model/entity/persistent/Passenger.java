@@ -26,8 +26,10 @@ import java.util.List;
 })
 @Entity(name = "passenger")
 @Table(name = "PASSENGER", indexes = {
-        @Index(name = "PASSENGER_PHONENUMBER_INDEX", columnList = "PHONE_NUMBER")
+        @Index(name = "PASSENGER_PHONENUMBER_INDEX", columnList = "PHONE_NUMBER"),
+        @Index(name = "PASSENGER_USERNAME_INDEX",columnList = "USERNAME")
 })
+
 public class Passenger implements Serializable {
     @Id
     @Column(name = "PASSENGER_ID", columnDefinition = "NUMBER")

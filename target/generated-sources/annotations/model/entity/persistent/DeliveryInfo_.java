@@ -10,6 +10,7 @@ public abstract class DeliveryInfo_ {
 
 	public static volatile SingularAttribute<DeliveryInfo, String> destinationInfo;
 	public static volatile SingularAttribute<DeliveryInfo, String> receiverLastName;
+	public static volatile SingularAttribute<DeliveryInfo, String> phoneNumber;
 	public static volatile SingularAttribute<DeliveryInfo, Long> id;
 	public static volatile SingularAttribute<DeliveryInfo, String> receiverFirstName;
 	public static volatile SingularAttribute<DeliveryInfo, String> desc;

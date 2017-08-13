@@ -32,6 +32,10 @@ public class DeliveryInfo {
     @Column(name = "DESCRIPTION", columnDefinition = "NVARCHAR2(100)")
     private String desc;
 
+    @Basic
+    @Column(name = "RECIVER_PHONE_NUMBER", columnDefinition = "VARCHAR2(20)")
+    private String phoneNumber;
+
     public DeliveryInfo() {
     }
 
@@ -73,5 +77,13 @@ public class DeliveryInfo {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

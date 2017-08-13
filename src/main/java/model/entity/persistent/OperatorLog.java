@@ -16,7 +16,7 @@ public class OperatorLog implements Serializable {
     @Id
     @Column(name = "O_LOG_ID", columnDefinition = "NUMBER")
     @SequenceGenerator(name = "oLogGen", sequenceName = "oLogSeq")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "oLogGen")
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)

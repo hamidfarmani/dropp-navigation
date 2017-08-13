@@ -16,7 +16,7 @@ public class DriverLog implements Serializable {
     @Id
     @Column(name = "D_LOG_ID", columnDefinition = "NUMBER")
     @SequenceGenerator(name = "dLogGen", sequenceName = "dLogSeq")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "dLogGen")
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)

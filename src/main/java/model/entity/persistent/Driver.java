@@ -33,7 +33,8 @@ import java.util.List;
 })
 @Entity(name = "driver")
 @Table(name = "DRIVER", indexes = {
-        @Index(name = "DRIVER_PHONENUMBER_INDEX", columnList = "PHONE_NUMBER")
+        @Index(name = "DRIVER_PHONENUMBER_INDEX", columnList = "PHONE_NUMBER"),
+        @Index(name = "DRIVER_USERNAME_INDEX",columnList = "USERNAME")
 })
 public class Driver implements Serializable {
 

@@ -26,7 +26,9 @@ import java.util.List;
 
 })
 @Entity(name = "operator")
-@Table(name = "OPERATOR")
+@Table(name = "OPERATOR",indexes = {
+        @Index(name = "OPERATOR_USERNAME_INDEX",columnList = "USERNAME")
+})
 public class Operator implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
@@ -103,6 +105,8 @@ public class Operator implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "FK_SERVICE_PROVIDER", referencedColumnName = "ID")
     private ServiceProvider serviceProvider;
+
+
 
     public Operator() {
     }

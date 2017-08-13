@@ -1,6 +1,7 @@
 package model.entity.persistent;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by kasra on 7/13/2017.
@@ -25,6 +26,10 @@ public class State {
     @Column(name = "NAME",columnDefinition = "NVARCHAR2(30)")
     private String name;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "FK_STATE", referencedColumnName = "STATE_ID")
+    private List<City> cities;
+
     public State() {
     }
 
@@ -44,6 +49,11 @@ public class State {
         this.name = name;
     }
 
+    public List<City> getCities() {
+        return cities;
+    }
 
-
+    public void setCities(List<City> cities) {
+        this.cities = cities;
+    }
 }

@@ -25,7 +25,7 @@ public class City {
     @Column(name = "NAME", columnDefinition = "NVARCHAR2(30)")
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "FK_STATE", referencedColumnName = "STATE_ID")
     private State state;
 

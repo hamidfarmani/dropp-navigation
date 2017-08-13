@@ -16,7 +16,7 @@ public class PassengerLog implements Serializable {
     @Id
     @Column(name = "P_LOG_ID", columnDefinition = "NUMBER")
     @SequenceGenerator(name = "pLogGen", sequenceName = "pLogSeq")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "pLogGen")
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)

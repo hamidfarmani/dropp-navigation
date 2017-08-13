@@ -1016,13 +1016,19 @@ public class OperatorServiceImpl implements OperatorService {
                     .setParameter("state", TicketState.UNRESOLVED).getResultList();
 
             for (int i = 0; i < t.size(); i++) {
-                t.get(i);
+                Ticket ticketObject = t.get(i);
                 JSONObject ticket = new JSONObject();
-                ticket.put("id", t.get(i).getId());
-                ticket.put("driverUsername", t.get(i).getDriver().getUsername());
-                ticket.put("passengerUsername", t.get(i).getPassenger().getUsername());
-                ticket.put("subject", t.get(i).getTicketSubject().getSubject());
-                ticket.put("description", t.get(i).getDescription());
+                ticket.put("id", ticketObject.getId());
+                if(ticketObject.getDriver()!=null) {
+                    ticket.put("driverUsername", ticketObject.getDriver().getUsername());
+                }
+                if(ticketObject.getPassenger()!=null) {
+                    ticket.put("passengerUsername", ticketObject.getPassenger().getUsername());
+                }
+                if(ticketObject.getTicketSubject() != null) {
+                    ticket.put("subject", ticketObject.getTicketSubject().getSubject());
+                }
+                ticket.put("description", ticketObject.getDescription());
                 allTickets.put(ticket);
             }
 

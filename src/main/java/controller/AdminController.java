@@ -306,7 +306,7 @@ public class AdminController {
             String waitingMinStr = jsonObjectRequest.getString("waitingMin");
             String entranceStr = jsonObjectRequest.getString("entrance");
             String twoWayCostStr = jsonObjectRequest.getString("twoWayCost");
-            String coShareStr = jsonObjectRequest.getString("coShare");
+            String coShareStr = jsonObjectRequest.getString("genoShare");
 
             if(type.isEmpty() || cityName.isEmpty()
                     || before2KMStr.isEmpty() || after2KMStr.isEmpty()
@@ -360,7 +360,7 @@ public class AdminController {
             String waitingMinStr = jsonObjectRequest.getString("waitingMin");
             String entranceStr = jsonObjectRequest.getString("entrance");
             String twoWayCostStr = jsonObjectRequest.getString("twoWayCost");
-            String coShareStr = jsonObjectRequest.getString("coShare");
+            String coShareStr = jsonObjectRequest.getString("genoShare");
 
             if(tariffIDStr.isEmpty() || before2KMStr.isEmpty() || after2KMStr.isEmpty()
                     || perMinStr.isEmpty() || waitingMinStr.isEmpty()

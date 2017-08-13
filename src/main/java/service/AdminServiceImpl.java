@@ -1003,19 +1003,13 @@ public class AdminServiceImpl implements AdminService {
             label = new Label(3, 0, "تعداد کل رانندگان");
             excelSheet.addCell(label);
 
-
-
             LocalDate bDateLocal = youngest.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate tDateLocal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             int youngestAge = Period.between(bDateLocal, tDateLocal).getYears();
 
-
-
             bDateLocal = oldest.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             tDateLocal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             int oldestAge = Period.between(bDateLocal, tDateLocal).getYears();
-
-
 
             label = new Label(0, 1, String.valueOf(youngestAge));
             excelSheet.addCell(label);
@@ -1060,7 +1054,7 @@ public class AdminServiceImpl implements AdminService {
             passengerExcelWorkSheet = Workbook.createWorkbook(resp.getOutputStream());
             WritableSheet excelSheet = passengerExcelWorkSheet.createSheet("مسافران", 0);
 //            excelSheet.getSettings().setProtected(true);
-            Date birthDate = null;
+
             Label label = new Label(0, 4, "نام کاربری");
             excelSheet.addCell(label);
             label = new Label(1, 4, "شماره تلفن همراه");
@@ -1076,7 +1070,7 @@ public class AdminServiceImpl implements AdminService {
                 excelSheet.addCell(label);
 
                 if(passenger.getPassengerInfo()!=null) {
-                    birthDate = passenger.getPassengerInfo().getBirthDate();
+                    Date birthDate = passenger.getPassengerInfo().getBirthDate();
                     if (birthDate != null) {
                         if (birthDate.before(oldest)) {
                             oldest = birthDate;
@@ -1100,13 +1094,13 @@ public class AdminServiceImpl implements AdminService {
                     }
                 }
             }
-            label = new Label(0, 0, "جوان ترین راننده");
+            label = new Label(0, 0, "جوان ترین مسافر");
             excelSheet.addCell(label);
-            label = new Label(1, 0, "پیرترین راننده");
+            label = new Label(1, 0, "پیرترین مسافر");
             excelSheet.addCell(label);
-            label = new Label(2, 0, "میانگین سنی رانندگان");
+            label = new Label(2, 0, "میانگین سنی مسافران");
             excelSheet.addCell(label);
-            label = new Label(3, 0, "تعداد کل رانندگان");
+            label = new Label(3, 0, "تعداد کل مسافران");
             excelSheet.addCell(label);
 
 

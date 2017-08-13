@@ -141,7 +141,9 @@ public class MasterServiceImpl implements MasterService {
         try {
             entityManager.getTransaction().begin();
 
-            Operator operator = entityManager.find(Operator.class,id);
+            Operator operator = (Operator)entityManager.createNamedQuery("operator.findBy.id")
+                    .setParameter("id",id)
+                    .getSingleResult();
 
             if(firstname!=null) {
                 operator.setFirstName(firstname);
@@ -177,6 +179,9 @@ public class MasterServiceImpl implements MasterService {
             entityManager.getTransaction().commit();
 
             return Status.OK;
+        } catch (NoResultException e) {
+            e.printStackTrace();
+            return Status.NOT_FOUND;
         } catch (RollbackException e) {
             e.printStackTrace();
             entityManager.getTransaction().rollback();

@@ -516,7 +516,7 @@ public class ProviderServiceImpl implements ProviderService {
             }
             label = new Label(0, 0, "بیشترین بدهی");
             excelSheet.addCell(label);
-            label = new Label(1, 0, "نام کاربری بدهکار");
+            label = new Label(1, 0, "نام کاربری بدهکار بیشترین مبلغ");
             excelSheet.addCell(label);
             label = new Label(2, 0, "تعداد رانندگان بدهکار");
             excelSheet.addCell(label);
