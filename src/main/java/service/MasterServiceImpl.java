@@ -144,41 +144,42 @@ public class MasterServiceImpl implements MasterService {
             Operator operator = (Operator)entityManager.createNamedQuery("operator.findBy.id")
                     .setParameter("id",id)
                     .getSingleResult();
-
-            if(firstname!=null) {
-                operator.setFirstName(firstname);
+            if(operator.getRole()==UserRole.OPERATOR) {
+                if (firstname != null) {
+                    operator.setFirstName(firstname);
+                }
+                if (lastname != null) {
+                    operator.setLastName(lastname);
+                }
+                if (password != null) {
+                    String hashedPassword = EncoderUtil.getSHA512Hash(password).toLowerCase();
+                    operator.setPassword(hashedPassword);
+                }
+                if (PhoneNumber != null) {
+                    operator.setPhoneNumber(PhoneNumber);
+                }
+                if (birthDate != null) {
+                    operator.setBirthDate(birthDate);
+                }
+                if (workNumber != null) {
+                    operator.setWorkNumber(workNumber);
+                }
+                if (city != null) {
+                    operator.setCity(city);
+                }
+                if (email != null) {
+                    operator.setEmail(email);
+                }
+                if (gender != null) {
+                    operator.setGender(gender);
+                }
+                operator.setAccountState(AccountState.VERIFIED);
+                operator.setLoggedIn(false);
+                entityManager.getTransaction().commit();
+                return Status.OK;
+            }else{
+                return Status.NOT_FOUND;
             }
-            if(lastname!=null) {
-                operator.setLastName(lastname);
-            }
-            if(password!=null) {
-                String hashedPassword = EncoderUtil.getSHA512Hash(password).toLowerCase();
-                operator.setPassword(hashedPassword);
-            }
-            if(PhoneNumber!=null) {
-                operator.setPhoneNumber(PhoneNumber);
-            }
-            if(birthDate!=null) {
-                operator.setBirthDate(birthDate);
-            }
-            if(workNumber!=null) {
-                operator.setWorkNumber(workNumber);
-            }
-            if(city!=null) {
-                operator.setCity(city);
-            }
-            if(email!=null) {
-                operator.setEmail(email);
-            }
-            if(gender!=null) {
-                operator.setGender(gender);
-            }
-            operator.setAccountState(AccountState.VERIFIED);
-            operator.setLoggedIn(false);
-
-            entityManager.getTransaction().commit();
-
-            return Status.OK;
         } catch (NoResultException e) {
             e.printStackTrace();
             return Status.NOT_FOUND;
@@ -203,18 +204,20 @@ public class MasterServiceImpl implements MasterService {
         try {
             entityManager.getTransaction().begin();
             Operator operator = (Operator) entityManager.createNamedQuery("operator.findBy.id")
-                    .setParameter("id",operatorID)
-                    .setMaxResults(1).getSingleResult();
-            if(operator!=null && operator.getRole()==UserRole.OPERATOR){
-                entityManager.remove(operator);
+                    .setParameter("id", operatorID)
+                    .getSingleResult();
+            if (operator != null && operator.getRole() == UserRole.OPERATOR) {
+                operator.setAccountState(AccountState.DEACTIVATE);
                 entityManager.getTransaction().commit();
-
                 return Status.OK;
-            }else{
+            } else {
                 return Status.NOT_FOUND;
             }
 
-        } catch (RollbackException e) {
+        }catch(NoResultException e){
+            e.printStackTrace();
+            return Status.NOT_FOUND;
+        }catch (RollbackException e) {
             e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
@@ -433,11 +436,11 @@ public class MasterServiceImpl implements MasterService {
 
     public Status voucherUpdate(Long id, int maxUse, String description, Date startDate, Date endDate,  VoucherCodeType codeType, String value){
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
-        JSONObject jsonObjectResponse = new JSONObject();
-        VoucherCode voucherCode = entityManager.find(VoucherCode.class,id);
-
         try {
             entityManager.getTransaction().begin();
+            VoucherCode voucherCode = (VoucherCode) entityManager.createNamedQuery("voucherCode.findBy.id")
+                    .setParameter("id",id)
+                    .getSingleResult();
             voucherCode.setType(codeType);
             voucherCode.setDiscountValue(value);
             voucherCode.setStartDate(startDate);

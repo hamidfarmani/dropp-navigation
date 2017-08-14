@@ -14,6 +14,7 @@ import java.util.Date;
 @NamedQueries({
         @NamedQuery(name = "voucherCode.all", query = "select v from voucherCode v"),
         @NamedQuery(name = "voucherCode.findBy.code", query = "select v from voucherCode v where v.code=:code"),
+        @NamedQuery(name = "voucherCode.findBy.id", query = "select v from voucherCode v where v.id=:id"),
 })
 
 @Entity(name = "voucherCode")

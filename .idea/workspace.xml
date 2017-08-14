@@ -7,58 +7,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe5ff66d-3ca9-45a1-8699-09bb05f03014" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/TSO/TSO.war" afterPath="$PROJECT_DIR$/out/artifacts/TSO/TSO.war" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/controller/GlobalExceptionHandler.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/controller/GlobalExceptionHandler.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/controller/OperatorController.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/controller/OperatorController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/City.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/City.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/DeliveryInfo.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/DeliveryInfo.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/DeliveryInfo_.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/DeliveryInfo_.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/Driver.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/Driver.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/DriverLog.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/DriverLog.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/Operator.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/Operator.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/OperatorLog.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/OperatorLog.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/Passenger.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/Passenger.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/PassengerLog.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/PassengerLog.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/State.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/State.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/State_.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/model/entity/persistent/State_.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/service/AdminServiceImpl.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/service/AdminServiceImpl.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/service/MasterServiceImpl.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/service/MasterServiceImpl.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/service/OperatorServiceImpl.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/service/OperatorServiceImpl.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/service/ProviderServiceImpl.class" afterPath="$PROJECT_DIR$/out/artifacts/Transportation_System_Web_Services_war_exploded/WEB-INF/classes/service/ProviderServiceImpl.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/controller/OperatorController.class" afterPath="$PROJECT_DIR$/target/classes/controller/OperatorController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/model/entity/persistent/City.class" afterPath="$PROJECT_DIR$/target/classes/model/entity/persistent/City.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/model/entity/persistent/DeliveryInfo.class" afterPath="$PROJECT_DIR$/target/classes/model/entity/persistent/DeliveryInfo.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/model/entity/persistent/DeliveryInfo_.class" afterPath="$PROJECT_DIR$/target/classes/model/entity/persistent/DeliveryInfo_.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/model/entity/persistent/Driver.class" afterPath="$PROJECT_DIR$/target/classes/model/entity/persistent/Driver.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/model/entity/persistent/DriverLog.class" afterPath="$PROJECT_DIR$/target/classes/model/entity/persistent/DriverLog.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/model/entity/persistent/Operator.class" afterPath="$PROJECT_DIR$/target/classes/model/entity/persistent/Operator.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/model/entity/persistent/OperatorLog.class" afterPath="$PROJECT_DIR$/target/classes/model/entity/persistent/OperatorLog.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/model/entity/persistent/Passenger.class" afterPath="$PROJECT_DIR$/target/classes/model/entity/persistent/Passenger.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/model/entity/persistent/PassengerLog.class" afterPath="$PROJECT_DIR$/target/classes/model/entity/persistent/PassengerLog.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/model/entity/persistent/State.class" afterPath="$PROJECT_DIR$/target/classes/model/entity/persistent/State.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/model/entity/persistent/State_.class" afterPath="$PROJECT_DIR$/target/classes/model/entity/persistent/State_.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/service/AdminServiceImpl.class" afterPath="$PROJECT_DIR$/target/classes/service/AdminServiceImpl.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/service/MasterServiceImpl.class" afterPath="$PROJECT_DIR$/target/classes/service/MasterServiceImpl.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/service/OperatorServiceImpl.class" afterPath="$PROJECT_DIR$/target/classes/service/OperatorServiceImpl.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/service/ProviderServiceImpl.class" afterPath="$PROJECT_DIR$/target/classes/service/ProviderServiceImpl.class" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/service/MasterServiceImpl.class" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/controller/AdminController.class" afterPath="$PROJECT_DIR$/target/classes/controller/AdminController.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/controller/AdminController.java" afterPath="$PROJECT_DIR$/src/main/java/controller/AdminController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/controller/OperatorController.java" afterPath="$PROJECT_DIR$/src/main/java/controller/OperatorController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/model/entity/persistent/City.java" afterPath="$PROJECT_DIR$/src/main/java/model/entity/persistent/City.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/model/entity/persistent/DeliveryInfo.java" afterPath="$PROJECT_DIR$/src/main/java/model/entity/persistent/DeliveryInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/model/entity/persistent/Driver.java" afterPath="$PROJECT_DIR$/src/main/java/model/entity/persistent/Driver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/model/entity/persistent/DriverLog.java" afterPath="$PROJECT_DIR$/src/main/java/model/entity/persistent/DriverLog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/model/entity/persistent/Operator.java" afterPath="$PROJECT_DIR$/src/main/java/model/entity/persistent/Operator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/model/entity/persistent/OperatorLog.java" afterPath="$PROJECT_DIR$/src/main/java/model/entity/persistent/OperatorLog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/model/entity/persistent/Passenger.java" afterPath="$PROJECT_DIR$/src/main/java/model/entity/persistent/Passenger.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/model/entity/persistent/PassengerLog.java" afterPath="$PROJECT_DIR$/src/main/java/model/entity/persistent/PassengerLog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/model/entity/persistent/State.java" afterPath="$PROJECT_DIR$/src/main/java/model/entity/persistent/State.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/service/AdminServiceImpl.java" afterPath="$PROJECT_DIR$/src/main/java/service/AdminServiceImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/META-INF/persistence.xml" afterPath="$PROJECT_DIR$/src/main/META-INF/persistence.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/model/entity/persistent/VoucherCode.java" afterPath="$PROJECT_DIR$/src/main/java/model/entity/persistent/VoucherCode.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/model/enums/Status.java" afterPath="$PROJECT_DIR$/src/main/java/model/enums/Status.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/service/MasterServiceImpl.java" afterPath="$PROJECT_DIR$/src/main/java/service/MasterServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/service/OperatorServiceImpl.java" afterPath="$PROJECT_DIR$/src/main/java/service/OperatorServiceImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/service/ProviderServiceImpl.java" afterPath="$PROJECT_DIR$/src/main/java/service/ProviderServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/generated-sources/annotations/model/entity/persistent/DeliveryInfo_.java" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/model/entity/persistent/DeliveryInfo_.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/generated-sources/annotations/model/entity/persistent/State_.java" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/model/entity/persistent/State_.java" />
     </list>
     <ignored path="Transportation System Web Services.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -104,12 +60,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="AdminController.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="AdminController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/controller/AdminController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="362" column="65" lean-forward="true" selection-start-line="362" selection-start-column="61" selection-end-line="362" selection-end-column="65" />
-              <folding />
+            <state relative-caret-position="128">
+              <caret line="669" column="28" lean-forward="false" selection-start-line="669" selection-start-column="28" selection-end-line="669" selection-end-column="28" />
+              <folding>
+                <element signature="method#searchTariff#0;class#AdminController#0" expanded="false" />
+                <element signature="method#banOperator#0;class#AdminController#0" expanded="false" />
+                <element signature="method#unBanOperator#0;class#AdminController#0" expanded="false" />
+                <element signature="method#operatorsAgeReport#0;class#AdminController#0" expanded="false" />
+                <element signature="method#devicesReport#0;class#AdminController#0" expanded="false" />
+                <element signature="method#tripsReport#0;class#AdminController#0" expanded="false" />
+                <element signature="method#insertProvider#0;class#AdminController#0" expanded="false" />
+                <element signature="method#costTripsReport#0;class#AdminController#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -117,13 +82,12 @@
       <file leaf-file-name="AdminServiceImpl.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/service/AdminServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2667">
-              <caret line="539" column="29" lean-forward="false" selection-start-line="539" selection-start-column="29" selection-end-line="539" selection-end-column="29" />
+            <state relative-caret-position="-73">
+              <caret line="1073" column="44" lean-forward="false" selection-start-line="1073" selection-start-column="44" selection-end-line="1073" selection-end-column="44" />
               <folding>
                 <element signature="method#isStateExist#0;class#AdminServiceImpl#0" expanded="false" />
                 <element signature="method#isCityExist#0;class#AdminServiceImpl#0" expanded="false" />
                 <element signature="method#driversAgeReport#0;class#AdminServiceImpl#0" expanded="false" />
-                <element signature="method#passengersAgeReport#0;class#AdminServiceImpl#0" expanded="false" />
                 <element signature="method#operatorsAgeReport#0;class#AdminServiceImpl#0" expanded="false" />
                 <element signature="method#tripsReport#0;class#AdminServiceImpl#0" expanded="false" />
                 <element signature="method#insertProvider#0;class#AdminServiceImpl#0" expanded="false" />
@@ -136,8 +100,8 @@
       <file leaf-file-name="ProviderServiceImpl.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/service/ProviderServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="465" column="21" lean-forward="false" selection-start-line="465" selection-start-column="21" selection-end-line="465" selection-end-column="21" />
+            <state relative-caret-position="1604">
+              <caret line="566" column="9" lean-forward="false" selection-start-line="566" selection-start-column="9" selection-end-line="566" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -146,9 +110,57 @@
       <file leaf-file-name="MasterServiceImpl.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/service/MasterServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="112">
-              <caret line="180" column="21" lean-forward="true" selection-start-line="180" selection-start-column="21" selection-end-line="180" selection-end-column="21" />
+            <state relative-caret-position="102">
+              <caret line="43" column="0" lean-forward="true" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+              <folding>
+                <element signature="method#masterLogin#0;class#MasterServiceImpl#0" expanded="false" />
+                <element signature="method#operatorRegister#0;class#MasterServiceImpl#0" expanded="false" />
+                <element signature="method#operatorUpdate#0;class#MasterServiceImpl#0" expanded="false" />
+                <element signature="method#operatorRemove#0;class#MasterServiceImpl#0" expanded="false" />
+                <element signature="method#isUsernameExist#0;class#MasterServiceImpl#0" expanded="false" />
+                <element signature="method#isPhoneNumberExist#0;class#MasterServiceImpl#0" expanded="false" />
+                <element signature="method#isSubjectExist#0;class#MasterServiceImpl#0" expanded="false" />
+                <element signature="method#ticketSubjectRegister#0;class#MasterServiceImpl#0" expanded="false" />
+                <element signature="method#viewAllTicketSubjects#0;class#MasterServiceImpl#0" expanded="false" />
+                <element signature="method#voucherRegister#0;class#MasterServiceImpl#0" expanded="false" />
+                <element signature="method#voucherUpdate#0;class#MasterServiceImpl#0" expanded="false" />
+                <element signature="method#banOperator#0;class#MasterServiceImpl#0" expanded="false" />
+                <element signature="method#unBanOperator#0;class#MasterServiceImpl#0" expanded="false" />
+                <element signature="method#searchOperators#0;class#MasterServiceImpl#0" expanded="false" />
+                <element signature="method#isVoucherCodeExist#0;class#MasterServiceImpl#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="persistence.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/META-INF/persistence.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="106">
+              <caret line="18" column="69" lean-forward="false" selection-start-line="18" selection-start-column="69" selection-end-line="18" selection-end-column="69" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ProviderController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/controller/ProviderController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="98">
+              <caret line="229" column="0" lean-forward="false" selection-start-line="229" selection-start-column="0" selection-end-line="229" selection-end-column="0" />
+              <folding>
+                <element signature="method#driverPayment#0;class#ProviderController#0" expanded="false" />
+                <element signature="method#providerClaim#0;class#ProviderController#0" expanded="false" />
+                <element signature="method#mostDebtDrivers#0;class#ProviderController#0" expanded="false" />
+                <element signature="method#customDebtDrivers#0;class#ProviderController#0" expanded="false" />
+                <element signature="method#banDriver#0;class#ProviderController#0" expanded="false" />
+                <element signature="method#unBanDriver#0;class#ProviderController#0" expanded="false" />
+                <element signature="method#deactiveDriver#0;class#ProviderController#0" expanded="false" />
+                <element signature="method#banDriverByCredit#0;class#ProviderController#0" expanded="false" />
+                <element signature="method#viewDriverOfProvider#0;class#ProviderController#0" expanded="false" />
+                <element signature="method#driverOfProviderReport#0;class#ProviderController#0" expanded="false" />
+                <element signature="method#providerClaim#1;class#ProviderController#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -187,7 +199,6 @@
       <find>setting</find>
       <find>getTotalClaim</find>
       <find>banop</find>
-      <find>claim</find>
       <find>trips/</find>
       <find>onlinetri</find>
       <find>searcht</find>
@@ -199,6 +210,7 @@
       <find>passenger</find>
       <find>tariff</find>
       <find>coshare</find>
+      <find>claim</find>
     </findStrings>
     <replaceStrings>
       <replace>getErrorCode</replace>
@@ -253,8 +265,6 @@
         <option value="$PROJECT_DIR$/src/main/java/util/converter/AccountStateConverter.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/model/entity/persistent/SystemSetting.java" />
-        <option value="$PROJECT_DIR$/src/main/java/model/entity/persistent/VoucherCode.java" />
-        <option value="$PROJECT_DIR$/src/main/java/model/enums/Status.java" />
         <option value="$PROJECT_DIR$/src/main/java/model/entity/persistent/Organization.java" />
         <option value="$PROJECT_DIR$/src/main/java/model/entity/persistent/Address.java" />
         <option value="$PROJECT_DIR$/src/main/java/service/COPServiceImpl.java" />
@@ -285,12 +295,14 @@
         <option value="$PROJECT_DIR$/src/main/java/model/entity/persistent/PassengerLog.java" />
         <option value="$PROJECT_DIR$/src/main/java/model/entity/persistent/OperatorLog.java" />
         <option value="$PROJECT_DIR$/src/main/java/model/entity/persistent/DriverLog.java" />
-        <option value="$PROJECT_DIR$/src/main/META-INF/persistence.xml" />
         <option value="$PROJECT_DIR$/src/main/java/service/OperatorServiceImpl.java" />
-        <option value="$PROJECT_DIR$/src/main/java/service/ProviderServiceImpl.java" />
-        <option value="$PROJECT_DIR$/src/main/java/service/MasterServiceImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/service/AdminServiceImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/controller/AdminController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/service/ProviderServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/model/enums/Status.java" />
+        <option value="$PROJECT_DIR$/src/main/java/model/entity/persistent/VoucherCode.java" />
+        <option value="$PROJECT_DIR$/src/main/java/service/MasterServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/META-INF/persistence.xml" />
       </list>
     </option>
   </component>
@@ -479,7 +491,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -685,70 +696,6 @@
               <option name="myItemId" value="java" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="security" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Transportation System Web Services op" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Transportation System Web Services op" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="security" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jwt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Transportation System Web Services op" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Transportation System Web Services op" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="security" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="exceptions" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -777,66 +724,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="struct" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Transportation System Web Services op" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Transportation System Web Services op" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="model" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="enums" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Transportation System Web Services op" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Transportation System Web Services op" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="model" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="persistent" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1251,6 +1138,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -2173,7 +2061,8 @@
       <workItem from="1502346301398" duration="3473000" />
       <workItem from="1502514447523" duration="7930000" />
       <workItem from="1502524637836" duration="781000" />
-      <workItem from="1502601817319" duration="9313000" />
+      <workItem from="1502601817319" duration="9500000" />
+      <workItem from="1502687820500" duration="6375000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit&#10;passenger registeration and set GCM key implemented">
       <created>1486373218999</created>
@@ -2343,11 +2232,18 @@
       <option name="project" value="LOCAL" />
       <updated>1502524043380</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Resolving Bugs">
+      <created>1502611757897</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1502611757897</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1690279000" />
+    <option name="totallyTimeSpent" value="1696841000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -2383,12 +2279,12 @@
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32405892" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.08674304" sideWeight="0.4924357" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2111293" sideWeight="0.4924357" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Persistence" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30711043" sideWeight="0.5265226" order="6" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33585477" sideWeight="0.4734774" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32965118" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34341908" sideWeight="0.4734774" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30711043" sideWeight="0.5304136" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30711043" sideWeight="0.5304136" order="8" side_tool="true" content_ui="tabs" />
@@ -2443,13 +2339,14 @@
     <MESSAGE value="Confirm Driver Changed! (providerID added)&#10;&#10;Provider:&#10;provider/drivers (q count offset)&#10;Method: GET&#10;&#10;Admin:&#10;{{url}}/admin/providers&#10;Method: POST&#10;&#10;{&#10;  &quot;name&quot;: &quot;hamid&quot;&#10;}&#10;&#10;&#10;admin/providers&#10;Method: GET" />
     <MESSAGE value="Report:&#10;admin/report/trips/cost&#10;&#10;Resolve Bug" />
     <MESSAGE value="allow origin added for unauthorized, access denied and token expired&#10;&#10;resolved bugs:&#10;driver search&#10;login message&#10;&#10;added feature:&#10;provider operator login" />
-    <option name="LAST_COMMIT_MESSAGE" value="allow origin added for unauthorized, access denied and token expired&#10;&#10;resolved bugs:&#10;driver search&#10;login message&#10;&#10;added feature:&#10;provider operator login" />
+    <MESSAGE value="Resolving Bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Resolving Bugs" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="382" />
+      <option name="time" value="384" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="GlassfishConfiguration">
@@ -2467,27 +2364,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/model/enums/Status.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="42" column="44" lean-forward="false" selection-start-line="42" selection-start-column="44" selection-end-line="42" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/model/entity/persistent/Organization.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="17" column="53" lean-forward="false" selection-start-line="17" selection-start-column="53" selection-end-line="17" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/util/LocalEntityManagerFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="28" column="17" lean-forward="true" selection-start-line="28" selection-start-column="17" selection-end-line="28" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/model/entity/persistent/SubscribeUser.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="88">
@@ -2615,32 +2491,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/controller/MasterController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="96" column="175" lean-forward="false" selection-start-line="96" selection-start-column="175" selection-end-line="96" selection-end-column="175" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/model/enums/UserRole.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="12" column="4" lean-forward="false" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/security/JwtAuthenticationException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/security/config/WebSecurityConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="35" column="72" lean-forward="false" selection-start-line="35" selection-start-column="72" selection-end-line="35" selection-end-column="72" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2651,38 +2505,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/controller/DefaultController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="697">
-          <caret line="61" column="0" lean-forward="false" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#830#831#0" expanded="false" />
-            <element signature="e#884#885#0" expanded="false" />
-            <element signature="e#994#995#0" expanded="false" />
-            <element signature="e#1050#1051#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/security/jwt/JWTAuthenticationFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="302">
-          <caret line="38" column="129" lean-forward="false" selection-start-line="38" selection-start-column="129" selection-end-line="38" selection-end-column="129" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/controller/GlobalExceptionHandler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
           <caret line="27" column="68" lean-forward="true" selection-start-line="27" selection-start-column="68" selection-end-line="27" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/security/exceptions/AccessDeniedHandlerImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -2697,7 +2523,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="5" column="12" lean-forward="false" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2706,7 +2531,7 @@
         <state relative-caret-position="438">
           <caret line="51" column="35" lean-forward="false" selection-start-line="51" selection-start-column="35" selection-end-line="51" selection-end-column="35" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2750,7 +2575,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
           <caret line="13" column="13" lean-forward="false" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2758,7 +2582,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="18" column="72" lean-forward="false" selection-start-line="18" selection-start-column="72" selection-end-line="18" selection-end-column="72" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2766,7 +2589,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="18" column="72" lean-forward="false" selection-start-line="18" selection-start-column="72" selection-end-line="18" selection-end-column="72" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2774,15 +2596,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="18" column="72" lean-forward="false" selection-start-line="18" selection-start-column="72" selection-end-line="18" selection-end-column="72" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/META-INF/persistence.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2790,19 +2603,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="455">
           <caret line="81" column="36" lean-forward="false" selection-start-line="81" selection-start-column="36" selection-end-line="81" selection-end-column="36" />
-          <folding>
-            <element signature="e#1997#1998#0" expanded="true" />
-            <element signature="e#2051#2052#0" expanded="true" />
-            <element signature="e#2097#2098#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/service/OperatorServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="1017" column="34" lean-forward="true" selection-start-line="1017" selection-start-column="34" selection-end-line="1017" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2814,26 +2614,130 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/service/ProviderServiceImpl.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/util/converter/ServiceTypeConverter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="465" column="21" lean-forward="false" selection-start-line="465" selection-start-column="21" selection-end-line="465" selection-end-column="21" />
+        <state relative-caret-position="884">
+          <caret line="55" column="21" lean-forward="true" selection-start-line="55" selection-start-column="21" selection-end-line="55" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/security/config/WebSecurityConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="35" column="72" lean-forward="false" selection-start-line="35" selection-start-column="72" selection-end-line="35" selection-end-column="72" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/service/MasterServiceImpl.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/security/jwt/JWTAuthenticationFilter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="180" column="21" lean-forward="true" selection-start-line="180" selection-start-column="21" selection-end-line="180" selection-end-column="21" />
+        <state relative-caret-position="314">
+          <caret line="38" column="129" lean-forward="false" selection-start-line="38" selection-start-column="129" selection-end-line="38" selection-end-column="129" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/security/JwtAuthenticationException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/security/exceptions/AccessDeniedHandlerImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/security/jwt/JwtService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="27" column="51" lean-forward="true" selection-start-line="27" selection-start-column="51" selection-end-line="27" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/service/OperatorServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="186">
+          <caret line="87" column="63" lean-forward="true" selection-start-line="87" selection-start-column="63" selection-end-line="87" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/controller/MasterController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="96" column="175" lean-forward="false" selection-start-line="96" selection-start-column="175" selection-end-line="96" selection-end-column="175" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/controller/DefaultController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="61" column="53" lean-forward="false" selection-start-line="61" selection-start-column="53" selection-end-line="61" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/controller/AdminController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="669" column="28" lean-forward="false" selection-start-line="669" selection-start-column="28" selection-end-line="669" selection-end-column="28" />
+          <folding>
+            <element signature="method#searchTariff#0;class#AdminController#0" expanded="false" />
+            <element signature="method#banOperator#0;class#AdminController#0" expanded="false" />
+            <element signature="method#unBanOperator#0;class#AdminController#0" expanded="false" />
+            <element signature="method#operatorsAgeReport#0;class#AdminController#0" expanded="false" />
+            <element signature="method#devicesReport#0;class#AdminController#0" expanded="false" />
+            <element signature="method#tripsReport#0;class#AdminController#0" expanded="false" />
+            <element signature="method#insertProvider#0;class#AdminController#0" expanded="false" />
+            <element signature="method#costTripsReport#0;class#AdminController#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/service/AdminServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-73">
+          <caret line="1073" column="44" lean-forward="false" selection-start-line="1073" selection-start-column="44" selection-end-line="1073" selection-end-column="44" />
+          <folding>
+            <element signature="method#isStateExist#0;class#AdminServiceImpl#0" expanded="false" />
+            <element signature="method#isCityExist#0;class#AdminServiceImpl#0" expanded="false" />
+            <element signature="method#driversAgeReport#0;class#AdminServiceImpl#0" expanded="false" />
+            <element signature="method#operatorsAgeReport#0;class#AdminServiceImpl#0" expanded="false" />
+            <element signature="method#tripsReport#0;class#AdminServiceImpl#0" expanded="false" />
+            <element signature="method#insertProvider#0;class#AdminServiceImpl#0" expanded="false" />
+            <element signature="method#OSReport#0;class#AdminServiceImpl#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/service/ProviderServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1604">
+          <caret line="566" column="9" lean-forward="false" selection-start-line="566" selection-start-column="9" selection-end-line="566" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/model/enums/Status.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="747">
+          <caret line="44" column="44" lean-forward="true" selection-start-line="44" selection-start-column="44" selection-end-line="44" selection-end-column="44" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/controller/ProviderController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="182" column="40" lean-forward="false" selection-start-line="182" selection-start-column="40" selection-end-line="182" selection-end-column="40" />
+        <state relative-caret-position="98">
+          <caret line="229" column="0" lean-forward="false" selection-start-line="229" selection-start-column="0" selection-end-line="229" selection-end-column="0" />
           <folding>
             <element signature="method#driverPayment#0;class#ProviderController#0" expanded="false" />
             <element signature="method#providerClaim#0;class#ProviderController#0" expanded="false" />
@@ -2850,35 +2754,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/util/converter/ServiceTypeConverter.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/model/entity/persistent/VoucherCode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="884">
-          <caret line="55" column="21" lean-forward="true" selection-start-line="55" selection-start-column="21" selection-end-line="55" selection-end-column="21" />
+        <state relative-caret-position="144">
+          <caret line="16" column="99" lean-forward="false" selection-start-line="16" selection-start-column="99" selection-end-line="16" selection-end-column="99" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/service/AdminServiceImpl.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/service/MasterServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2667">
-          <caret line="539" column="29" lean-forward="false" selection-start-line="539" selection-start-column="29" selection-end-line="539" selection-end-column="29" />
+        <state relative-caret-position="102">
+          <caret line="43" column="0" lean-forward="true" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
           <folding>
-            <element signature="method#isStateExist#0;class#AdminServiceImpl#0" expanded="false" />
-            <element signature="method#isCityExist#0;class#AdminServiceImpl#0" expanded="false" />
-            <element signature="method#driversAgeReport#0;class#AdminServiceImpl#0" expanded="false" />
-            <element signature="method#passengersAgeReport#0;class#AdminServiceImpl#0" expanded="false" />
-            <element signature="method#operatorsAgeReport#0;class#AdminServiceImpl#0" expanded="false" />
-            <element signature="method#tripsReport#0;class#AdminServiceImpl#0" expanded="false" />
-            <element signature="method#insertProvider#0;class#AdminServiceImpl#0" expanded="false" />
-            <element signature="method#OSReport#0;class#AdminServiceImpl#0" expanded="false" />
+            <element signature="method#masterLogin#0;class#MasterServiceImpl#0" expanded="false" />
+            <element signature="method#operatorRegister#0;class#MasterServiceImpl#0" expanded="false" />
+            <element signature="method#operatorUpdate#0;class#MasterServiceImpl#0" expanded="false" />
+            <element signature="method#operatorRemove#0;class#MasterServiceImpl#0" expanded="false" />
+            <element signature="method#isUsernameExist#0;class#MasterServiceImpl#0" expanded="false" />
+            <element signature="method#isPhoneNumberExist#0;class#MasterServiceImpl#0" expanded="false" />
+            <element signature="method#isSubjectExist#0;class#MasterServiceImpl#0" expanded="false" />
+            <element signature="method#ticketSubjectRegister#0;class#MasterServiceImpl#0" expanded="false" />
+            <element signature="method#viewAllTicketSubjects#0;class#MasterServiceImpl#0" expanded="false" />
+            <element signature="method#voucherRegister#0;class#MasterServiceImpl#0" expanded="false" />
+            <element signature="method#voucherUpdate#0;class#MasterServiceImpl#0" expanded="false" />
+            <element signature="method#banOperator#0;class#MasterServiceImpl#0" expanded="false" />
+            <element signature="method#unBanOperator#0;class#MasterServiceImpl#0" expanded="false" />
+            <element signature="method#searchOperators#0;class#MasterServiceImpl#0" expanded="false" />
+            <element signature="method#isVoucherCodeExist#0;class#MasterServiceImpl#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/controller/AdminController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/META-INF/persistence.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="362" column="65" lean-forward="true" selection-start-line="362" selection-start-column="61" selection-end-line="362" selection-end-column="65" />
+        <state relative-caret-position="106">
+          <caret line="18" column="69" lean-forward="false" selection-start-line="18" selection-start-column="69" selection-end-line="18" selection-end-column="69" />
           <folding />
         </state>
       </provider>
