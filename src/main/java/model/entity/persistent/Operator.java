@@ -39,7 +39,7 @@ public class Operator implements Serializable {
     @Column(name = "OPERATOR_ID", columnDefinition = "NUMBER")
     @SequenceGenerator(name = "operatorGen", sequenceName = "operatorIdSeq")
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "operatorGen")
-    private Long oId;
+    private long oId;
 
     @Basic
     @Column(name = "PHONE_NUMBER", columnDefinition = "VARCHAR2(20)")
@@ -58,7 +58,7 @@ public class Operator implements Serializable {
     private Operator creator;
 
     @Basic
-    @Column(name = "USERNAME", columnDefinition = "NVARCHAR2(20)", unique = true)
+    @Column(name = "USERNAME", columnDefinition = "NVARCHAR2(20)")
     private String username;
 
     @Basic
@@ -67,14 +67,14 @@ public class Operator implements Serializable {
 
     @Basic
     @Column(name = "IS_LOGGED_IN", columnDefinition = "CHAR")
-    private Boolean isLoggedIn;
+    private boolean isLoggedIn;
 
     @Basic
-    @Column(name = "FIRSTNAME", columnDefinition = "NVARCHAR2(32)")
+    @Column(name = "FIRST_NAME", columnDefinition = "NVARCHAR2(32)")
     private String firstName;
 
     @Basic
-    @Column(name = "LASTNAME", columnDefinition = "NVARCHAR2(32)")
+    @Column(name = "LAST_NAME", columnDefinition = "NVARCHAR2(32)")
     private String lastName;
 
     @Basic
@@ -106,16 +106,14 @@ public class Operator implements Serializable {
     @JoinColumn(name = "FK_SERVICE_PROVIDER", referencedColumnName = "ID")
     private ServiceProvider serviceProvider;
 
-
-
     public Operator() {
     }
 
-    public Long getoId() {
+    public long getoId() {
         return oId;
     }
 
-    public void setoId(Long oId) {
+    public void setoId(long oId) {
         this.oId = oId;
     }
 
@@ -167,11 +165,11 @@ public class Operator implements Serializable {
         this.password = password;
     }
 
-    public Boolean isLoggedIn() {
+    public boolean isLoggedIn() {
         return isLoggedIn;
     }
 
-    public void setLoggedIn(Boolean loggedIn) {
+    public void setLoggedIn(boolean loggedIn) {
         isLoggedIn = loggedIn;
     }
 

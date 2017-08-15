@@ -1559,20 +1559,25 @@ public class OperatorServiceImpl implements OperatorService {
 
 
                 tripInfo.put("id", tripObject.getId());
-                tripInfo.put("ETA", tripObject.getETA());
+                tripInfo.put("ETA", tripObject.getInfo().getETA());
                 tripInfo.put("UUID", tripObject.getUUID());
                 tripInfo.put("cashPayment", tripObject.getCashPayment());
                 tripInfo.put("cost", tripObject.getCost());
                 tripInfo.put("creditPayment", tripObject.getCreditPayment());
-                tripInfo.put("distance", tripObject.getDistance());
-                tripInfo.put("originAddress", tripObject.getOriginAddress());
-//            tripInfo.put("paymentMethod", tripObject.getPaymentMethodDBValue());
+
+//              tripInfo.put("paymentMethod", tripObject.getPaymentMethodDBValue());
+//              tripInfo.put("city", tripObject.getCityDBValue());
                 tripInfo.put("serviceType", tripObject.getServiceTypeDBValue());
-                tripInfo.put("startDate", tripObject.getStartDate());
-                tripInfo.put("waitingTime", tripObject.getWaitingTime());
-                tripInfo.put("city", tripObject.getCityDBValue());
-                tripInfo.put("rate", tripObject.getRate());
-                tripInfo.put("isOneWay", tripObject.isOneWay());
+                if(tripObject.getInfo()!=null) {
+                    tripInfo.put("distance", tripObject.getInfo().getDistance());
+                    tripInfo.put("originAddress", tripObject.getInfo().getOriginAddress());
+                    tripInfo.put("startDate", tripObject.getInfo().getStartDate());
+                    tripInfo.put("waitingTime", tripObject.getInfo().getWaitingTime());
+                    tripInfo.put("rate", tripObject.getInfo().getRate());
+                    tripInfo.put("isOneWay", tripObject.getInfo().isOneWay());
+
+                }
+
 
                 if (tripObject.getPassenger() != null) {
                     tripInfo.put("passengerUsername", tripObject.getPassenger().getUsername());

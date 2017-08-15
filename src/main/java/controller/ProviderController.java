@@ -196,6 +196,8 @@ public class ProviderController {
             Object driverOfProvider = providerService.viewDriverOfProvider(providerUsername, q, c, p);
             if(driverOfProvider instanceof JSONObject){
                 return returnResponse(Status.OK, (JSONObject)driverOfProvider);
+            }else if (driverOfProvider instanceof Status){
+                return returnResponse((Status)driverOfProvider);
             }else{
                 return returnResponse(Status.UNKNOWN_ERROR);
             }

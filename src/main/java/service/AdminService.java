@@ -80,6 +80,8 @@ public interface AdminService {
 
     void costTripsReport(HttpServletResponse resp);
 
+    void providersClaimReport(HttpServletResponse resp);
+
 
 }
 

@@ -1,17 +1,14 @@
 package model.entity.persistent;
 
-import model.enums.City;
 import model.enums.PaymentMethod;
 import model.enums.ServiceType;
 import model.enums.TripState;
 import util.IOCContainer;
-import util.converter.CityConverter;
 import util.converter.PaymentMethodConverter;
 import util.converter.ServiceTypeConverter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,17 +18,17 @@ import java.util.List;
          @NamedQuery(name = "trip.findBy.UUID", query = "select t from trip t where t.UUID=:UUID"),
          @NamedQuery(name = "trip.findBy.passengerID", query = "select t from trip t where t.passenger.id=:passengerID"),
          @NamedQuery(name = "trip.findBy.driverID", query = "select t from trip t where t.driver.id=:driverID"),
-         @NamedQuery(name = "trip.findBy.lowRate", query = "select t.driver.username, avg(rate) from trip t GROUP by t.driver.username having avg(rate)<:rate"),
+         @NamedQuery(name = "trip.findBy.lowRate", query = "select t.driver.username, avg(t.info.rate) from trip t GROUP by t.driver.username having avg(t.info.rate)<:rate"),
          @NamedQuery(name = "trip.findBy.driverUsername",query = "select t from trip t left join driver d on t.driver.id=d.id where d.username like :username"),
          @NamedQuery(name = "trip.findBy.driverPhoneNumber",query = "select t from trip t left join driver d on t.driver.id=d.id where d.phoneNumber like :phoneNumber"),
          @NamedQuery(name = "trip.findBy.passengerUsername",query = "select t from trip t left join passenger p on t.passenger.id=p.id where p.username like :username"),
          @NamedQuery(name = "trip.findBy.passengerPhoneNumber",query = "select t from trip t left join passenger p on t.passenger.id=p.id where p.phoneNumber like :phoneNumber"),
          @NamedQuery(name = "trip.findBy.uuid",query = "select t from trip t where t.UUID like :uuid"),
-         @NamedQuery(name = "trip.between.date",query = "select t from trip t where trunc(t.startDate)>=:startDate and trunc(endDate)<=:endDate"),
-         @NamedQuery(name = "trip.today.count",query = "select count(t.id) from trip t where trunc(t.startDate) = trunc(current_date)"),
-         @NamedQuery(name = "trip.distance.findBy.vehicleID",query = "select SUM(t.distance) from trip t where (t.serviceType!='R' or t.serviceType!='D') and t.vehicle.id=:vehicleID"),
+         @NamedQuery(name = "trip.between.date",query = "select t from trip t where trunc(t.info.startDate)>=:startDate and trunc(t.info.endDate)<=:endDate"),
+         @NamedQuery(name = "trip.today.count",query = "select count(t.id) from trip t where trunc(t.info.startDate) = trunc(current_date)"),
+         @NamedQuery(name = "trip.distance.findBy.vehicleID",query = "select SUM(t.info.distance) from trip t where (t.serviceType!='R' or t.serviceType!='D') and t.vehicle.id=:vehicleID"),
          @NamedQuery(name = "trip.searchLike", query = "select t from trip t left join t.driver d left join t.passenger p left join t.subscribeUser s left join t.origin o  where t.UUID like :input or  p.username like :input or d.username like :input or s.subscriptionCode like :input " ),
-         @NamedQuery(name = "trip.groupBy.city", query = "select t.city,sum(t.cost) from trip t group by t.city" ),
+//         @NamedQuery(name = "trip.groupBy.city", query = "select t.city,sum(t.cost) from trip t group by t.city" ),
          @NamedQuery(name = "trip.groupBy.serviceType", query = "select t.serviceType,sum(t.cost) from trip t group by t.serviceType" )
  })
 
@@ -52,28 +49,6 @@ public class Trip implements Serializable {
     private String UUID;
 
     @Basic
-    @Column(name = "START_DATE", columnDefinition = "TIMESTAMP")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date startDate;
-
-    @Basic
-    @Column(name = "END_DATE", columnDefinition = "TIMESTAMP")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date endDate;
-
-    @Basic
-    @Column(name = "RATE", columnDefinition = "NUMBER(1)")
-    private Integer rate;
-
-    @Basic
-    @Column(name = "CITY", columnDefinition = "VARCHAR2(2)")
-    private City city;
-
-    @Basic
-    @Column(name = "PAYMENT_METHOD", columnDefinition = "NUMBER(1)")
-    private PaymentMethod paymentMethod;
-
-    @Basic
     @Column(name = "STATE", columnDefinition = "NUMBER(2)")
     private TripState state;
 
@@ -81,9 +56,14 @@ public class Trip implements Serializable {
     @Column(name = "SERVICE_TYPE", columnDefinition = "CHAR")
     private ServiceType serviceType;
 
+
     @Basic
     @Column(name = "COST", columnDefinition = "NUMBER(9)")
     private Integer cost;
+
+    @Basic
+    @Column(name = "PAYMENT_METHOD", columnDefinition = "NUMBER(1)")
+    private PaymentMethod paymentMethod;
 
     @Basic
     @Column(name = "CASH_PAYMENT", columnDefinition = "NUMBER(9)")
@@ -93,21 +73,6 @@ public class Trip implements Serializable {
     @Column(name = "CREDIT_PAYMENT", columnDefinition = "NUMBER(9)")
     private Integer creditPayment;
 
-    @Basic
-    @Column(name = "IS_ONE_WAY", columnDefinition = "CHAR")
-    private Boolean isOneWay;
-
-    @Basic
-    @Column(name = "WAITING_TIME", columnDefinition = "NUMBER(4)")
-    private Integer waitingTime;
-
-    @Basic
-    @Column(name = "DISTANCE", columnDefinition = "NUMBER(8)")
-    private Long distance;
-
-    @Basic
-    @Column(name = "ETA", columnDefinition = "NUMBER(7)")
-    private Long ETA;
 
     @Basic
     @Column(name = "GENO_SHARE", columnDefinition = "NUMBER(9)")
@@ -121,7 +86,7 @@ public class Trip implements Serializable {
     @JoinColumn(name = "FK_Vehicle", referencedColumnName = "ID")
     private Vehicle vehicle;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
     @JoinColumn(name = "FK_VOUCHER", referencedColumnName = "VOUCHER_ID")
     private VoucherCode voucherCode;
 
@@ -137,9 +102,6 @@ public class Trip implements Serializable {
     @JoinColumn(name = "FK_TRIP", referencedColumnName = "TRIP_ID")
     private List<TripDestination> destinations;
 
-    @Basic
-    @Column(name = "ORIGIN_ADDRESS", columnDefinition = "NVARCHAR2(150)")
-    private String originAddress;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "FK_PASSENGER", referencedColumnName = "PASSENGER_ID")
@@ -157,6 +119,10 @@ public class Trip implements Serializable {
     @JoinColumn(name = "FK_SUBUSER", referencedColumnName = "SUBUSER_ID")
     private SubscribeUser subscribeUser;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
+    @JoinColumn(name = "FK_INFO", referencedColumnName = "TRIP_INFO_ID")
+    private TripInfo info;
+
     public Trip() {
     }
 
@@ -172,56 +138,8 @@ public class Trip implements Serializable {
         return UUID;
     }
 
-    public void setUUID(String uuid) {
-        this.UUID = uuid;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Integer getRate() {
-        return rate;
-    }
-
-    public void setRate(Integer rate) {
-        this.rate = rate;
-    }
-
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public Integer getCashPayment() {
-        return cashPayment;
-    }
-
-    public void setCashPayment(Integer cashPayment) {
-        this.cashPayment = cashPayment;
-    }
-
-    public Integer getCreditPayment() {
-        return creditPayment;
-    }
-
-    public void setCreditPayment(Integer creditPayment) {
-        this.creditPayment = creditPayment;
+    public void setUUID(String UUID) {
+        this.UUID = UUID;
     }
 
     public TripState getState() {
@@ -248,36 +166,36 @@ public class Trip implements Serializable {
         this.cost = cost;
     }
 
-    public Boolean isOneWay() {
-        return isOneWay;
+    public Integer getCashPayment() {
+        return cashPayment;
     }
 
-    public void setOneWay(Boolean oneWay) {
-        isOneWay = oneWay;
+    public void setCashPayment(Integer cashPayment) {
+        this.cashPayment = cashPayment;
     }
 
-    public Integer getWaitingTime() {
-        return waitingTime;
+    public Integer getCreditPayment() {
+        return creditPayment;
     }
 
-    public void setWaitingTime(Integer waitingTime) {
-        this.waitingTime = waitingTime;
+    public void setCreditPayment(Integer creditPayment) {
+        this.creditPayment = creditPayment;
     }
 
-    public Long getDistance() {
-        return distance;
+    public Integer getGenoShare() {
+        return genoShare;
     }
 
-    public void setDistance(Long distance) {
-        this.distance = distance;
+    public void setGenoShare(Integer genoShare) {
+        this.genoShare = genoShare;
     }
 
-    public Long getETA() {
-        return ETA;
+    public Integer getProviderShare() {
+        return providerShare;
     }
 
-    public void setETA(Long ETA) {
-        this.ETA = ETA;
+    public void setProviderShare(Integer providerShare) {
+        this.providerShare = providerShare;
     }
 
     public Vehicle getVehicle() {
@@ -296,6 +214,13 @@ public class Trip implements Serializable {
         this.voucherCode = voucherCode;
     }
 
+    public DeliveryInfo getDeliveryInfo() {
+        return deliveryInfo;
+    }
+
+    public void setDeliveryInfo(DeliveryInfo deliveryInfo) {
+        this.deliveryInfo = deliveryInfo;
+    }
 
     public Location getOrigin() {
         return origin;
@@ -311,14 +236,6 @@ public class Trip implements Serializable {
 
     public void setDestinations(List<TripDestination> destinations) {
         this.destinations = destinations;
-    }
-
-    public String getOriginAddress() {
-        return originAddress;
-    }
-
-    public void setOriginAddress(String originAddress) {
-        this.originAddress = originAddress;
     }
 
     public Passenger getPassenger() {
@@ -353,36 +270,20 @@ public class Trip implements Serializable {
         this.subscribeUser = subscribeUser;
     }
 
-    public DeliveryInfo getDeliveryInfo() {
-        return deliveryInfo;
+    public TripInfo getInfo() {
+        return info;
     }
 
-    public void setDeliveryInfo(DeliveryInfo deliveryInfo) {
-        this.deliveryInfo = deliveryInfo;
+    public void setInfo(TripInfo info) {
+        this.info = info;
     }
 
-    public Integer getGenoShare() {
-        return genoShare;
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
     }
 
-    public void setGenoShare(Integer genoShare) {
-        this.genoShare = genoShare;
-    }
-
-    public Integer getProviderShare() {
-        return providerShare;
-    }
-
-    public void setProviderShare(Integer providerShare) {
-        this.providerShare = providerShare;
-    }
-
-    public City getCity() {
-        return city;
-    }
-
-    public void setCity(City city) {
-        this.city = city;
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     public Integer getPaymentMethodDBValue() {
@@ -391,9 +292,5 @@ public class Trip implements Serializable {
 
     public String getServiceTypeDBValue() {
         return ((ServiceTypeConverter) IOCContainer.getBean("serviceTypeConverter")).convertToDatabaseColumn(serviceType);
-    }
-
-    public String getCityDBValue() {
-        return ((CityConverter) IOCContainer.getBean("cityConverter")).convertToDatabaseColumn(city);
     }
 }

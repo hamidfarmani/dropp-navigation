@@ -1277,28 +1277,14 @@ public class AdminServiceImpl implements AdminService {
     public void tripsReport(HttpServletResponse resp,Date startDate, Date endDate) {
         List<Trip> tripsList = null;
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        WritableWorkbook operatorExcelWorkSheet = null;
         try {
             entityManager.getTransaction().begin();
             tripsList = entityManager.createNamedQuery("trip.between.date")
                     .setParameter("startDate",startDate)
                     .setParameter("endDate",endDate)
                     .getResultList();
-            entityManager.getTransaction().commit();
-        } catch (RollbackException e) {
-            e.printStackTrace();
-            entityManager.getTransaction().rollback();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
-        WritableWorkbook operatorExcelWorkSheet = null;
-        try {
+
             int sumCost = 0;
             int sumCashPay = 0;
             int sumCreditPay = 0;
@@ -1327,22 +1313,23 @@ public class AdminServiceImpl implements AdminService {
                 if(trip.getCreditPayment()!=null) {
                     sumCreditPay = sumCreditPay + trip.getCreditPayment();
                 }
-                if(trip.getDistance()!=null) {
-                    sumDistance = sumDistance + trip.getDistance();
-                    if (trip.getDistance() > mostDistance) {
-                        mostDistance = trip.getDistance();
+
+                if(trip.getInfo()!= null && trip.getInfo().getDistance()!=null) {
+                    sumDistance = sumDistance + trip.getInfo().getDistance();
+                    if (trip.getInfo().getDistance() > mostDistance) {
+                        mostDistance = trip.getInfo().getDistance();
                     }
-                    if (trip.getDistance() < minDistance) {
-                        minDistance = trip.getDistance();
+                    if (trip.getInfo().getDistance() < minDistance) {
+                        minDistance = trip.getInfo().getDistance();
                     }
                 }
-                if(trip.getRate()!=null) {
-                    sumRate = sumRate + trip.getRate();
-                    if(trip.getRate()>mostRate){
-                        mostRate = trip.getRate();
+                if(trip.getInfo()!=null && trip.getInfo().getRate()!=null) {
+                    sumRate = sumRate + trip.getInfo().getRate();
+                    if(trip.getInfo().getRate()>mostRate){
+                        mostRate = trip.getInfo().getRate();
                     }
-                    if(trip.getRate()<minRate){
-                        minRate = trip.getRate();
+                    if(trip.getInfo().getRate()<minRate){
+                        minRate = trip.getInfo().getRate();
                     }
                     rates++;
                 }
@@ -1417,12 +1404,19 @@ public class AdminServiceImpl implements AdminService {
             excelSheet.addCell(label);
 
             operatorExcelWorkSheet.write();
-
-        } catch (IOException e) {
+            entityManager.getTransaction().commit();
+        } catch (RollbackException e) {
             e.printStackTrace();
-        } catch (WriteException e) {
+            entityManager.getTransaction().rollback();
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
             if (operatorExcelWorkSheet != null) {
                 try {
                     operatorExcelWorkSheet.close();
@@ -1595,8 +1589,8 @@ public class AdminServiceImpl implements AdminService {
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            tripsGroupByCityList = entityManager.createNamedQuery("trip.groupBy.city")
-                    .getResultList();
+//            tripsGroupByCityList = entityManager.createNamedQuery("trip.groupBy.city")
+//                    .getResultList();
             tripsGroupByServiceTypeList = entityManager.createNamedQuery("trip.groupBy.serviceType")
                     .getResultList();
             entityManager.getTransaction().commit();
@@ -1618,26 +1612,26 @@ public class AdminServiceImpl implements AdminService {
             tripCostExcelWorkSheet = Workbook.createWorkbook(resp.getOutputStream());
 
             WritableSheet excelSheet = tripCostExcelWorkSheet.createSheet("درآمد", 0);
-            Label label = new Label(0, 0, "نام شهر");
-            excelSheet.addCell(label);
-            label = new Label(1, 0, "مجموع درآمد");
-            excelSheet.addCell(label);
+//            Label label = new Label(0, 0, "نام شهر");
+//            excelSheet.addCell(label);
+//            label = new Label(1, 0, "مجموع درآمد");
+//            excelSheet.addCell(label);
 
-            label = new Label(4, 0, "نام سرویس");
+            Label label = new Label(4, 0, "نام سرویس");
             excelSheet.addCell(label);
             label = new Label(5, 0, "مجموع درآمد");
             excelSheet.addCell(label);
 
 
-            for (int i=0;i<tripsGroupByCityList.size();i++) {
-                Object[] obj = tripsGroupByCityList.get(i);
-                String city = String.valueOf(obj[0]);
-                Long totalCost = (Long) obj[1];
-                label = new Label(0, i+1, city);
-                excelSheet.addCell(label);
-                label = new Label(1, i+1, String.valueOf(totalCost));
-                excelSheet.addCell(label);
-            }
+//            for (int i=0;i<tripsGroupByCityList.size();i++) {
+//                Object[] obj = tripsGroupByCityList.get(i);
+//                String city = String.valueOf(obj[0]);
+//                Long totalCost = (Long) obj[1];
+//                label = new Label(0, i+1, city);
+//                excelSheet.addCell(label);
+//                label = new Label(1, i+1, String.valueOf(totalCost));
+//                excelSheet.addCell(label);
+//            }
 
             for (int i=0;i<tripsGroupByServiceTypeList.size();i++) {
                 Object[] obj = tripsGroupByServiceTypeList.get(i);
@@ -1659,6 +1653,75 @@ public class AdminServiceImpl implements AdminService {
             if (tripCostExcelWorkSheet != null) {
                 try {
                     tripCostExcelWorkSheet.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (WriteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void providersClaimReport(HttpServletResponse resp) {
+        List<ServiceProvider> serviceProviderList = null;
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            serviceProviderList = entityManager.createNamedQuery("serviceProvider.get.all")
+                    .getResultList();
+            entityManager.getTransaction().commit();
+        } catch (RollbackException e) {
+            e.printStackTrace();
+            entityManager.getTransaction().rollback();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        WritableWorkbook providersClaimExcelWorkSheet = null;
+        try {
+            providersClaimExcelWorkSheet = Workbook.createWorkbook(resp.getOutputStream());
+
+            WritableSheet excelSheet = providersClaimExcelWorkSheet.createSheet("بدهی", 0);
+            Label label = new Label(0, 3, "نام ارائه دهنده ی سرویس");
+            excelSheet.addCell(label);
+            label = new Label(1, 3, "بدهی");
+            excelSheet.addCell(label);
+            Long sum = Long.valueOf(0);
+            for (int i=0;i<serviceProviderList.size();i++) {
+                ServiceProvider serviceProvider = serviceProviderList.get(i);
+                label = new Label(0, i+4, serviceProvider.getName());
+                excelSheet.addCell(label);
+                sum = sum + serviceProvider.getTotalClaim()-serviceProvider.getDriversClaim();
+                label = new Label(1, i+4, String.valueOf(serviceProvider.getTotalClaim()-serviceProvider.getDriversClaim()));
+                excelSheet.addCell(label);
+            }
+
+            label = new Label(0, 0, "تعداد سرویس دهندگان");
+            excelSheet.addCell(label);
+            label = new Label(1, 0, "مجموع بدهی");
+            excelSheet.addCell(label);
+
+            label = new Label(0, 1, String.valueOf(serviceProviderList.size()));
+            excelSheet.addCell(label);
+            label = new Label(1, 1, String.valueOf(sum));
+            excelSheet.addCell(label);
+
+            providersClaimExcelWorkSheet.write();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WriteException e) {
+            e.printStackTrace();
+        } finally {
+            if (providersClaimExcelWorkSheet != null) {
+                try {
+                    providersClaimExcelWorkSheet.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (WriteException e) {

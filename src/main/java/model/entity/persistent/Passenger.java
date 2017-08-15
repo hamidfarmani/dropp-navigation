@@ -31,6 +31,7 @@ import java.util.List;
 })
 
 public class Passenger implements Serializable {
+
     @Id
     @Column(name = "PASSENGER_ID", columnDefinition = "NUMBER")
     @SequenceGenerator(name = "passengerGen", sequenceName = "passengerSeq")
@@ -38,11 +39,11 @@ public class Passenger implements Serializable {
     private long pId;
 
     @Basic
-    @Column(name = "PHONE_NUMBER", columnDefinition = "VARCHAR2(20)", unique = true)
+    @Column(name = "PHONE_NUMBER", columnDefinition = "VARCHAR2(20)")
     private String phoneNumber;
 
     @Basic
-    @Column(name = "USERNAME", columnDefinition = "NVARCHAR2(20)", unique = true)
+    @Column(name = "USERNAME", columnDefinition = "NVARCHAR2(20)")
     private String username;
 
     @Basic
@@ -80,8 +81,6 @@ public class Passenger implements Serializable {
     @Basic
     @Column(name = "POINT", columnDefinition = "NUMBER(9)")
     private Integer point;
-
-
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "FK_RECOMMENDER", referencedColumnName = "PASSENGER_ID")
@@ -245,5 +244,4 @@ public class Passenger implements Serializable {
             return 6;
         else return 7;
     }
-
 }

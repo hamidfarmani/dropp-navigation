@@ -42,10 +42,10 @@ public class Driver implements Serializable {
     @Column(name = "DRIVER_ID", columnDefinition = "NUMBER")
     @SequenceGenerator(name = "driverGen", sequenceName = "driverSeq")
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "driverGen")
-    private long dId;
+    private long id;
 
     @Basic
-    @Column(name = "PHONE_NUMBER", columnDefinition = "VARCHAR2(20)", unique = true)
+    @Column(name = "PHONE_NUMBER", columnDefinition = "VARCHAR2(20)")
     private String phoneNumber;
 
     @Basic
@@ -75,7 +75,7 @@ public class Driver implements Serializable {
     private Vehicle vehicle;
 
     @Basic
-    @Column(name = "USERNAME", columnDefinition = "NVARCHAR2(20)", unique = true)
+    @Column(name = "USERNAME", columnDefinition = "NVARCHAR2(20)")
     private String username;
 
     @Basic
@@ -87,11 +87,11 @@ public class Driver implements Serializable {
     private boolean isLoggedIn;
 
     @Basic
-    @Column(name = "FIRSTNAME", columnDefinition = "NVARCHAR2(32)")
+    @Column(name = "FIRST_NAME", columnDefinition = "NVARCHAR2(32)")
     private String firstName;
 
     @Basic
-    @Column(name = "LASTNAME", columnDefinition = "NVARCHAR2(32)")
+    @Column(name = "LAST_NAME", columnDefinition = "NVARCHAR2(32)")
     private String lastName;
 
     @Basic
@@ -139,7 +139,6 @@ public class Driver implements Serializable {
     private List<Message> messages;
 
 
-    @OrderBy("startDate")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
     @JoinColumn(name = "FK_DRIVER", referencedColumnName = "DRIVER_ID")
     private List<Trip> trips;
@@ -152,11 +151,11 @@ public class Driver implements Serializable {
     }
 
     public long getdId() {
-        return dId;
+        return id;
     }
 
     public void setdId(long dId) {
-        this.dId = dId;
+        this.id = dId;
     }
 
     public String getPhoneNumber() {

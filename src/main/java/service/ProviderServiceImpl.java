@@ -10,6 +10,7 @@ import model.entity.persistent.Operator;
 import model.entity.persistent.ServiceProvider;
 import model.enums.AccountState;
 import model.enums.Status;
+import model.enums.UserRole;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.context.annotation.Scope;
@@ -44,6 +45,12 @@ public class ProviderServiceImpl implements ProviderService {
             Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
                     .setParameter("username", providerUsername)
                     .getSingleResult();
+            if(operator.getRole()!= UserRole.PROVIDER){
+                return Status.NOT_FOUND;
+            }
+            if(operator.getServiceProvider()==null){
+                return Status.SERVICE_PROVIDER_NOT_REGISTERED;
+            }
             Driver driver = (Driver) entityManager.createNamedQuery("driver.provider.username")
                     .setParameter("providerID",operator.getServiceProvider().getId())
                     .setParameter("username",username)
@@ -317,7 +324,12 @@ public class ProviderServiceImpl implements ProviderService {
             Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
                     .setParameter("username", providerUsername)
                     .getSingleResult();
-
+            if(operator.getRole()!=UserRole.PROVIDER){
+                return Status.NOT_FOUND;
+            }
+            if(operator.getServiceProvider()==null){
+                return Status.SERVICE_PROVIDER_NOT_REGISTERED;
+            }
             if (count == -1) {
                 driverList = entityManager.createNamedQuery("driver.findBy.providerID.searchLike")
                         .setParameter("providerID",operator.getServiceProvider().getId())

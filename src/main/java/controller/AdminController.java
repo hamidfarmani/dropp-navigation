@@ -730,6 +730,15 @@ public class AdminController {
         adminManager.costTripsReport(response);
     }
 
+
+    @RequestMapping(value = "/admin/report/providers", method = RequestMethod.GET, produces = "application/vnd.ms-excel;charset=UTF-8")
+    public void providersClaimReport(HttpServletResponse response) throws IOException {
+        String fileName = "Providers_Claim_Report.xls";
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        adminManager.providersClaimReport(response);
+    }
+
     private ResponseEntity<String> returnResponse(Status status) {
         return ResponseProvider.getInstance().getResponse(status);
     }

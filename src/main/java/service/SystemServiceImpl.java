@@ -43,9 +43,15 @@ public class SystemServiceImpl implements SystemService {
                 status = validateOperatorForNewToken(username);
                 break;
             case MASTER_OPERATOR:
-
+                status = validateOperatorForNewToken(username);
+                break;
             case ADMIN:
+                status = validateOperatorForNewToken(username);
+                break;
             case CAR_OPERATOR:
+                status = validateOperatorForNewToken(username);
+                break;
+            case PROVIDER:
                 status = validateOperatorForNewToken(username);
                 break;
             default:
@@ -63,7 +69,7 @@ public class SystemServiceImpl implements SystemService {
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            Operator operator = (Operator) entityManager.createNamedQuery("operator.findBy.username")
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
                     .setParameter("username", username)
                     .setMaxResults(1)
                     .getSingleResult();
