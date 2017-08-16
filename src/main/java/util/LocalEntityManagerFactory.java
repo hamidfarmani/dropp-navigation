@@ -1,11 +1,16 @@
 package util;
 
+import model.enums.City;
+import model.enums.Gender;
+import service.AdminService;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import java.util.Date;
 
 /**
  * Created by kasra on 1/31/2017.
@@ -23,6 +28,10 @@ public class LocalEntityManagerFactory implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("GenoTSWebService");
+        AdminService adminService = (AdminService) IOCContainer.getBean("adminService");
+        if(!adminService.isAdminExist()) {
+            adminService.adminRegister("admin", "admin", new Date(), "admin@admin.com", "09000000000", "1234567890", "admin", "admin", Gender.MALE, City.TEHRAN);
+        }
     }
 
     public void contextDestroyed(ServletContextEvent servletContextEvent) {

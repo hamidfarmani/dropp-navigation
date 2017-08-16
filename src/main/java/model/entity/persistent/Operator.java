@@ -18,6 +18,7 @@ import java.util.List;
         @NamedQuery(name = "operator.findBy.id", query = "select o from operator o where o.oId=:id"),
         @NamedQuery(name = "operator.like", query = "select o from operator o where o.username like :input or o.firstName like :input or o.lastName like :input or o.phoneNumber like :input or o.workNumber like :input"),
         @NamedQuery(name = "operator.exact.username", query = "select o from operator o where o.username=:username"),
+        @NamedQuery(name = "operator.admin.exist", query = "select o from operator o where o.role=:role and o.accountState!=-2"),
         @NamedQuery(name = "operator.all", query = "select o from operator o"),
         @NamedQuery(name = "operator.exact.usernameAndRole", query = "select o from operator o where o.username=:username and o.role=:role"),
         @NamedQuery(name = "operator.username.exist", query = "select o.id from operator o where o.username=:username"),

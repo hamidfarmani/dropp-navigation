@@ -16,6 +16,8 @@ public interface AdminService {
 
     Status masterRegister(String creatorUsername, String firstname, String lastname, Date birthDate, String email, String PhoneNumber, String workNumber, String username, String password, Gender gender, City city);
 
+    Status adminRegister(String firstname, String lastname, Date birthDate, String email, String PhoneNumber, String workNumber, String username, String password, Gender gender, City city);
+
     Status operatorRemove(Long operatorID);
 
     boolean isUsernameExist(String username);
@@ -82,7 +84,7 @@ public interface AdminService {
 
     void providersClaimReport(HttpServletResponse resp);
 
-
+    boolean isAdminExist();
 }
 
 

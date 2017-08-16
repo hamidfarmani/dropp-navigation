@@ -61,6 +61,10 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+    <listener>
+        <listener-class>util.LocalEntityManagerFactory</listener-class>
+    </listener>
+
 
 
 </web-app>

@@ -55,6 +55,9 @@ public class ProviderServiceImpl implements ProviderService {
                     .setParameter("providerID",operator.getServiceProvider().getId())
                     .setParameter("username",username)
                     .setMaxResults(1).getSingleResult();
+            if(driver.getCredit()>=0){
+                return Status.NO_POSSIBILITY_FOR_PAYMENT;
+            }
             ServiceProvider serviceProvider = (ServiceProvider) entityManager.createNamedQuery("serviceProvider.findby.id")
                     .setParameter("id",driver.getServiceProvider().getId())
                     .setMaxResults(1).getSingleResult();

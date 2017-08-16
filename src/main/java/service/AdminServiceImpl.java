@@ -102,9 +102,52 @@ public class AdminServiceImpl implements AdminService {
             operator.setEmail(email);
             operator.setGender(gender);
             operator.setCreator(creator);
-            operator.setAccountState(AccountState.REGISTERED);
+            operator.setAccountState(AccountState.VERIFIED);
             operator.setRegistrationTimestamp(new Timestamp(System.currentTimeMillis()));
             operator.setRole(UserRole.MASTER_OPERATOR);
+
+            entityManager.persist(operator);
+            entityManager.getTransaction().commit();
+
+            return Status.OK;
+        } catch (RollbackException e) {
+            e.printStackTrace();
+            entityManager.getTransaction().rollback();
+            return Status.BAD_DATA;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+    }
+
+    public Status adminRegister(String firstname, String lastname, Date birthDate, String email, String PhoneNumber, String workNumber, String username, String password, Gender gender, City city) {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            Operator operator = (Operator) IOCContainer.getBean("operator");
+
+            String hashedPassword = EncoderUtil.getSHA512Hash(password).toLowerCase();
+            operator.setFirstName(firstname);
+            operator.setLastName(lastname);
+            operator.setUsername(username);
+            operator.setPassword(hashedPassword);
+            operator.setPhoneNumber(PhoneNumber);
+            operator.setBirthDate(birthDate);
+            operator.setWorkNumber(workNumber);
+            operator.setCity(city);
+            operator.setLoggedIn(false);
+            operator.setEmail(email);
+            operator.setGender(gender);
+            operator.setAccountState(AccountState.VERIFIED);
+            operator.setRegistrationTimestamp(new Timestamp(System.currentTimeMillis()));
+            operator.setRole(UserRole.ADMIN);
 
             entityManager.persist(operator);
             entityManager.getTransaction().commit();
@@ -1727,6 +1770,24 @@ public class AdminServiceImpl implements AdminService {
                 } catch (WriteException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+    }
+
+    public boolean isAdminExist() {
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            return !entityManager.createNamedQuery("operator.admin.exist")
+                    .setParameter("role",UserRole.ADMIN)
+                    .getResultList()
+                    .isEmpty();
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
             }
         }
     }
