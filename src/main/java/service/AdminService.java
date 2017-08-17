@@ -84,6 +84,8 @@ public interface AdminService {
 
     void providersClaimReport(HttpServletResponse resp);
 
+    void tripsPeak(HttpServletResponse resp);
+
     boolean isAdminExist();
 }
 

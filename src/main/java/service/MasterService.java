@@ -36,4 +36,7 @@ public interface MasterService {
     Object searchOperators(String query, int count, int pageIndex, String operatorUsername);
 
     boolean isVoucherCodeExist(String code);
+
+    Status changeOperatorPassword(String logedInOperatorUsername,String username, String newPass);
+
 }

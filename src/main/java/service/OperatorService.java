@@ -101,4 +101,6 @@ public interface OperatorService {
     boolean isOrganizationUsernameExist(String username);
 
     Object viewProviders();
+
+    Status changeOperatorPassword(String logedInOperatorUsername, String newPass);
 }

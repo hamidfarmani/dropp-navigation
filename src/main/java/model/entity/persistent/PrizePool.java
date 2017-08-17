@@ -1,13 +1,14 @@
 package model.entity.persistent;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by kasra on 7/13/2017.
  */
 @Entity(name = "prizePool")
 @Table(name = "PRIZE_POOL")
-public class PrizePool {
+public class PrizePool implements Serializable {
 
     @Id
     @Column(name = "ID", columnDefinition = "NUMBER")

@@ -1,6 +1,7 @@
 package model.entity.persistent;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Entity(name = "state")
 @Table(name = "STATE")
-public class State {
+public class State implements Serializable {
 
     @Id
     @Column(name = "STATE_ID", columnDefinition = "NUMBER")

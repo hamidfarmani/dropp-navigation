@@ -1,6 +1,7 @@
 package model.entity.persistent;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Date;
 
 @Entity(name = "tutorialInfo")
 @Table(name = "TUTORIAL_INFO")
-public class TutorialInfo {
+public class TutorialInfo implements Serializable {
 
     @Id
     @Column(name = "TUT_ID", columnDefinition = "NUMBER")

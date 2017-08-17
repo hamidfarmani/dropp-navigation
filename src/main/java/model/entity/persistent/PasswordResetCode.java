@@ -3,6 +3,7 @@ package model.entity.persistent;
 import model.enums.PassResetCodeState;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Date;
  */
 @Table(name = "PASSWORD_RESET_CODE")
 @Entity(name = "passwordResetCode")
-public class PasswordResetCode {
+public class PasswordResetCode implements Serializable {
 
     @Id
     @Column(name = "ID", columnDefinition = "NUMBER")

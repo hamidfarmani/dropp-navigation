@@ -1,6 +1,7 @@
 package model.entity.persistent;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by kasra on 7/13/2017.
@@ -14,7 +15,7 @@ import javax.persistence.*;
 
 @Entity(name = "city")
 @Table(name = "CITY")
-public class City {
+public class City implements Serializable {
     @Id
     @Column(name = "CITY_ID", columnDefinition = "NUMBER")
     @SequenceGenerator(name = "cityGen", sequenceName = "citySeq")

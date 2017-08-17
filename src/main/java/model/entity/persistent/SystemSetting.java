@@ -1,6 +1,7 @@
 package model.entity.persistent;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by kasra on 6/22/2017.
@@ -10,7 +11,7 @@ import javax.persistence.*;
 })
 @Table(name = "SYSTEM_SETTING")
 @Entity(name = "systemSetting")
-public class SystemSetting {
+public class SystemSetting implements Serializable {
 
     @Id
     @Column(name = "ID", columnDefinition = "NUMBER")

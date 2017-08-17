@@ -3,6 +3,7 @@ package model.entity.persistent;
 import model.enums.TicketState;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by kasra on 7/1/2017.
@@ -15,7 +16,7 @@ import javax.persistence.*;
 
 @Entity(name = "bug")
 @Table(name = "BUG")
-public class Bug {
+public class Bug implements Serializable {
 
 
 

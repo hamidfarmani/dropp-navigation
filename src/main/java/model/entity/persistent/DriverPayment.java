@@ -3,15 +3,15 @@ package model.entity.persistent;
 import model.enums.DriverPaymentState;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by kasra on 7/6/2017.
  */
 @Entity(name = "driverPayment")
 @Table(name = "Driver_Payment")
-public class DriverPayment {
+public class DriverPayment implements Serializable {
 
     @Id
     @Column(name = "DP_ID", columnDefinition = "NUMBER")

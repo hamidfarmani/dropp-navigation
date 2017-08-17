@@ -1714,4 +1714,27 @@ public class OperatorServiceImpl implements OperatorService {
         jsonObjectResponse.put("serviceProvider", providersJSONArray);
         return jsonObjectResponse;
     }
+
+    public Status changeOperatorPassword(String logedInOperatorUsername, String newPass){
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            Operator loggedInOperator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", logedInOperatorUsername)
+                    .getSingleResult();
+            String hashedNewPassword = EncoderUtil.getSHA512Hash(newPass).toLowerCase();
+            loggedInOperator.setPassword(hashedNewPassword);
+            entityManager.getTransaction().commit();
+            return Status.OK;
+        } catch (NoResultException e) {
+            return Status.NOT_FOUND;
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+    }
 }

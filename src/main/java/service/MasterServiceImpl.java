@@ -602,4 +602,40 @@ public class MasterServiceImpl implements MasterService {
         }
     }
 
+    public Status changeOperatorPassword(String logedInOperatorUsername,String username, String newPass){
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", username)
+                    .getSingleResult();
+            Operator loggedInOperator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", logedInOperatorUsername)
+                    .getSingleResult();
+
+
+            if((loggedInOperator.getRole()==UserRole.ADMIN)
+                    ||(loggedInOperator.getRole()== UserRole.MASTER_OPERATOR && operator.getRole()== UserRole.OPERATOR)
+                    ||(loggedInOperator.getRole()== UserRole.MASTER_OPERATOR && operator.getRole()== UserRole.PROVIDER)
+                    ||(loggedInOperator.getRole()== UserRole.MASTER_OPERATOR && operator.getRole()== UserRole.CAR_OPERATOR)
+                    ) {
+                String hashedNewPassword = EncoderUtil.getSHA512Hash(newPass).toLowerCase();
+                operator.setPassword(hashedNewPassword);
+                entityManager.getTransaction().commit();
+                return Status.OK;
+            }else{
+                return Status.NOT_FOUND;
+            }
+        } catch (NoResultException e) {
+            return Status.NOT_FOUND;
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+    }
+
 }

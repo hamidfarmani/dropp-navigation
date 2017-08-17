@@ -1774,6 +1774,69 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    public void tripsPeak(HttpServletResponse resp) {
+        List<Object[]> tripsPeak = null;
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            tripsPeak = entityManager.createNamedQuery("tripinfo.startdate.peak")
+                    .getResultList();
+            entityManager.getTransaction().commit();
+        } catch (RollbackException e) {
+            e.printStackTrace();
+            entityManager.getTransaction().rollback();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        WritableWorkbook tripsPeakExcelWorkSheet = null;
+        try {
+            tripsPeakExcelWorkSheet = Workbook.createWorkbook(resp.getOutputStream());
+
+            WritableSheet excelSheet = tripsPeakExcelWorkSheet.createSheet("ساعات شلوغی", 0);
+            Label label = new Label(0, 0, "تاریخ");
+            excelSheet.addCell(label);
+            label = new Label(1, 0, "ساعت");
+            excelSheet.addCell(label);
+            label = new Label(2, 0, "تعداد سفر");
+            excelSheet.addCell(label);
+            for (int i=0;i<tripsPeak.size();i++) {
+                Object[] obj = tripsPeak.get(i);
+                String[] split = String.valueOf(obj[0]).split(" ");
+                label = new Label(0, i+1, split[0]);
+                excelSheet.addCell(label);
+                label = new Label(1, i+1, split[1]);
+                excelSheet.addCell(label);
+                label = new Label(2, i+1, String.valueOf(obj[1]));
+                excelSheet.addCell(label);
+            }
+
+
+            tripsPeakExcelWorkSheet.write();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WriteException e) {
+            e.printStackTrace();
+        } finally {
+            if (tripsPeakExcelWorkSheet != null) {
+                try {
+                    tripsPeakExcelWorkSheet.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (WriteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     public boolean isAdminExist() {
         EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
         try {

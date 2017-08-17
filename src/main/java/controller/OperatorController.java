@@ -721,6 +721,30 @@ public class OperatorController {
         return returnResponse(Status.UNKNOWN_ERROR);
     }
 
+    @RequestMapping(value = "/operator/operators/password", method = RequestMethod.PATCH, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> changeOperatorPassword(@RequestHeader(value = "Authorization") String auth,@RequestBody String request) {
+        JSONObject jsonObjectRequest = new JSONObject(request);
+        String newPass,rePass;
+        try {
+            HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+            String logedInOperatorUsername = httpAuthParser.returnUsername(auth);
+            newPass = jsonObjectRequest.getString("newPass");
+            rePass = jsonObjectRequest.getString("rePass");
+            if(!newPass.equals(rePass)){
+                return returnResponse(Status.PASSWORD_MISMATCH);
+            }
+            Status status = operatorService.changeOperatorPassword(logedInOperatorUsername,newPass);
+
+            return ResponseProvider.getInstance().getResponse(status);
+        } catch (JSONException e) {
+            return ResponseProvider.getInstance().getResponse(Status.BAD_JSON);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return ResponseProvider.getInstance().getResponse(Status.BAD_DATA);
+        }
+    }
+
+
     private ResponseEntity<String> returnResponse(Status status) {
         return ResponseProvider.getInstance().getResponse(status);
     }

@@ -3,6 +3,7 @@ package model.entity.persistent;
 import model.enums.AccountState;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Date;
  */
 @Table(name = "OPERATOR_STATE_HISTORY")
 @Entity(name = "operatorStateHistory")
-public class OperatorStateHistory {
+public class OperatorStateHistory implements Serializable {
 
     @Id
     @Column(name = "ID", columnDefinition = "NUMBER")
