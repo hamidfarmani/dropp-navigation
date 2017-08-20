@@ -18,6 +18,7 @@ import security.model.AccountCredentials;
 import util.EncoderUtil;
 import util.IOCContainer;
 import util.LocalEntityManagerFactory;
+import util.Reloader;
 import util.converter.CityConverter;
 import util.converter.ServiceTypeConverter;
 import util.converter.TicketStateConverter;
@@ -111,7 +112,6 @@ public class AdminServiceImpl implements AdminService {
 
             return Status.OK;
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -154,7 +154,6 @@ public class AdminServiceImpl implements AdminService {
 
             return Status.OK;
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -191,19 +190,25 @@ public class AdminServiceImpl implements AdminService {
                     service.setServiceState(true);
                     service.setServiceType(serviceType);
 
-                    entityManager.persist(service);
-                    entityManager.getTransaction().commit();
+                    Reloader r =(Reloader)IOCContainer.getBean("reloader");
+                    Status reloadStatus = r.reload(ReloadType.SERVICE_TYPE);
+                    if(reloadStatus == Status.OK){
+                        entityManager.persist(service);
+                        entityManager.getTransaction().commit();
+                        r =(Reloader)IOCContainer.getBean("reloader");
+                        reloadStatus = r.reload(ReloadType.SERVICE_TYPE);
+                        return reloadStatus;
+                    }else{
+                        return Status.RELOAD_NOT_OCCURRED;
+                    }
 
-                    return Status.OK;
                 } catch (NoResultException e) {
-                    e.printStackTrace();
                     return Status.TARIFF_NOT_REGISTERED;
                 }
             } else {
                 return Status.SERVICE_TYPE_EXIST;
             }
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -267,17 +272,24 @@ public class AdminServiceImpl implements AdminService {
             if (sr.size() == 0) {
                 searchRadius.setRadius(radius);
                 searchRadius.setServiceType(serviceType);
-                entityManager.persist(searchRadius);
-                entityManager.getTransaction().commit();
-                return Status.OK;
+                Reloader r =(Reloader)IOCContainer.getBean("reloader");
+                Status reloadStatus = r.reload(ReloadType.SEARCH_RADIUS);
+                if(reloadStatus == Status.OK){
+                    entityManager.persist(searchRadius);
+                    entityManager.getTransaction().commit();
+                    r =(Reloader)IOCContainer.getBean("reloader");
+                    reloadStatus = r.reload(ReloadType.SEARCH_RADIUS);
+                    return reloadStatus;
+                }else{
+                    return Status.RELOAD_NOT_OCCURRED;
+                }
+
             } else {
                 return Status.SERVICE_TYPE_EXIST;
             }
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();
@@ -300,13 +312,20 @@ public class AdminServiceImpl implements AdminService {
                     .setParameter("serviceType", serviceType)
                     .getSingleResult();
             sr.setRadius(radius);
-            entityManager.getTransaction().commit();
-            return Status.OK;
+            Status reloadStatus;
+            Reloader r =(Reloader)IOCContainer.getBean("reloader");
+            reloadStatus = r.reload(ReloadType.SEARCH_RADIUS);
+            if(reloadStatus == Status.OK){
+                entityManager.getTransaction().commit();
+                r =(Reloader)IOCContainer.getBean("reloader");
+                reloadStatus = r.reload(ReloadType.SEARCH_RADIUS);
+                return reloadStatus;
+            }else{
+                return Status.RELOAD_NOT_OCCURRED;
+            }
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();
@@ -338,10 +357,8 @@ public class AdminServiceImpl implements AdminService {
             jsonObjectResponse.put("searchRadius", types);
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();
@@ -373,10 +390,8 @@ public class AdminServiceImpl implements AdminService {
             jsonObjectResponse.put("searchRadius", types);
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();
@@ -401,16 +416,14 @@ public class AdminServiceImpl implements AdminService {
                     .setParameter("id", operatorID)
                     .setMaxResults(1).getSingleResult();
             if (operator != null) {
-                entityManager.remove(operator);
+                operator.setAccountState(AccountState.DEACTIVATE);
                 entityManager.getTransaction().commit();
-
                 return Status.OK;
             } else {
                 return Status.NOT_FOUND;
             }
 
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -533,9 +546,18 @@ public class AdminServiceImpl implements AdminService {
                 tariff.setTwoWayCostPercentage(twoWayCost);
                 tariff.setGenoSharePercentage(coShare);
 
-                entityManager.persist(tariff);
-                entityManager.getTransaction().commit();
-                return Status.OK;
+                Reloader r =(Reloader)IOCContainer.getBean("reloader");
+                Status reloadStatus = r.reload(ReloadType.TARIFF);
+                if(reloadStatus == Status.OK){
+                    entityManager.persist(tariff);
+                    entityManager.getTransaction().commit();
+                    r =(Reloader)IOCContainer.getBean("reloader");
+                    reloadStatus = r.reload(ReloadType.TARIFF);
+                    return reloadStatus;
+                }else{
+                    return Status.RELOAD_NOT_OCCURRED;
+                }
+
             } else {
                 return Status.SERVICE_TYPE_EXIST;
             }
@@ -583,13 +605,20 @@ public class AdminServiceImpl implements AdminService {
             previousTariff.setTwoWayCostPercentage(twoWayCost);
             previousTariff.setGenoSharePercentage(coShare);
 
-            entityManager.getTransaction().commit();
 
-            return Status.OK;
+            Reloader r =(Reloader)IOCContainer.getBean("reloader");
+            Status reloadStatus = r.reload(ReloadType.TARIFF);
+            if(reloadStatus == Status.OK){
+                entityManager.getTransaction().commit();
+                r =(Reloader)IOCContainer.getBean("reloader");
+                reloadStatus = r.reload(ReloadType.TARIFF);
+                return reloadStatus;
+            }else{
+                return Status.RELOAD_NOT_OCCURRED;
+            }
         } catch (NoResultException e) {
             return Status.NOT_FOUND;
         } catch (NullPointerException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (Exception e) {
             e.printStackTrace();
@@ -656,12 +685,20 @@ public class AdminServiceImpl implements AdminService {
             entityManager.getTransaction().begin();
             model.entity.persistent.Service service = entityManager.find(model.entity.persistent.Service.class, serviceID);
             service.setServiceState(false);
-            entityManager.getTransaction().commit();
-            return Status.OK;
+            Reloader r =(Reloader)IOCContainer.getBean("reloader");
+            Status reloadStatus = r.reload(ReloadType.SERVICE_TYPE);
+            if(reloadStatus == Status.OK){
+                entityManager.getTransaction().commit();
+                r =(Reloader)IOCContainer.getBean("reloader");
+                reloadStatus = r.reload(ReloadType.SERVICE_TYPE);
+                return reloadStatus;
+            }else{
+                return Status.RELOAD_NOT_OCCURRED;
+            }
+
         } catch (NoResultException e) {
             return Status.NOT_FOUND;
         } catch (NullPointerException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } finally {
             if (entityManager.getTransaction().isActive()) {
@@ -683,12 +720,20 @@ public class AdminServiceImpl implements AdminService {
                     .setParameter("serviceType", service.getServiceType())
                     .getSingleResult();
             service.setServiceState(true);
-            entityManager.getTransaction().commit();
-            return Status.OK;
+            Reloader r =(Reloader)IOCContainer.getBean("reloader");
+            Status reloadStatus = r.reload(ReloadType.SERVICE_TYPE);
+            if(reloadStatus == Status.OK){
+                entityManager.getTransaction().commit();
+                r =(Reloader)IOCContainer.getBean("reloader");
+                reloadStatus = r.reload(ReloadType.SERVICE_TYPE);
+                return reloadStatus;
+            }else{
+                return Status.RELOAD_NOT_OCCURRED;
+            }
+
         } catch (NoResultException e) {
             return Status.TARIFF_NOT_REGISTERED;
         } catch (NullPointerException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } finally {
             if (entityManager.getTransaction().isActive()) {
@@ -754,7 +799,6 @@ public class AdminServiceImpl implements AdminService {
         } catch (NoResultException e) {
             return Status.NOT_FOUND;
         } catch (NullPointerException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } finally {
             if (entityManager.getTransaction().isActive()) {
@@ -792,13 +836,20 @@ public class AdminServiceImpl implements AdminService {
             systemSetting.setCriticalAndroidUpdate(androidUpdateCritical);
             systemSetting.setAllowCompetitors(allowCompetitors);
 
-            entityManager.getTransaction().commit();
+            Reloader r =(Reloader)IOCContainer.getBean("reloader");
+            Status reloadStatus = r.reload(ReloadType.SYSTEM_SETTING);
+            if(reloadStatus == Status.OK){
+                r =(Reloader)IOCContainer.getBean("reloader");
+                reloadStatus = r.reload(ReloadType.SYSTEM_SETTING);
+                entityManager.getTransaction().commit();
+                return reloadStatus;
+            }else{
+                return Status.RELOAD_NOT_OCCURRED;
+            }
 
-            return Status.OK;
         } catch (NoResultException e) {
             return Status.NOT_FOUND;
         } catch (NullPointerException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (Exception e) {
             e.printStackTrace();
@@ -840,10 +891,8 @@ public class AdminServiceImpl implements AdminService {
             jsonObjectResponse.put("systemSetting", settingJSON);
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();
@@ -873,7 +922,6 @@ public class AdminServiceImpl implements AdminService {
 
             return Status.OK;
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -904,13 +952,10 @@ public class AdminServiceImpl implements AdminService {
 
             return Status.OK;
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (NullPointerException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -936,7 +981,6 @@ public class AdminServiceImpl implements AdminService {
                     .getSingleResult();
             return state;
         } catch (NoResultException e) {
-            e.printStackTrace();
             return state;
         } finally {
             if (entityManager.getTransaction().isActive()) {
@@ -959,7 +1003,6 @@ public class AdminServiceImpl implements AdminService {
                     .getSingleResult();
             return city;
         } catch (NoResultException e) {
-            e.printStackTrace();
             return city;
         } finally {
             if (entityManager.getTransaction().isActive()) {
@@ -982,7 +1025,6 @@ public class AdminServiceImpl implements AdminService {
                     .getResultList();
             entityManager.getTransaction().commit();
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1210,7 +1252,6 @@ public class AdminServiceImpl implements AdminService {
                     .getResultList();
             entityManager.getTransaction().commit();
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1449,7 +1490,6 @@ public class AdminServiceImpl implements AdminService {
             operatorExcelWorkSheet.write();
             entityManager.getTransaction().commit();
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1505,7 +1545,6 @@ public class AdminServiceImpl implements AdminService {
                     .getResultList();
             entityManager.getTransaction().commit();
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1638,7 +1677,6 @@ public class AdminServiceImpl implements AdminService {
                     .getResultList();
             entityManager.getTransaction().commit();
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1714,7 +1752,6 @@ public class AdminServiceImpl implements AdminService {
                     .getResultList();
             entityManager.getTransaction().commit();
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1783,7 +1820,6 @@ public class AdminServiceImpl implements AdminService {
                     .getResultList();
             entityManager.getTransaction().commit();
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1852,6 +1888,16 @@ public class AdminServiceImpl implements AdminService {
             if (entityManager.isOpen()) {
                 entityManager.close();
             }
+        }
+    }
+
+    public Status reload(ReloadType reloadType){
+        Reloader r =(Reloader)IOCContainer.getBean("reloader");
+        Status reloadStatus = r.reload(reloadType);
+        if(reloadStatus==Status.OK){
+            return Status.OK;
+        }else{
+            return Status.RELOAD_NOT_OCCURRED;
         }
     }
 }

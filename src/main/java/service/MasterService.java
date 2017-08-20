@@ -39,4 +39,5 @@ public interface MasterService {
 
     Status changeOperatorPassword(String logedInOperatorUsername,String username, String newPass);
 
+    Status reloadTicketSubjects();
 }

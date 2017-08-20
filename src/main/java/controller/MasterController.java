@@ -9,7 +9,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.MasterService;
-import util.*;
+import util.HTTPAuthParser;
+import util.IOCContainer;
+import util.ResponseProvider;
+import util.Validation;
 import util.converter.*;
 
 import java.text.ParseException;
@@ -202,7 +205,7 @@ public class MasterController {
     }
 
     @RequestMapping(value = "/master/ticketSubjects", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> ticketSubjectRegister(@RequestBody String request, @RequestHeader(value = "Authorization") String auth) {
+    public ResponseEntity<String> ticketSubjectRegister(@RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);
         String subject, parentID, roleStr;
         UserRole userRole;
@@ -223,18 +226,7 @@ public class MasterController {
         }
         if (!masterService.isSubjectExist(subject,userRole)) {
             Status ticketSubjectRegisterStatus = masterService.ticketSubjectRegister(subject,parentID,userRole);
-            Status reloadStatus = null;
-            if(ticketSubjectRegisterStatus==Status.OK){
-                Reloader r =(Reloader)IOCContainer.getBean("reloader");
-                reloadStatus = r.reload(auth,'J');
-                if(reloadStatus == Status.OK){
-                    return returnResponse(Status.OK);
-                }else{
-                    return returnResponse(Status.RELOAD_NOT_OCCURRED);
-                }
-            }else{
-                return returnResponse(ticketSubjectRegisterStatus);
-            }
+            return returnResponse(ticketSubjectRegisterStatus);
         }else {
             return returnResponse(Status.SUBJECT_EXIST);
         }
@@ -403,12 +395,15 @@ public class MasterController {
     @RequestMapping(value = "/master/operators/{username}/password", method = RequestMethod.PATCH, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> changeOperatorPassword(@PathVariable String username,@RequestHeader(value = "Authorization") String auth,@RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);
-        String newPass,oldPass,rePass;
+        String newPass,rePass;
         try {
             HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
             String logedInOperatorUsername = httpAuthParser.returnUsername(auth);
             newPass = jsonObjectRequest.getString("newPass");
             rePass = jsonObjectRequest.getString("rePass");
+            if(newPass.isEmpty()||rePass.isEmpty()){
+                return returnResponse(Status.BAD_DATA);
+            }
             if(!newPass.equals(rePass)){
                 return returnResponse(Status.PASSWORD_MISMATCH);
             }
@@ -421,6 +416,12 @@ public class MasterController {
             e.printStackTrace();
             return ResponseProvider.getInstance().getResponse(Status.BAD_DATA);
         }
+    }
+
+    @RequestMapping(value = "/master/system/tickets/subject/reload", method = RequestMethod.GET,  produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> reloadTicketSubject() {
+        Status status = masterService.reloadTicketSubjects();
+        return returnResponse(status);
     }
 
     private ResponseEntity<String> returnResponse(Status status) {

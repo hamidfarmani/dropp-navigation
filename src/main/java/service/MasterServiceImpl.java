@@ -13,10 +13,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import security.model.AccountCredentials;
-import util.EncoderUtil;
-import util.Generator;
-import util.IOCContainer;
-import util.LocalEntityManagerFactory;
+import util.*;
 import util.converter.AccountStateConverter;
 import util.converter.CityConverter;
 import util.converter.GenderConverter;
@@ -118,10 +115,8 @@ public class MasterServiceImpl implements MasterService {
 
             return Status.OK;
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -181,10 +176,8 @@ public class MasterServiceImpl implements MasterService {
                 return Status.NOT_FOUND;
             }
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -215,10 +208,8 @@ public class MasterServiceImpl implements MasterService {
             }
 
         }catch(NoResultException e){
-            e.printStackTrace();
             return Status.NOT_FOUND;
         }catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -261,7 +252,6 @@ public class MasterServiceImpl implements MasterService {
                     .getSingleResult();
             return op;
         }catch (NoResultException e){
-            e.printStackTrace();
             return op;
         } finally {
             if(entityManager.getTransaction().isActive()){
@@ -315,14 +305,19 @@ public class MasterServiceImpl implements MasterService {
                 parent.setTicketSubjects(ticketSubjects);
             }
 
-            entityManager.getTransaction().commit();
-
-            return Status.OK;
+            Reloader r =(Reloader)IOCContainer.getBean("reloader");
+            Status reloadStatus = r.reload(ReloadType.TICKET_SUBJECT);
+            if(reloadStatus == Status.OK){
+                entityManager.getTransaction().commit();
+                r =(Reloader)IOCContainer.getBean("reloader");
+                reloadStatus = r.reload(ReloadType.TICKET_SUBJECT);
+                return reloadStatus;
+            }else{
+                return Status.RELOAD_NOT_OCCURRED;
+            }
         }catch(NoResultException e){
-            e.printStackTrace();
             return Status.NOT_FOUND;
         }catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -368,10 +363,8 @@ public class MasterServiceImpl implements MasterService {
             entityManager.getTransaction().commit();
             return jsonObjectResponse;
         }catch(NoResultException e){
-            e.printStackTrace();
             return Status.NOT_FOUND;
         }catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -414,10 +407,8 @@ public class MasterServiceImpl implements MasterService {
             entityManager.persist(voucherCode);
             entityManager.getTransaction().commit();
         }catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         }catch (JSONException e){
-            e.printStackTrace();
             return Status.BAD_JSON;
         }catch(Exception e){
             e.printStackTrace();
@@ -449,10 +440,8 @@ public class MasterServiceImpl implements MasterService {
             voucherCode.setMaxUses(maxUse);
             entityManager.getTransaction().commit();
         }catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         }catch (JSONException e){
-            e.printStackTrace();
             return Status.BAD_JSON;
         }catch(Exception e){
             e.printStackTrace();
@@ -569,7 +558,6 @@ public class MasterServiceImpl implements MasterService {
             jsonObjectResponse.put("operators", operatorJsonArray);
             return jsonObjectResponse;
         } catch (NoResultException e){
-            e.printStackTrace();
             return  Status.NOT_FOUND;
         }
         catch (Exception e) {
@@ -638,4 +626,13 @@ public class MasterServiceImpl implements MasterService {
         }
     }
 
+    public Status reloadTicketSubjects(){
+        Reloader r =(Reloader)IOCContainer.getBean("reloader");
+        Status reloadStatus = r.reload(ReloadType.TICKET_SUBJECT);
+        if(reloadStatus==Status.OK){
+            return Status.OK;
+        }else{
+            return Status.RELOAD_NOT_OCCURRED;
+        }
+    }
 }

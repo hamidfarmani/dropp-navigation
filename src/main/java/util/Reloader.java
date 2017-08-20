@@ -1,5 +1,6 @@
 package util;
 
+import model.enums.ReloadType;
 import model.enums.Status;
 
 import java.io.BufferedReader;
@@ -15,30 +16,34 @@ import static org.springframework.http.HttpHeaders.USER_AGENT;
  */
 public class Reloader {
     private static final String ip = Provider.getInstance().getCILENT_IP();
-    private static final String rootAddress = "/geno/TS/api/rest";
+    private static final String rootAddress = "/geno/TS/api/rest/TSO/" + Provider.getInstance().getTSO_API_KEY();
     private static final String reloadTariffURL = "/admin/system/tariff/reload";
     private static final String reloadRadiusURL = "/admin/system/searchRadius/reload";
     private static final String reloadServiceURL = "/admin/system/services/active/reload";
     private static final String reloadSystemSettingURL = "/admin/system/setting/reload";
     private static final String reloadTicketSubjectURL = "/admin/system/tickets/subject/reload";
+    private static final String reloadStatesURL = "/admin/system/states/reload";
 
-    public Status reload(String auth,Character method) {
+    public Status reload(ReloadType method) {
         String urlStr = null;
         switch (method){
-            case 'T':
+            case TARIFF:
                 urlStr = ip + rootAddress + reloadTariffURL;
                 break;
-            case 'R':
+            case SEARCH_RADIUS:
                 urlStr = ip + rootAddress + reloadRadiusURL;
                 break;
-            case 'S':
+            case SERVICE_TYPE:
                 urlStr = ip + rootAddress + reloadServiceURL;
                 break;
-            case 'Y':
+            case SYSTEM_SETTING:
                 urlStr = ip + rootAddress + reloadSystemSettingURL;
                 break;
-            case 'J':
+            case TICKET_SUBJECT:
                 urlStr = ip + rootAddress + reloadTicketSubjectURL;
+                break;
+            case STATES:
+                urlStr = ip + rootAddress + reloadStatesURL;
                 break;
             default:
                 return Status.BAD_DATA;
@@ -50,7 +55,6 @@ public class Reloader {
             con.setRequestMethod("GET");
             con.setRequestProperty("User-Agent", USER_AGENT);
             con.addRequestProperty("Content-Type", "application/json");
-            con.setRequestProperty("Authorization",auth);
             int responseCode = con.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(

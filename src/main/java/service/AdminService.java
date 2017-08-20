@@ -1,10 +1,7 @@
 package service;
 
 import model.entity.persistent.State;
-import model.enums.City;
-import model.enums.Gender;
-import model.enums.ServiceType;
-import model.enums.Status;
+import model.enums.*;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletResponse;
@@ -87,6 +84,8 @@ public interface AdminService {
     void tripsPeak(HttpServletResponse resp);
 
     boolean isAdminExist();
+
+    Status reload(ReloadType reloadType);
 }
 
 

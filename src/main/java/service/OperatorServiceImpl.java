@@ -60,7 +60,6 @@ public class OperatorServiceImpl implements OperatorService {
             return jsonObjectResponse;
 
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } finally {
             if (entityManager.getTransaction().isActive()) {
@@ -139,9 +138,7 @@ public class OperatorServiceImpl implements OperatorService {
             Operator operator = (Operator)entityManager.createNamedQuery("operator.exact.username")
                     .setParameter("username",op)
                     .getSingleResult();
-            if(providerID.isEmpty()){
-                driver.setServiceProvider(null);
-            }else{
+            if(!providerID.isEmpty()){
                 serviceProviderID = Long.valueOf(providerID);
                 ServiceProvider serviceProvider = (ServiceProvider)entityManager.createNamedQuery("serviceProvider.findby.id")
                         .setParameter("id",serviceProviderID)
@@ -175,7 +172,6 @@ public class OperatorServiceImpl implements OperatorService {
             jsonObjectResponse.put("numberAllDrivers", driversCount);
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
         }finally {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
@@ -237,7 +233,6 @@ public class OperatorServiceImpl implements OperatorService {
             }
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
         } finally {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
@@ -340,7 +335,6 @@ public class OperatorServiceImpl implements OperatorService {
             }
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } finally {
             if (entityManager.getTransaction().isActive()) {
@@ -413,7 +407,6 @@ public class OperatorServiceImpl implements OperatorService {
             }
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } finally {
             if (entityManager.getTransaction().isActive()) {
@@ -579,7 +572,6 @@ public class OperatorServiceImpl implements OperatorService {
                     .getResultList();
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } finally {
             if (entityManager.getTransaction().isActive()) {
@@ -626,7 +618,6 @@ public class OperatorServiceImpl implements OperatorService {
             jsonObjectResponse.put("banPassengers", banPassengers);
             return jsonObjectResponse;
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } finally {
             entityManager.close();
@@ -683,10 +674,8 @@ public class OperatorServiceImpl implements OperatorService {
 
             entityManager.getTransaction().commit();
         }catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         }catch (JSONException e){
-            e.printStackTrace();
             return Status.BAD_JSON;
         }catch(Exception e){
             e.printStackTrace();
@@ -726,10 +715,8 @@ public class OperatorServiceImpl implements OperatorService {
             jsonObjectResponse.put("organizations", organizations);
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();
@@ -756,10 +743,8 @@ public class OperatorServiceImpl implements OperatorService {
             entityManager.getTransaction().commit();
             return Status.OK;
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();
@@ -784,10 +769,8 @@ public class OperatorServiceImpl implements OperatorService {
             entityManager.getTransaction().commit();
             return Status.OK;
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();
@@ -823,10 +806,8 @@ public class OperatorServiceImpl implements OperatorService {
             entityManager.getTransaction().commit();
             jsonObjectResponse.put("drivers", drivers);
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();
@@ -863,10 +844,8 @@ public class OperatorServiceImpl implements OperatorService {
 
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();
@@ -921,10 +900,8 @@ public class OperatorServiceImpl implements OperatorService {
 
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();
@@ -959,10 +936,8 @@ public class OperatorServiceImpl implements OperatorService {
             entityManager.getTransaction().commit();
             return Status.OK;
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();
@@ -988,10 +963,8 @@ public class OperatorServiceImpl implements OperatorService {
             entityManager.getTransaction().commit();
             return Status.OK;
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();
@@ -1036,10 +1009,8 @@ public class OperatorServiceImpl implements OperatorService {
 
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();
@@ -1112,7 +1083,6 @@ public class OperatorServiceImpl implements OperatorService {
             }
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } finally {
             if (entityManager.getTransaction().isActive()) {
@@ -1228,7 +1198,6 @@ public class OperatorServiceImpl implements OperatorService {
             jsonObjectResponse.put("numberOfAllPassengers", passengerCount);
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
         }finally {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
@@ -1254,7 +1223,7 @@ public class OperatorServiceImpl implements OperatorService {
             jsonObjectResponse.put("numberOfNewPassengers", passengerCount);
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
+
         }finally {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
@@ -1283,7 +1252,7 @@ public class OperatorServiceImpl implements OperatorService {
             jsonObjectResponse.put("numberOfTodaysTrips", allTripsCount);
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
+
         }finally {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
@@ -1305,7 +1274,7 @@ public class OperatorServiceImpl implements OperatorService {
             jsonObjectResponse.put("numberOfAllOrganizations", allOrganizationCount);
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
+
         }finally {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
@@ -1331,7 +1300,7 @@ public class OperatorServiceImpl implements OperatorService {
             jsonObjectResponse.put("numberOfNewOrganizations", newOrganizationCount);
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
+
         }finally {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
@@ -1382,7 +1351,7 @@ public class OperatorServiceImpl implements OperatorService {
             jsonObjectResponse.put("allStates", statesJSONArray);
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
+
         }finally {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
@@ -1412,7 +1381,7 @@ public class OperatorServiceImpl implements OperatorService {
             jsonObjectResponse.put("cities", cityJSONArray);
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
+
         }finally {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
@@ -1456,10 +1425,8 @@ public class OperatorServiceImpl implements OperatorService {
             entityManager.getTransaction().commit();
             return jsonObjectResponse;
         }catch(NoResultException e){
-            e.printStackTrace();
             return Status.NOT_FOUND;
         }catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -1621,7 +1588,6 @@ public class OperatorServiceImpl implements OperatorService {
             }
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } finally {
             if (entityManager.getTransaction().isActive()) {
@@ -1685,10 +1651,8 @@ public class OperatorServiceImpl implements OperatorService {
 
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         } catch (JSONException e) {
-            e.printStackTrace();
             return Status.BAD_JSON;
         } catch (Exception e) {
             e.printStackTrace();

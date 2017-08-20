@@ -67,10 +67,8 @@ public class ProviderServiceImpl implements ProviderService {
             entityManager.getTransaction().commit();
             return Status.OK;
         }catch (NoResultException e){
-             e.printStackTrace();
              return Status.NOT_FOUND;
         }catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -104,7 +102,6 @@ public class ProviderServiceImpl implements ProviderService {
             return jsonObjectResponse;
 
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -141,7 +138,6 @@ public class ProviderServiceImpl implements ProviderService {
             jsonObjectResponse.put("mostDebts",drivers);
             entityManager.getTransaction().commit();
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -182,7 +178,6 @@ public class ProviderServiceImpl implements ProviderService {
             entityManager.getTransaction().commit();
             jsonObjectResponse.put("mostDebts",drivers);
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -302,7 +297,6 @@ public class ProviderServiceImpl implements ProviderService {
             entityManager.getTransaction().commit();
             return Status.OK;
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -358,7 +352,6 @@ public class ProviderServiceImpl implements ProviderService {
             jsonObjectResponse.put("drivers",drivers);
             entityManager.getTransaction().commit();
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -389,7 +382,6 @@ public class ProviderServiceImpl implements ProviderService {
                     .getResultList();
             entityManager.getTransaction().commit();
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
         } catch (Exception e) {
             e.printStackTrace();
@@ -488,7 +480,6 @@ public class ProviderServiceImpl implements ProviderService {
             }
             entityManager.getTransaction().commit();
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
         } catch (Exception e) {
             e.printStackTrace();

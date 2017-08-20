@@ -127,7 +127,6 @@ public class COPServiceImpl implements COPService {
                 return Status.MANUFACTURE_EXIST;
             }
         } catch (RollbackException e) {
-            e.printStackTrace();
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
         } catch (Exception e) {
@@ -158,7 +157,6 @@ public class COPServiceImpl implements COPService {
             j.put("distance",distance);
             return j;
         } catch (NoResultException e){
-            e.printStackTrace();
             return null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -189,10 +187,8 @@ public class COPServiceImpl implements COPService {
             jsonObjectResponse.put("All Manufactures" , allManufacture);
             entityManager.getTransaction().commit();
         }catch (NoResultException e) {
-            e.printStackTrace();
             return Status.NOT_FOUND;
         }catch (JSONException e){
-            e.printStackTrace();
             return Status.BAD_JSON;
         }catch(Exception e){
             e.printStackTrace();

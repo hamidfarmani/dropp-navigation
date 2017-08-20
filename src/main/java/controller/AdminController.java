@@ -1,10 +1,7 @@
 package controller;
 
 import model.entity.persistent.State;
-import model.enums.City;
-import model.enums.Gender;
-import model.enums.ServiceType;
-import model.enums.Status;
+import model.enums.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +9,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.AdminService;
-import util.*;
+import util.HTTPAuthParser;
+import util.IOCContainer;
+import util.ResponseProvider;
+import util.Validation;
 import util.converter.CityConverter;
 import util.converter.GenderConverter;
 import util.converter.ServiceTypeConverter;
@@ -127,7 +127,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/services", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> activeServiceRegister(@RequestBody String request, @RequestHeader(value = "Authorization") String auth) {
+    public ResponseEntity<String> activeServiceRegister(@RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);
 
         String cityStr, serviceTypeStr;
@@ -156,18 +156,8 @@ public class AdminController {
         if (serviceTypeRegisterationStatus == null) {
             return returnResponse(Status.UNKNOWN_ERROR);
         }
-        Status reloadStatus;
-        if(serviceTypeRegisterationStatus==Status.OK){
-            Reloader r =(Reloader)IOCContainer.getBean("reloader");
-            reloadStatus = r.reload(auth,'S');
-            if(reloadStatus == Status.OK){
-                return returnResponse(Status.OK);
-            }else{
-                return returnResponse(Status.RELOAD_NOT_OCCURRED);
-            }
-        }else{
-            return returnResponse(serviceTypeRegisterationStatus);
-        }
+        return returnResponse(serviceTypeRegisterationStatus);
+
     }
 
     @RequestMapping(value = "/admin/services/{cityName}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
@@ -194,7 +184,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/searchRadiuses", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> searchRadiusRegister(@RequestBody String request, @RequestHeader(value = "Authorization") String auth) {
+    public ResponseEntity<String> searchRadiusRegister(@RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);
         String serviceTypeStr,radiusStr;
         double radius;
@@ -207,19 +197,8 @@ public class AdminController {
             radius = Long.valueOf(radiusStr);
             ServiceTypeConverter serviceTypeConverter = (ServiceTypeConverter) IOCContainer.getBean("serviceTypeConverter");
             ServiceType serviceType = serviceTypeConverter.convertToEntityAttribute(serviceTypeStr);
-            Object object = adminManager.radiusRegister(radius,serviceType);
-            if(object instanceof JSONObject){
-                Status reloadStatus;
-                Reloader r =(Reloader)IOCContainer.getBean("reloader");
-                reloadStatus = r.reload(auth,'R');
-                if(reloadStatus == Status.OK){
-                    return returnResponse(Status.OK,(JSONObject) object);
-                }else{
-                    return returnResponse(Status.RELOAD_NOT_OCCURRED,(JSONObject) object);
-                }
-            } else {
-                return returnResponse((Status) object);
-            }
+            Status status = adminManager.radiusRegister(radius,serviceType);
+            return returnResponse(status);
         } catch (JSONException e) {
             return ResponseProvider.getInstance().getResponse(Status.BAD_JSON);
         } catch (IllegalArgumentException e) {
@@ -229,26 +208,15 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/searchRadiuses/{serviceType}", method = RequestMethod.PATCH, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> searchRadiusUpdate(@PathVariable String serviceType, @RequestBody String request, @RequestHeader(value = "Authorization") String auth) {
+    public ResponseEntity<String> searchRadiusUpdate(@PathVariable String serviceType, @RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);
         double radius;
         try {
             radius = jsonObjectRequest.getDouble("radius");
             ServiceTypeConverter serviceTypeConverter = (ServiceTypeConverter) IOCContainer.getBean("serviceTypeConverter");
             ServiceType service = serviceTypeConverter.convertToEntityAttribute(serviceType);
-            Object object = adminManager.radiusUpdate(radius,service);
-            if(object instanceof JSONObject){
-                Status reloadStatus;
-                Reloader r =(Reloader)IOCContainer.getBean("reloader");
-                reloadStatus = r.reload(auth,'R');
-                if(reloadStatus == Status.OK){
-                    return returnResponse(Status.OK,(JSONObject) object);
-                }else{
-                    return returnResponse(Status.RELOAD_NOT_OCCURRED,(JSONObject) object);
-                }
-            }else {
-                return returnResponse((Status) object);
-            }
+            Status status = adminManager.radiusUpdate(radius,service);
+            return returnResponse(status);
         } catch (JSONException e) {
             return ResponseProvider.getInstance().getResponse(Status.BAD_JSON);
         } catch (IllegalArgumentException e) {
@@ -294,7 +262,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/tariffs", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> tariffRegister(@RequestBody String request, @RequestHeader(value = "Authorization") String auth) {
+    public ResponseEntity<String> tariffRegister(@RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);
         try {
             String cityName = jsonObjectRequest.getString("city").trim();
@@ -326,20 +294,7 @@ public class AdminController {
 
             ServiceType serviceType = ((ServiceTypeConverter) IOCContainer.getBean("serviceTypeConverter")).convertToEntityAttribute(type);
             Status tarifRegisterStatus = adminManager.tariffRegister(city, before2KM, after2KM, perMin, waitingMin, entrance, serviceType, twoWayCost, coShare);
-            Status reloadStatus = null;
-            if(tarifRegisterStatus==Status.OK){
-                Reloader r =(Reloader)IOCContainer.getBean("reloader");
-                reloadStatus = r.reload(auth,'T');
-                if(reloadStatus == Status.OK){
-                    return returnResponse(Status.OK);
-                }else{
-                    return returnResponse(Status.RELOAD_NOT_OCCURRED);
-                }
-            }else{
-                return returnResponse(tarifRegisterStatus);
-            }
-
-
+            return returnResponse(tarifRegisterStatus);
 
         } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
             return returnResponse(Status.BAD_DATA);
@@ -350,7 +305,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/tariffs", method = RequestMethod.PATCH, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> tariffUpdate(@RequestBody String request, @RequestHeader(value = "Authorization") String auth) {
+    public ResponseEntity<String> tariffUpdate(@RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);
         try {
             String tariffIDStr = jsonObjectRequest.getString("tariffID");
@@ -379,18 +334,8 @@ public class AdminController {
             int coShare = Integer.valueOf(coShareStr);
 
             Status tarifUpdateStatus = adminManager.tariffUpdate(tariffID, before2KM,after2KM,perMin,waitingMin,entrance,twoWayCost,coShare);
-            Status reloadStatus = null;
-            if(tarifUpdateStatus==Status.OK){
-                Reloader r =(Reloader)IOCContainer.getBean("reloader");
-                reloadStatus = r.reload(auth,'T');
-                if(reloadStatus == Status.OK){
-                    return returnResponse(Status.OK);
-                }else{
-                    return returnResponse(Status.RELOAD_NOT_OCCURRED);
-                }
-            }else{
-                return returnResponse(tarifUpdateStatus);
-            }
+            return returnResponse(tarifUpdateStatus);
+
         } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
             return returnResponse(Status.BAD_DATA);
         } catch (JSONException e) {
@@ -451,7 +396,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/services/{serviceID}/disable", method = RequestMethod.PATCH, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> disableService(@PathVariable String serviceID, @RequestHeader(value = "Authorization") String auth) {
+    public ResponseEntity<String> disableService(@PathVariable String serviceID) {
         Long id;
         try {
             if(serviceID.isEmpty()){
@@ -459,18 +404,9 @@ public class AdminController {
             }
             id = Long.valueOf(serviceID);
             Status disableServiceStatus = adminManager.disableService(id);
-            Status reloadStatus;
-            if(disableServiceStatus==Status.OK){
-                Reloader r =(Reloader)IOCContainer.getBean("reloader");
-                reloadStatus = r.reload(auth,'S');
-                if(reloadStatus == Status.OK){
-                    return returnResponse(Status.OK);
-                }else{
-                    return returnResponse(Status.RELOAD_NOT_OCCURRED);
-                }
-            }else{
-                return returnResponse(disableServiceStatus);
-            }
+
+            return returnResponse(disableServiceStatus);
+
         } catch (JSONException e) {
             return ResponseProvider.getInstance().getResponse(Status.BAD_JSON);
         } catch (IllegalArgumentException e) {
@@ -480,7 +416,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/services/{serviceID}/enable", method = RequestMethod.PATCH, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> enableService(@PathVariable String serviceID, @RequestHeader(value = "Authorization") String auth) {
+    public ResponseEntity<String> enableService(@PathVariable String serviceID) {
         Long id;
         try {
             if(serviceID.isEmpty()){
@@ -488,18 +424,9 @@ public class AdminController {
             }
             id = Long.valueOf(serviceID);
             Status enableServiceStatus = adminManager.enableService(id);
-            Status reloadStatus;
-            if(enableServiceStatus==Status.OK){
-                Reloader r =(Reloader)IOCContainer.getBean("reloader");
-                reloadStatus = r.reload(auth,'S');
-                if(reloadStatus == Status.OK){
-                    return returnResponse(Status.OK);
-                }else{
-                    return returnResponse(Status.RELOAD_NOT_OCCURRED);
-                }
-            }else{
-                return returnResponse(enableServiceStatus);
-            }
+
+            return returnResponse(enableServiceStatus);
+
         } catch (JSONException e) {
             return ResponseProvider.getInstance().getResponse(Status.BAD_JSON);
         } catch (IllegalArgumentException e) {
@@ -538,7 +465,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/settings", method = RequestMethod.PATCH, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> systemSettingUpdate(@RequestBody String request, @RequestHeader(value = "Authorization") String auth) {
+    public ResponseEntity<String> systemSettingUpdate(@RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);
         try {
             Boolean smsSender = jsonObjectRequest.getBoolean("smsSender");
@@ -559,18 +486,8 @@ public class AdminController {
             Status systemUpdateStatus = adminManager.settingUpdate(smsSender, emailSender,dailySmsReport,weeklySmsReport,
                     dailyEmailReport,weeklyEmailReport,monthlyEmailReport,exceptionOccurrenceSms,exceptionOccurrenceEmail,
                     IOSUpdate,IOSUpdateCritical,androidUpdate,androidUpdateCritical,allowCompetitors);
-            Status reloadStatus = null;
-            if(systemUpdateStatus==Status.OK){
-                Reloader r =(Reloader)IOCContainer.getBean("reloader");
-                reloadStatus = r.reload(auth,'Y');
-                if(reloadStatus == Status.OK){
-                    return returnResponse(Status.OK);
-                }else{
-                    return returnResponse(Status.RELOAD_NOT_OCCURRED);
-                }
-            }else{
-                return returnResponse(systemUpdateStatus);
-            }
+
+            return returnResponse(systemUpdateStatus);
         } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
             return returnResponse(Status.BAD_DATA);
         } catch (JSONException e) {
@@ -642,6 +559,24 @@ public class AdminController {
         return returnResponse(Status.OK);
     }
 
+    @RequestMapping(value = "/admin/providers", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8",  produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> insertProvider(@RequestBody String request) {
+        JSONObject jsonObjectRequest = new JSONObject(request);
+        try {
+            String name = jsonObjectRequest.getString("name");
+            if(name.isEmpty()){
+                return returnResponse(Status.BAD_DATA);
+            }
+            Status status = adminManager.insertProvider(name);
+            return returnResponse(status);
+        } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
+            return returnResponse(Status.BAD_DATA);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return returnResponse(Status.BAD_JSON);
+        }
+    }
+
     @RequestMapping(value = "/admin/report/drivers/age", method = RequestMethod.GET, produces = "application/vnd.ms-excel;charset=UTF-8")
     public void driversAgeReport(HttpServletResponse response) throws IOException {
         String fileName = "Drivers_Age_Report.xls";
@@ -704,24 +639,6 @@ public class AdminController {
         adminManager.tripsReport(response,sDate,eDate);
     }
 
-    @RequestMapping(value = "/admin/providers", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8",  produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> insertProvider(@RequestBody String request) {
-        JSONObject jsonObjectRequest = new JSONObject(request);
-        try {
-            String name = jsonObjectRequest.getString("name");
-            if(name.isEmpty()){
-                return returnResponse(Status.BAD_DATA);
-            }
-            Status status = adminManager.insertProvider(name);
-            return returnResponse(status);
-        } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
-            return returnResponse(Status.BAD_DATA);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return returnResponse(Status.BAD_JSON);
-        }
-    }
-
     @RequestMapping(value = "/admin/report/trips/cost", method = RequestMethod.GET, produces = "application/vnd.ms-excel;charset=UTF-8")
     public void costTripsReport(HttpServletResponse response) throws IOException {
         String fileName = "Trips_Cost_Report.xls";
@@ -729,7 +646,6 @@ public class AdminController {
         response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
         adminManager.costTripsReport(response);
     }
-
 
     @RequestMapping(value = "/admin/report/providers", method = RequestMethod.GET, produces = "application/vnd.ms-excel;charset=UTF-8")
     public void providersClaimReport(HttpServletResponse response) throws IOException {
@@ -745,6 +661,36 @@ public class AdminController {
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
         adminManager.tripsPeak(response);
+    }
+
+    @RequestMapping(value = "/admin/system/tariff/reload", method = RequestMethod.GET,  produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> reloadTariff() {
+        Status status = adminManager.reload(ReloadType.TARIFF);
+        return returnResponse(status);
+    }
+
+    @RequestMapping(value = "/admin/system/searchRadius/reload", method = RequestMethod.GET,  produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> reloadRadius() {
+        Status status = adminManager.reload(ReloadType.SEARCH_RADIUS);
+        return returnResponse(status);
+    }
+
+    @RequestMapping(value = "/admin/system/services/active/reload", method = RequestMethod.GET,  produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> reloadService() {
+        Status status = adminManager.reload(ReloadType.SERVICE_TYPE);
+        return returnResponse(status);
+    }
+
+    @RequestMapping(value = "/admin/system/setting/reload", method = RequestMethod.GET,  produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> reloadSystemSetting() {
+        Status status = adminManager.reload(ReloadType.SYSTEM_SETTING);
+        return returnResponse(status);
+    }
+
+    @RequestMapping(value = "/admin/system/states/reload", method = RequestMethod.GET,  produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> reloadStates() {
+        Status status = adminManager.reload(ReloadType.STATES);
+        return returnResponse(status);
     }
 
     private ResponseEntity<String> returnResponse(Status status) {

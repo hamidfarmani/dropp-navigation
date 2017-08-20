@@ -21,6 +21,8 @@ public class Provider {
 
     private String phoneNumberRegEx = "(0|\\+98)?([ ]|,|-|[()]){0,2}9[0|1|2|3|4|9]([ ]|,|-|[()]){0,2}(?:[0-9]([ ]|,|-|[()]){0,2}){8}";
 
+    private String TSO_API_KEY = "d8f3c2b6-ef98-4ebc-a563-10107c9ba8c9-7991953BC211AA992585D6A741261";
+
     private Provider() {
     }
 
@@ -54,5 +56,9 @@ public class Provider {
 
     public String getCILENT_IP() {
         return CILENT_IP;
+    }
+
+    public String getTSO_API_KEY() {
+        return TSO_API_KEY;
     }
 }

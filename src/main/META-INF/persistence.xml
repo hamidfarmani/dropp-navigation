@@ -12,10 +12,10 @@
         <properties>
 
 
-            <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle9iDialect"/>
-            <!--<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle12cDialect"/>-->
-            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
-            <!--<property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521:orcl"/>-->
+            <!--<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle9iDialect"/>-->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle12cDialect"/>
+            <!--<property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521:xe"/>-->
+            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521:orcl"/>
             <property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver"/>
             <property name="hibernate.default_schema" value="TS_ADMIN"/>
             <property name="hibernate.connection.username" value="TS"/>
