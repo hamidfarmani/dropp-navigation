@@ -25,6 +25,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.RollbackException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 
@@ -347,6 +348,55 @@ public class ProviderServiceImpl implements ProviderService {
                 d.put("credit", driver.getCredit());
                 d.put("username", driver.getUsername());
                 d.put("accountState", accountStateConverter.convertToDatabaseColumn(driver.getAccountState()));
+                drivers.put(d);
+            }
+            jsonObjectResponse.put("drivers",drivers);
+            entityManager.getTransaction().commit();
+        } catch (RollbackException e) {
+            entityManager.getTransaction().rollback();
+            return Status.BAD_DATA;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if(entityManager.getTransaction().isActive()){
+                entityManager.getTransaction().rollback();
+            }if(entityManager.isOpen()){
+                entityManager.close();
+            }
+        }
+        return jsonObjectResponse;
+    }
+
+    public Object driversCostTrips(String providerUsername, Date sDate, Date eDate){
+        JSONObject jsonObjectResponse = new JSONObject();
+        JSONArray drivers = new JSONArray();
+        List<Object[]> driverList = null;
+        EntityManager entityManager = LocalEntityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            Operator operator = (Operator) entityManager.createNamedQuery("operator.exact.username")
+                    .setParameter("username", providerUsername)
+                    .getSingleResult();
+            if(operator.getRole()!=UserRole.PROVIDER){
+                return Status.NOT_FOUND;
+            }
+            if(operator.getServiceProvider()==null){
+                return Status.SERVICE_PROVIDER_NOT_REGISTERED;
+            }
+            driverList = entityManager.createNamedQuery("driver.groupBy.username.tripsCost")
+                    .setParameter("providerID",operator.getServiceProvider().getId())
+                    .setParameter("fromDate", sDate)
+                    .setParameter("toDate",eDate)
+                    .getResultList();
+
+
+            for (Object[] obj : driverList) {
+                JSONObject d = new JSONObject();
+                d.put("username", obj[0]);
+                d.put("sumCost", obj[1]);
+                d.put("sumDistance", obj[2]);
+                d.put("tripsCount", obj[3]);
                 drivers.put(d);
             }
             jsonObjectResponse.put("drivers",drivers);

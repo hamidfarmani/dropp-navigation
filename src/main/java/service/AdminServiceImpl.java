@@ -916,11 +916,18 @@ public class AdminServiceImpl implements AdminService {
             State state = (State) IOCContainer.getBean("state");
 
             state.setName(name);
+            Reloader r =(Reloader)IOCContainer.getBean("reloader");
+            Status reloadStatus = r.reload(ReloadType.STATES);
+            if(reloadStatus == Status.OK){
+                entityManager.persist(state);
+                entityManager.getTransaction().commit();
+                r =(Reloader)IOCContainer.getBean("reloader");
+                reloadStatus = r.reload(ReloadType.STATES);
+                return reloadStatus;
+            }else{
+                return Status.RELOAD_NOT_OCCURRED;
+            }
 
-            entityManager.persist(state);
-            entityManager.getTransaction().commit();
-
-            return Status.OK;
         } catch (RollbackException e) {
             entityManager.getTransaction().rollback();
             return Status.BAD_DATA;
@@ -947,10 +954,18 @@ public class AdminServiceImpl implements AdminService {
                     .getSingleResult();
             city.setState(state);
             city.setName(name);
-            entityManager.persist(city);
-            entityManager.getTransaction().commit();
+            Reloader r =(Reloader)IOCContainer.getBean("reloader");
+            Status reloadStatus = r.reload(ReloadType.STATES);
+            if(reloadStatus == Status.OK){
+                entityManager.persist(city);
+                entityManager.getTransaction().commit();
+                r =(Reloader)IOCContainer.getBean("reloader");
+                reloadStatus = r.reload(ReloadType.STATES);
+                return reloadStatus;
+            }else{
+                return Status.RELOAD_NOT_OCCURRED;
+            }
 
-            return Status.OK;
         } catch (NoResultException e) {
             return Status.NOT_FOUND;
         } catch (NullPointerException e) {

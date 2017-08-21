@@ -14,6 +14,10 @@ import util.ResponseProvider;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @RestController
 @CrossOrigin
@@ -141,7 +145,6 @@ public class ProviderController {
         }
     }
 
-
     @RequestMapping(value = "/provider/deactiveDriver", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> deactiveDriver(@RequestHeader(value = "Authorization") String auth,@RequestBody String request) {
         JSONObject jsonObjectRequest = new JSONObject(request);
@@ -209,6 +212,41 @@ public class ProviderController {
             return returnResponse(Status.BAD_JSON);
         }
     }
+
+    @RequestMapping(value = "/provider/drivers/trips/cost", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> driversCostTrips(@RequestHeader(value = "Authorization") String auth, @RequestBody String request) {
+        JSONObject jsonObjectRequest = new JSONObject(request);
+        try{
+            HTTPAuthParser httpAuthParser = (HTTPAuthParser)IOCContainer.getBean("httpAuthParser");
+            String providerUsername = httpAuthParser.returnUsername(auth);
+            String fromDate = jsonObjectRequest.getString("from");
+            String toDate = jsonObjectRequest.getString("to");
+
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Date sDate = null;
+            Date eDate = null;
+            try {
+                sDate = df.parse(fromDate);
+                eDate = df.parse(toDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            Object mostDebtDrivers = providerService.driversCostTrips(providerUsername,sDate,eDate);
+            if(mostDebtDrivers instanceof JSONObject){
+                return returnResponse(Status.OK, (JSONObject)mostDebtDrivers);
+            }else{
+                return returnResponse(Status.UNKNOWN_ERROR);
+            }
+
+        } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
+            return returnResponse(Status.BAD_DATA);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return returnResponse(Status.BAD_JSON);
+        }
+    }
+
 
     @RequestMapping(value = "/provider/report/drivers", method = RequestMethod.GET, produces = "application/vnd.ms-excel;charset=UTF-8")
     public void driverOfProviderReport(@RequestHeader(value = "Authorization") String auth,HttpServletResponse response) throws IOException {

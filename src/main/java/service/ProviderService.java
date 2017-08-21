@@ -3,6 +3,7 @@ package service;
 import model.enums.Status;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
 public interface ProviderService {
 
@@ -27,6 +28,8 @@ public interface ProviderService {
     void driverOfProviderReport(HttpServletResponse resp,String providerUsername);
 
     void providerClaim(HttpServletResponse resp,String providerUsername);
+
+    Object driversCostTrips(String providerUsername, Date sDate, Date eDate);
 }
 
 

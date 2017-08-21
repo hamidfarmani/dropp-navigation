@@ -29,7 +29,8 @@ import java.util.List;
         @NamedQuery(name = "driver.all.count",query = "select count(d.id) from driver d"),
         @NamedQuery(name = "driver.findBy.serviceType",query = "select d from driver d where d.serviceType=:serviceType"),
         @NamedQuery(name = "driver.orderby.credit", query = "select d from driver d where d.serviceProvider.id=:providerID and d.credit<0 order by d.credit asc"),
-        @NamedQuery(name = "driver.orderby.gt.creditAndProviderID", query = "select d from driver d where d.serviceProvider.id=:providerID and d.credit <= :value order by d.credit asc")
+        @NamedQuery(name = "driver.orderby.gt.creditAndProviderID", query = "select d from driver d where d.serviceProvider.id=:providerID and d.credit <= :value order by d.credit asc"),
+        @NamedQuery(name = "driver.groupBy.username.tripsCost",query = "select d.username,sum(t.cost),sum(i.distance),count(t.id) from driver d left join trip t on d.id=t.driver.id left join tripInfo i on t.info.id=i.id where d.serviceProvider.id=:providerID and trunc(i.startDate)>=trunc(:fromDate) and trunc(i.startDate)<=trunc(:toDate) group by d.username order by sum(t.cost) desc"),
 })
 @Entity(name = "driver")
 @Table(name = "DRIVER", indexes = {
